@@ -1,0 +1,12 @@
+
+Create a flowchart for shopping cart checkout in a food delivery app.
+- Start: "User adds items to cart"
+- Steps:
+  - "View cart and confirm items"
+  - "Proceed to checkout"
+  - "Enter delivery address"
+  - "Choose payment method"
+  - "Review order"
+- End: "Order placed"
+- Decision Points:
+  - "Is payment valid?" > Yes: "Process order" > No: "Prompt user to re-enter payment"

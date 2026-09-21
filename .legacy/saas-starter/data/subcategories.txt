@@ -1,0 +1,13 @@
+## Subcategories
+- [Product Requirements]: Purpose, features, target audience, success metrics, risks.
+- [Frontend Development]: Framework, styling, state management, navigation.
+- [Backend Development]: API design, database, authentication, integrations.
+- [API Design]: Endpoints, specifications, error handling, rate limiting.
+- [Database Schema]: Entities, relationships, indexing, migrations.
+- [User Flow]: Onboarding, core journey, error handling, edge cases.
+- [DevOps and Hosting]: Hosting, CI/CD, monitoring, scaling.
+- [State Management]: Local, global, server, persistence.
+- [Performance Optimization]: Frontend, backend, network optimization.
+- [Testing Plan]: Unit, integration, end-to-end testing.
+- [Code Documentation]: Comments, API docs, architecture diagrams, README.
+- [Third-Party Libraries]: Functionality, compatibility, security, compliance.

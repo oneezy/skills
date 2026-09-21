@@ -1,0 +1,13 @@
+## App Development Categories
+1. Product Requirements
+2. Frontend Development
+3. Backend Development
+4. API Design
+5. Database Schema
+6. User Flow
+7. DevOps and Hosting
+8. State Management
+9. Performance Optimization
+10. Testing Plan
+11. Code Documentation
+12. Third-Party Libraries

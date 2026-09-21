@@ -1,0 +1,11 @@
+# [list_type]
+
+- ./ (root)
+  - 📁 [folder]/
+    - 📄 [file].[extension]
+  - 📁 [folder]/
+    - 📄 [file].[extension]
+  - 📁 [folder]/
+    - 📄 [file].[extension]
+  - 📁 [folder]/
+    - 📄 [file].[extension]

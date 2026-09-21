@@ -1,0 +1,13 @@
+
+Create a timeline of steps to plan a wedding in Hawaii in 6 months.
+- Steps:
+  - Month 1: "Choose venue and set date"
+  - Month 2: "Hire vendors (catering, photographer, etc.)"
+  - Month 3: "Send invitations"
+  - Month 4: "Finalize travel plans and accommodations"
+  - Month 5: "Confirm guest list and finalize details with vendors"
+  - Month 6: "Wedding week preparation and event"
+- Milestones:
+  - "Venue booked" by Month 1
+  - "Vendors hired" by Month 2
+  - "Invitations sent" by Month 3

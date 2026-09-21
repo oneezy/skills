@@ -1,0 +1,9 @@
+
+Create a 1:1 template for strategizing career goals as a designer with my mentor.
+- Sections:
+  - "Current strengths and skills"
+  - "Areas for growth"
+  - "Short-term goals (6 months)"
+  - "Long-term goals (3 years)"
+  - "Action items for next session"
+  - "Feedback and advice from mentor"

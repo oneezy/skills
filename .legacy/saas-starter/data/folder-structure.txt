@@ -1,0 +1,16 @@
+## Expected Folder Structure
+project-name/
+├── docs/
+│   ├── 01-prd.md
+│   ├── 02-frontend.md
+│   ├── 03-backend.md
+│   ├── 04-api.md
+│   ├── 05-database-schema.md
+│   ├── 06-user-flow.md
+│   ├── 07-devops.md
+│   ├── 08-state-management.md
+│   ├── 09-performance-optimization.md
+│   ├── 10-testing-plan.md
+│   ├── 11-code-documentation.md
+│   ├── 12-third-party-libraries.md
+├── README.md

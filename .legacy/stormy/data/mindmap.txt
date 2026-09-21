@@ -1,0 +1,10 @@
+
+Create a mind map for a road trip itinerary down the Pacific Coast Highway.
+- Central idea: "Pacific Coast Highway Road Trip"
+- Branches:
+  - "San Francisco" (sub-branches: "Golden Gate Bridge", "Alcatraz Island", "Chinatown")
+  - "Monterey" (sub-branches: "Cannery Row", "Monterey Bay Aquarium", "17-Mile Drive")
+  - "Big Sur" (sub-branches: "Bixby Bridge", "McWay Falls", "Pfeiffer Beach")
+  - "Santa Barbara" (sub-branches: "Stearns Wharf", "Mission Santa Barbara", "Wine Tasting")
+  - "Los Angeles" (sub-branches: "Hollywood Walk of Fame", "Santa Monica Pier", "Getty Center")
+  - "San Diego" (sub-branches: "Balboa Park", "San Diego Zoo", "Gaslamp Quarter")

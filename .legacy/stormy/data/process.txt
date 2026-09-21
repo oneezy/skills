@@ -1,0 +1,10 @@
+
+Create a process flow for assigning IT help desk tickets.
+- Steps:
+  - "Ticket submitted by user"
+  - "Categorize issue" (priority: low, medium, high)
+  - "Assign to appropriate technician"
+  - "Technician resolves issue"
+  - "Ticket closed and feedback collected"
+- Decision Points:
+  - "Is the issue resolved?" > Yes: "Close ticket" > No: "Reassign to a different technician"

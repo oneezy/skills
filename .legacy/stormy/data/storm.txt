@@ -1,0 +1,7 @@
+- Prompt: "What are creative ways to organize and track personal goals?"
+- Categories:
+  - "Digital Tools" (e.g., apps like Notion, habit trackers, Google Calendar)
+  - "Visualization Methods" (e.g., vision boards, mind maps)
+  - "Accountability Systems" (e.g., mentors, accountability groups)
+  - "Gamification" (e.g., reward systems, progress badges)
+  - "Long-Term Planning" (e.g., 5-year vision, milestone breakdowns)

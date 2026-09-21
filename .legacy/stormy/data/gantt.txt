@@ -1,0 +1,13 @@
+
+Create a Gantt chart for planning and launching a product in 12 weeks.
+- Phases:
+  - "Research": Week 1-2
+  - "Design": Week 3-5
+  - "Development": Week 6-9
+  - "Launch Planning": Week 10-11
+  - "Launch": Week 12
+- Dependencies:
+  - "Design" depends on "Research"
+  - "Development" depends on "Design"
+  - "Launch Planning" depends on "Development"
+  - "Launch" depends on "Launch Planning"

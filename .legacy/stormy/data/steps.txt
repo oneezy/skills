@@ -1,0 +1,15 @@
+### Prerequisites 
+- [prerequisite] (list as many as necessary)
+
+### Steps (high level to low level)
+- **1.** task (high level)
+ - **1.1** subtask (mid level)
+ - **1.2** subtask (mid level)
+- **2.** task (high level)
+ - **2.1** subtask (mid level)
+- **3.** task (high level)
+ - **3.1** subtask (mid level)
+  - **3.1.1** subsubtask (low level - very detailed)
+  - **3.1.2** subsubtask (low level - very detailed)
+ - **3.2** subtask (mid level)
+ - **3.3** subtask (mid level)

@@ -1,0 +1,15 @@
+
+Create a family tree that includes 4 generations.
+- Central Person: "Me"
+  - Parents:
+    - "Mother: Jane Doe"
+    - "Father: John Doe"
+  - Grandparents (Maternal):
+    - "Grandmother: Alice Smith"
+    - "Grandfather: Bob Smith"
+  - Grandparents (Paternal):
+    - "Grandmother: Mary Doe"
+    - "Grandfather: Frank Doe"
+  - Children (if applicable): 
+    - "Son: Jack Doe"
+    - "Daughter: Lily Doe"

@@ -1,0 +1,15 @@
+
+Create an organizational chart for a 20-person tech startup.
+- CEO: "Alex Carter"
+  - Product Team:
+    - Product Manager: "Jamie Lee"
+    - Developers: "Taylor, Morgan, Casey"
+    - Designers: "Jordan, Chris"
+  - Operations Team:
+    - Operations Manager: "Drew Collins"
+    - HR: "Sam, Kelly"
+    - Finance: "Alexis, Dana"
+  - Marketing Team:
+    - Marketing Manager: "Taylor White"
+    - Social Media: "Blake, Pat"
+    - Content: "Riley, Corey"

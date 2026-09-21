@@ -1,0 +1,37 @@
+## Targeted Questions
+1. Product Requirements:
+   - What is your app idea, and what problem does it solve?
+   - Who is the target audience?
+   - What are the app's key features?
+   - What metrics define success (e.g., user acquisition, engagement)?
+2. Frontend:
+   - Preferred framework or UI library?
+   - Styling method (e.g., Tailwind, Styled Components)?
+   - Navigation style (tabs, side menu)?
+3. Backend:
+   - Preferred framework (e.g., Express.js, Django)?
+   - Database type (relational or NoSQL)?
+   - Authentication method (e.g., JWT, OAuth)?
+4. API:
+   - What endpoints will your app need?
+   - Should the API use REST or GraphQL?
+   - What error handling strategies should be implemented?
+5. Database:
+   - What entities and relationships are involved?
+   - Should automated backups and migrations be included?
+6. User Flow:
+   - What is the onboarding process?
+   - Describe the core journey and interactions.
+   - How should errors and edge cases be handled?
+7. Libraries:
+   - What functionality do you need libraries for (e.g., payments, analytics)?
+   - Are there specific requirements or compliance considerations?
+8. DevOps:
+   - Where should the app be hosted?
+   - Should CI/CD pipelines be implemented?
+   - What monitoring and scaling strategies are needed?
+9. Testing:
+   - Should unit, integration, or end-to-end testing be implemented?
+10. Code Documentation:
+   - Should the code include inline comments?
+   - Should the API have Swagger/OpenAPI documentation?
