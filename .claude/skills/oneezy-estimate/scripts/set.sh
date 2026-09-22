@@ -3,7 +3,7 @@
 # Usage: set.sh <issue-number> [--estimate N] [--priority P] [--type T] --comment "why" [--repo owner/repo] [--dry-run]
 #   Estimate: 1 2 3 5 8 13         Priority: Low Medium High Critical
 #   Type:     bug feature tech-debt question learning reference
-# Refuses (exit 2, nothing written) any write outside the sizing rules; the message names the rule.
+# Refuses (exit 2, nothing written) any write outside the estimate rules; the message names the rule.
 # Needs: gh, authenticated with a token that can write the project (PROJECT_PAT in CI).
 set -euo pipefail
 
