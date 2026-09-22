@@ -1,6 +1,6 @@
 ---
-name: sizing
-description: Size the open backlog of the current repo's GitHub project: Estimate, Priority and Type on every unsized open issue, one comment each. Run by the task-manager workflow after issues open, or by hand to backfill a repo.
+name: oneezy-estimate
+description: Estimate the open backlog of the current repo's GitHub project: Estimate, Priority and Type on every unsized open issue, one comment each. Run by the task-manager workflow after issues open, or by hand to backfill a repo.
 disable-model-invocation: true
 ---
 
