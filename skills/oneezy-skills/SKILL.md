@@ -8,7 +8,7 @@ One library, `oneezy/skills`, is the source of truth for every skill Justin uses
 
 ## Do
 
-Run the script beside this file. It calls `npx --yes @oneezy/skills-sync` with the arguments given, so `npx` (Node 20+) and `git` must be on the path.
+Run the script beside this file. It calls `npx --yes skills-sync` with the arguments given, so `npx` (Node 20+) and `git` must be on the path.
 
 - Windows: `powershell -File <this skill folder>/scripts/sync.ps1 [args]`
 - Linux, macOS, WSL, cloud: `bash <this skill folder>/scripts/sync.sh [args]`

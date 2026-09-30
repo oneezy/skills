@@ -5,16 +5,16 @@ case "${1:-}" in
   add)
     shift
     lib="${SKILLS_REPO:-$HOME/.skills-sync}"
-    [ -d "$lib/skills" ] || npx --yes @oneezy/skills-sync --quiet
+    [ -d "$lib/skills" ] || npx --yes skills-sync --quiet
     (cd "$lib" && npx --yes skills@latest add "$@" --all)
-    exec npx --yes @oneezy/skills-sync --quiet
+    exec npx --yes skills-sync --quiet
     ;;
   update)
     lib="${SKILLS_REPO:-$HOME/.skills-sync}"
     (cd "$lib" && npx --yes skills@latest update -p -y)
-    exec npx --yes @oneezy/skills-sync --quiet
+    exec npx --yes skills-sync --quiet
     ;;
   *)
-    exec npx --yes @oneezy/skills-sync "$@"
+    exec npx --yes skills-sync "$@"
     ;;
 esac

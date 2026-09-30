@@ -18,7 +18,7 @@ Generated, never committed:
 ```
 git clone https://github.com/oneezy/skills
 cd skills
-npx @oneezy/skills-sync
+npx skills-sync
 ```
 
-The first run asks which harnesses, whether to link the user folders, which projects to include, and (on Windows) which WSL distros; it remembers the answers. Every later run, and `npx @oneezy/skills-sync --watch`, is silent and idempotent. See the tool's README in `oneezy/tools` under `clis/skills-sync`.
+The first run asks which harnesses, whether to link the user folders, which projects to include, and (on Windows) which WSL distros; it remembers the answers. Every later run, and `npx skills-sync --watch`, is silent and idempotent. See the tool's README in `oneezy/tools` under `clis/skills-sync`.
