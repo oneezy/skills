@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "library": {
+    "name": "skills",
+    "owner": "oneezy",
+    "homepage": "https://github.com/oneezy/skills"
+  },
+  "sources": {
+    "matt-pocock": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "policy": "follow",
+      "root": "skills",
+      "skills": [
+        "ask-matt",
+        "claude-handoff",
+        "code-review",
+        "codebase-design",
+        "diagnosing-bugs",
+        "domain-modeling",
+        "git-guardrails-claude-code",
+        "grill-me",
+        "grill-with-docs",
+        "grilling",
+        "handoff",
+        "implement",
+        "implement-spec",
+        "improve-codebase-architecture",
+        "loop-me",
+        "migrate-to-shoehorn",
+        "pr",
+        "prototype",
+        "research",
+        "retro",
+        "scaffold-exercises",
+        "setup-matt-pocock-skills",
+        "setup-pre-commit",
+        "setup-ts-deep-modules",
+        "tdd",
+        "teach",
+        "to-questionnaire",
+        "to-spec",
+        "to-tickets",
+        "triage",
+        "wait-what",
+        "wayfinder",
+        "wizard",
+        "writing-beats",
+        "writing-for-agents",
+        "writing-fragments",
+        "writing-shape"
+      ],
+      "pins": {
+        "writing-for-agents": "321658273cb1d20b76026717d027d505790106d4"
+      },
+      "attribution": [
+        "LICENSE",
+        "README.md"
+      ]
+    },
+    "pstack": {
+      "repo": "cursor/plugins",
+      "ref": "main",
+      "policy": "follow",
+      "root": "pstack/skills",
+      "skills": {
+        "architect": "architect",
+        "arena": "arena",
+        "automate-me": "automate-me",
+        "blast-radius": "blast-radius",
+        "bro": "bro",
+        "create-verification-skill": "create-verification-skill",
+        "figure-it-out": "figure-it-out",
+        "how": "how",
+        "interrogate": "interrogate",
+        "maintain-verification-skill": "maintain-verification-skill",
+        "make-bot-ui": "make-bot-ui",
+        "no-comments": "no-comments",
+        "poteto-mode": "poteto-mode",
+        "principle-attack-the-premise": "principle-attack-the-premise",
+        "principle-boundary-discipline": "principle-boundary-discipline",
+        "principle-build-the-lever": "principle-build-the-lever",
+        "principle-encode-lessons-in-structure": "principle-encode-lessons-in-structure",
+        "principle-exhaust-the-design-space": "principle-exhaust-the-design-space",
+        "principle-experience-first": "principle-experience-first",
+        "principle-fix-root-causes": "principle-fix-root-causes",
+        "principle-foundational-thinking": "principle-foundational-thinking",
+        "principle-guard-the-context-window": "principle-guard-the-context-window",
+        "principle-laziness-protocol": "principle-laziness-protocol",
+        "principle-make-operations-idempotent": "principle-make-operations-idempotent",
+        "principle-migrate-callers-then-delete-legacy-apis": "principle-migrate-callers-then-delete-legacy-apis",
+        "principle-minimize-reader-load": "principle-minimize-reader-load",
+        "principle-model-the-domain": "principle-model-the-domain",
+        "principle-never-block-on-the-human": "principle-never-block-on-the-human",
+        "principle-outcome-oriented-execution": "principle-outcome-oriented-execution",
+        "principle-prove-it-works": "principle-prove-it-works",
+        "principle-redesign-from-first-principles": "principle-redesign-from-first-principles",
+        "principle-separate-before-serializing-shared-state": "principle-separate-before-serializing-shared-state",
+        "principle-sequence-verifiable-units": "principle-sequence-verifiable-units",
+        "principle-subtract-before-you-add": "principle-subtract-before-you-add",
+        "principle-test-behavior-not-implementation": "principle-test-behavior-not-implementation",
+        "principle-type-system-discipline": "principle-type-system-discipline",
+        "recall": "recall",
+        "reflect": "reflect",
+        "setup-pstack": "setup-pstack",
+        "show-me-your-work": "show-me-your-work",
+        "swarm": "swarm",
+        "tdd": "pstack-tdd",
+        "teach": "pstack-teach",
+        "technical-writing": "technical-writing",
+        "typescript-best-practices": "typescript-best-practices",
+        "unslop": "unslop",
+        "why": "why"
+      },
+      "pins": {},
+      "attribution": [
+        "pstack/LICENSE",
+        "pstack/README.md"
+      ]
+    }
+  },
+  "plugins": {
+    "oneezy": {
+      "displayName": "Oneezy",
+      "description": "Justin's own skills: brain, estimate, merge, remote, skills, status.",
+      "group": "oneezy"
+    },
+    "trident": {
+      "displayName": "Trident",
+      "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
+      "group": "trident"
+    },
+    "matt-pocock": {
+      "displayName": "Matt Pocock",
+      "description": "Matt Pocock's skills from mattpocock/skills, following main; writing-for-agents pinned.",
+      "source": "matt-pocock"
+    },
+    "pstack": {
+      "displayName": "PStack",
+      "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
+      "source": "pstack"
+    }
+  }
+}

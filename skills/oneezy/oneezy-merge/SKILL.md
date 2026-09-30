@@ -5,7 +5,7 @@ disable-model-invocation: true
 argument-hint: "empty or 'this pr' to open for review; 'into dev' to merge; 'release' (or 'both', 'dev and main') to merge into dev and promote to main"
 ---
 
-Invoking this skill is Justin's word to commit and push the current branch. It does the actions for its mode and ends by calling the Skill tool with `oneezy-status`, exactly once; that report is the only message. Works in any repo with GitHub and Vercel; nothing is hardcoded.
+Invoking this skill is Justin's word to commit and push the current branch. It does the actions for its mode and ends by running `/oneezy-status`, exactly once; that report is the only message. Works in any repo with GitHub and Vercel; nothing is hardcoded.
 
 ## Mode, from the arguments
 
@@ -28,7 +28,7 @@ Each step names its calls. Nothing exploratory runs between them; one schema loa
 3. **Wait for the builds**: read the PR's combined status; while any `Vercel – *` status is pending, sleep 90 seconds in the background and read again, nothing else. Done when every Vercel status is success or failure. Any failure: skip steps 4 and 5.
 4. **Land** (land and release modes, all builds green): squash-merge with the expected head SHA, title = PR title plus `(#<pr>)`. Then one shell call: fetch, verify `origin/<base>` contains the squash commit (stop if not), check out the base, fast-forward, delete the remote branch and the local branch once. A refused delete is left for the report, not retried. Another session's worktree is never touched; this session's own cannot remove itself.
 5. **Promote** (release mode only): fast-forward `main` to `dev` on origin (`git push origin origin/dev:main`). When origin refuses because `main` is not an ancestor of `dev` (the repo promotes through release PRs), open a PR `dev` → `main` titled `release: promote dev to main (<the landed PR's prefix or ticket>)` whose body lists the commits since the last promotion, merge it with a merge commit (never squash: `dev` must stay an ancestor of `main`), and verify `origin/main` contains the merge. Then one shell call: fetch, fast-forward the local `main` ref (`git fetch origin main:main` when `main` is not checked out anywhere; `git pull --ff-only` in the checkout that has it). Nothing is deleted: `dev` and `main` are permanent. Done when `origin/main` equals `origin/dev`.
-6. **Report**: call the Skill tool with `oneezy-status`. It reads the state and renders the message, Next Up and the next session's prompt included. In release mode the Git line names both moves: the squash into `dev` and the promotion of `main`.
+6. **Report**: run `/oneezy-status`. It reads the state and renders the message, Next Up and the next session's prompt included. In release mode the Git line names both moves: the squash into `dev` and the promotion of `main`.
 
 Budget: open mode at most four calls before the report, land mode at most six, release mode at most nine, not counting the background sleeps.
 
