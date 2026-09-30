@@ -1,9 +1,24 @@
 # skills
 
-Justin's agent skills, plus the third-party skills he installs, in one repo.
+Justin's agent skills, plus pins for the third-party skills he uses, in one small repo.
+
+Committed:
 
 - `skills/<name>/` holds the skills authored here, in bare Agent Skills form (`SKILL.md`, optional `scripts/`, `references/`, `agents/openai.yaml`). Others install them with `npx skills add oneezy/skills`.
-- `.agents/skills/` is the working set every harness reads: third-party skills installed by `npx skills add <owner>/<repo>` and pinned in `skills-lock.json`, plus one link per skill in `skills/`.
-- `.claude/skills/` is generated: one link per entry of `.agents/skills`, for Claude Code. It is not committed.
+- `skills-lock.json` pins every third-party skill (source repo and content hash). Add one with `npx skills add <owner>/<repo>`; refresh them with `npx skills update`.
 
-After a clone or pull, and after adding or editing a skill, run `skills-sync` from the tools repo (`clis/skills-sync-cli`). It rebuilds the two layers here and links every skill into `~/.claude/skills` and `~/.agents/skills`, so every project on the host sees the same set.
+Generated, never committed:
+
+- `skills-sync.json` remembers this machine's sync answers.
+- `.agents/skills/` is the working set every harness reads: the third-party skills restored from the lock, plus one link per skill in `skills/`.
+- `.claude/skills/`, `.goose/skills/`, `.hermes/skills/` are one link per working-set entry, for each harness.
+
+## Use it
+
+```
+git clone https://github.com/oneezy/skills
+cd skills
+npx @oneezy/skills-sync
+```
+
+The first run asks which harnesses, whether to link the user folders, which projects to include, and (on Windows) which WSL distros; it remembers the answers. Every later run, and `npx @oneezy/skills-sync --watch`, is silent and idempotent. See the tool's README in `oneezy/tools` under `clis/skills-sync`.
