@@ -4,7 +4,7 @@ description: "Estimate the current repo's GitHub project: Estimate, Priority and
 disable-model-invocation: true
 ---
 
-An **AFK** run: no questions, no waiting, no human in the loop. Justin never edits the board, so this skill is the only thing that sets Estimate, Priority and Type. Every write goes through [`scripts/set.sh`](scripts/set.sh), which refuses anything outside the rules below with the rule named; a refusal is the rule speaking, so drop that one write and keep the rest.
+An **AFK** run: no questions, no waiting, no human in the loop. Justin never edits the board, so this skill is the only thing that sets Estimate, Priority and Type. Every write goes through `scripts/set.sh`, which refuses anything outside the rules below with the rule named; a refusal is the rule speaking, so drop that one write and keep the rest.
 
 The whole open backlog is in context on every run so each size is **relative** to its neighbours, never absolute: a 3 is smaller than every 5 on the board.
 

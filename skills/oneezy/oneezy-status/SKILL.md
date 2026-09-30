@@ -3,7 +3,7 @@ name: oneezy-status
 description: Render the status report for whatever is in front of you, a working tree, a branch, a PR or a merged PR, in the fixed shape in STATUS.md, always ending with Next Up and the next session's prompt. Read-only. Use when Justin asks for status, and as the last step of /oneezy-merge.
 ---
 
-One message, built from [STATUS.md](STATUS.md). The shape never changes; the **sources** that fill it change with the state. Nothing is changed by this skill: no commit, no push, no merge, no tracker write, and it never calls `/oneezy-merge`.
+One message, built from `STATUS.md`. The shape never changes; the **sources** that fill it change with the state. Nothing is changed by this skill: no commit, no push, no merge, no tracker write, and it never calls `/oneezy-merge`.
 
 ## State
 

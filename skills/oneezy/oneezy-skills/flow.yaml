@@ -1,0 +1,37 @@
+skill: oneezy-skills
+purpose: Keep Justin's skills in sync from the library by running the sync tool through the script beside the skill, then report what changed.
+runtime: [npx (Node 20+), git]
+refs:
+  - token: scripts/sync.ps1
+    kind: file
+    id: skills/oneezy/oneezy-skills/scripts/sync.ps1
+    need: conditional
+    when: Windows
+  - token: scripts/sync.sh
+    kind: file
+    id: skills/oneezy/oneezy-skills/scripts/sync.sh
+    need: conditional
+    when: Linux, macOS, WSL, cloud
+unresolved:
+  - token: "@oneezy/skills-sync"
+    note: the npm package name of the sync tool, written as a command argument; not a plugin or app
+agents:
+  max: 0
+steps:
+  - id: map-request
+    does: match Justin's words to the script's arguments (none for sync, update or my skills are missing; add <owner/repo>; update; status; unlink; --plan)
+    outcome:
+      done: arguments chosen
+  - id: run-script
+    after: map-request
+    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere with those arguments; add runs npx skills add <owner/repo> --all inside the library and update runs npx skills update -p -y there, each followed by npx --yes @oneezy/skills-sync --quiet; anything else goes to npx --yes @oneezy/skills-sync as is; a first run on a machine clones oneezy/skills into ~/.skills-sync, restores the lock's skills and links every skill into the user folders
+    needs: [npx, git]
+    outcome:
+      done: the tool's summary line printed
+  - id: report
+    after: run-script
+    does: one line per change the tool printed, then its summary line; say plainly when a skill is reported gone upstream or left alone as a conflict
+    returns: the change lines and the summary
+    outcome:
+      done: report on screen
+      fail: a skill Justin asked for is still missing after the sync → say which and stop, without improvising a copy

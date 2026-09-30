@@ -4,7 +4,7 @@ description: Justin's memory. Use whenever Justin says "remember this", "save th
 argument-hint: "remember <thing> | agenda [personal|work|ai] | what's in my brain about <topic> | done <thing>"
 ---
 
-Justin's brain is a tree of GitHub issues in `oneezy/brain`: **Brain > area > category > entry**. Areas are Personal, Work and AI. An entry is one thing Justin wants kept: a task, a date, an idea, a fact. This skill is the only way an agent writes there. It never touches wayfinder tickets (anything labelled `wayfinder:*`), and wayfinder never touches entries (anything labelled `brain`).
+Justin's brain is a tree of GitHub issues in `oneezy/brain`: **Brain > area > category > entry**. Areas are Personal, Work and AI. An entry is one thing Justin wants kept: a task, a date, an idea, a fact. This skill is the only way an agent writes there. It never touches wayfinder tickets (anything labelled `wayfinder:*`), and `/wayfinder` never touches entries (anything labelled `brain`).
 
 ## The tool
 
