@@ -5,7 +5,7 @@ refs:
   - token: /wayfinder
     kind: skill
     id: wayfinder
-    need: example
+    need: mention
     when: named as a boundary only; the brain never edits wayfinder tickets and wayfinder never edits entries
   - token: scripts/brain.py
     kind: file
@@ -20,13 +20,27 @@ steps:
     does: match Justin's words to one row of the request table (remember, agenda, find, done, trash, move, update)
     outcome:
       done: one command chosen
-  - id: remember
+  - id: tree
     after: map-request
+    if: the request is remember and the category names are unsure; once per session
+    does: run tree
+    needs: [scripts/brain.py]
+    outcome:
+      done: the areas and their categories known; a category is never invented
+  - id: remember
+    after: [map-request, tree]
     if: the request is remember, save to my brain, brain this, note to self
-    does: choose area, category, GTD list, priority and a one-line title from Justin's words without asking, then run remember with --via; several things in one breath become several entries, and a thing already in the brain is updated instead
+    does: choose area, category, GTD list, priority and a one-line title from Justin's words without asking, then run remember with --via; several things in one breath become several entries; a thing already in the brain that changed is updated (update) or commented (comment) instead of duplicated
     needs: [scripts/brain.py]
     outcome:
       done: the number, title, place and labels read back from the tool in one line
+  - id: comment
+    after: map-request
+    if: the request is remember and the thing is already in the brain; the change is history, not a correction
+    does: gh issue comment on the entry instead of creating a duplicate
+    needs: [gh]
+    outcome:
+      done: the entry number read back
   - id: agenda
     after: map-request
     if: the request is agenda, what do I need to do, what's most important, what's in my brain

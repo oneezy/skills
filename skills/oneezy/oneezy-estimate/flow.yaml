@@ -21,7 +21,6 @@ steps:
     needs: [scripts/backlog.sh, gh]
     outcome:
       done: every line read
-      fail: no open project linked to the repo → stop
   - id: list-work
     after: load-backlog
     does: write two lists in the reply, Unsized (no Estimate, minus wayfinder:map and phase issues) and Re-rank (Todo or Next Up whose Priority no longer fits)
