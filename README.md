@@ -47,3 +47,7 @@ Third-party skills come from two sources: `matt-pocock` follows `main` of `mattp
 | `skills-sync.local.json` | the tool, after every run: this machine's answers | ignored |
 
 Generated files are regenerated, never hand-edited. Before committing, run `npx @oneezy/skills-sync check`: it validates every own skill's frontmatter and `flow.yaml` and fails when a committed generated file drifts from what the config, the lock and the skills would produce. CI runs the same command on every pull request and on pushes to `dev` and `main`. It is a command you run, not a git hook; nothing is installed in the clone.
+
+## CI
+
+`.github/workflows/library.yml` only checks; it never pushes to `dev` or `main` and never publishes. Its `check` job builds `@oneezy/skills-sync` from `oneezy/tools` at the commit pinned as `SKILLS_SYNC_REF` (found by package name, so the folder may move) and runs `refresh --frozen`, `build --check` and `check` against the checkout, then `claude plugin validate` on every committed package and the catalog. Its `refresh` job runs only when started by hand from the Actions tab: an unfrozen `refresh` moves every unpinned skill to upstream's tip and, when the lock changed, opens a pull request to `dev` titled `chore(sources): refresh <ids>` with a summary of what moved. Nothing is scheduled. Uploading a plugin to ChatGPT is a hand-run checklist: `docs/agents/chatgpt-upload.md`.

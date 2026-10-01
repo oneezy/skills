@@ -1,0 +1,69 @@
+# Build @oneezy/skills-sync from a checkout of oneezy/tools at one commit, for the jobs in
+# .github/workflows/library.yml. The package is found by the name in its package.json (it is under
+# clis/skills-sync today and moves to packages/skills-sync with tools #75), never by folder. pnpm comes
+# from npm so a `packageManager` field in the tools root, when one appears, is honoured rather than
+# fought: pnpm switches itself to the version that field names.
+name: skills-sync CLI
+description: Check out oneezy/tools at a commit, locate @oneezy/skills-sync by name, build it, and list the commands it knows.
+
+inputs:
+  ref:
+    description: The oneezy/tools commit to build (SKILLS_SYNC_REF)
+    required: true
+  tools-path:
+    description: Where to check oneezy/tools out, relative to the workspace
+    default: tools
+  library-path:
+    description: The library checkout whose .github/scripts hold the package lookup
+    default: library
+
+outputs:
+  cli:
+    description: The built CLI entry (the package's bin), run with node
+    value: ${{ steps.locate.outputs.cli }}
+  commands:
+    description: The commands the built tool lists under "Commands" in --help, space-separated with a space on each side
+    value: ${{ steps.probe.outputs.commands }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check out oneezy/tools at the pinned commit
+      uses: actions/checkout@v5
+      with:
+        repository: oneezy/tools
+        ref: ${{ inputs.ref }}
+        path: ${{ inputs.tools-path }}
+        persist-credentials: false
+
+    - name: Set up Node
+      uses: actions/setup-node@v5
+      with:
+        node-version: 24
+
+    - name: Set up pnpm
+      shell: bash
+      run: |
+        npm install -g pnpm@12
+        pnpm --version
+
+    - name: Locate @oneezy/skills-sync by name
+      id: locate
+      shell: bash
+      run: node "${{ inputs.library-path }}/.github/scripts/find-package.mjs" "${{ inputs.tools-path }}"
+
+    - name: Build it
+      shell: bash
+      working-directory: ${{ steps.locate.outputs.dir }}
+      run: |
+        pnpm install --frozen-lockfile
+        pnpm run build
+        node "${{ steps.locate.outputs.cli }}" --help | head -n 1
+
+    - name: Which commands this build knows
+      id: probe
+      shell: bash
+      run: |
+        commands=$(node "${{ steps.locate.outputs.cli }}" --help | awk '/^Commands/ { on = 1; next } /^[A-Z]/ { on = 0 } on && /^  [a-z]/ { print $1 }' | tr '\n' ' ')
+        echo "commands: $commands"
+        echo "commands= $commands" >> "$GITHUB_OUTPUT"
