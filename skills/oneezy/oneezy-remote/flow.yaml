@@ -1,6 +1,6 @@
 skill: oneezy-remote
 purpose: Start, resume, stop or list remote Claude threads through the remote-sessions engine in oneezy/tools.
-runtime: [python3, remote_sessions.py from the main checkout of oneezy/tools (clis/remote-sessions-cli), Remote Control]
+runtime: [python3, remote_sessions.py (oneezy/tools main checkout), Remote Control]
 refs: []
 unresolved: []
 agents:

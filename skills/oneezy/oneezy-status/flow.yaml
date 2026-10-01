@@ -10,7 +10,7 @@ refs:
   - token: /oneezy-merge
     kind: skill
     id: oneezy-merge
-    need: example
+    need: mention
     when: never called; named as the skill that runs this one last, and in the closing code block
   - token: /wayfinder
     kind: skill
