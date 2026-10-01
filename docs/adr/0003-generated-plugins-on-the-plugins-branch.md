@@ -8,7 +8,7 @@ A Claude Code marketplace resolves relative plugin paths from its own clone, so 
 
 ## Decision
 
-`build --plugins` writes `plugins/<id>/` beside the source and the result is committed on `dev` and `main` like any other change, by Justin or by an agent on a task branch. The root catalogs `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json` list each plugin with a `./plugins/<id>` source. Both forms stay: the loose-skill form (`skills/`, linked into harnesses) and the plugin form, each behind a boolean in `skills-sync.json` (`skills`, `plugins`, default true). `.claude-plugin/plugin.json` inside a package carries no `version`, so Claude Code tracks commits; the portable and legacy manifests carry `0.<commit count>.0+<sha12>`. CI runs `check` (including `build --check`) and fails on drift.
+`build --plugins` writes `plugins/<id>/` beside the source and the result is committed on `dev` and `main` like any other change, by Justin or by an agent on a task branch. The root catalogs `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json` list each plugin with a `./plugins/<id>` source. Both forms stay: the loose-skill form (`skills/`, linked into harnesses) and the plugin form, each behind a boolean in `skills-sync.json` (`generate.skills`, `generate.plugins`, default true). `.claude-plugin/plugin.json` inside a package carries no `version`, so Claude Code tracks commits; the portable and legacy manifests carry `0.<commit count>.0+<sha12>`. CI runs `check` (including `build --check`) and fails on drift.
 
 ## Consequences
 
