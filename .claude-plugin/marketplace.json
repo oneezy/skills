@@ -1,0 +1,29 @@
+{
+  "name": "oneezy-skills",
+  "owner": {
+    "name": "oneezy"
+  },
+  "description": "Plugins built from https://github.com/oneezy/skills by @oneezy/skills-sync.",
+  "plugins": [
+    {
+      "name": "oneezy",
+      "source": "./plugins/oneezy",
+      "description": "Justin's own skills: brain, estimate, merge, remote, skills, status."
+    },
+    {
+      "name": "trident",
+      "source": "./plugins/trident",
+      "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components."
+    },
+    {
+      "name": "matt-pocock",
+      "source": "./plugins/matt-pocock",
+      "description": "Matt Pocock's skills from mattpocock/skills, following main; writing-for-agents pinned."
+    },
+    {
+      "name": "pstack",
+      "source": "./plugins/pstack",
+      "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach."
+    }
+  ]
+}

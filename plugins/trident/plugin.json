@@ -1,0 +1,30 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "trident",
+  "version": "0.23.0+69c043411fdf",
+  "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
+  "author": {
+    "name": "oneezy",
+    "url": "https://github.com/oneezy"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/oneezy/skills",
+  "keywords": [
+    "skills",
+    "trident"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Trident",
+        "shortDescription": "Skills for the Trident",
+        "longDescription": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
+        "developerName": "oneezy",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive"
+        ]
+      }
+    }
+  }
+}
