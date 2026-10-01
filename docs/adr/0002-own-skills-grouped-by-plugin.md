@@ -1,6 +1,8 @@
 # ADR-0002: Own skills are grouped by plugin under `skills/<plugin>/<skill>/`
 
-Date: 2026-09-30. Status: accepted. Decided on oneezy/skills#17 under Justin's autopilot grant.
+Date: 2026-09-30. Status: accepted, amended 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item A). Decided on oneezy/skills#17 under Justin's autopilot grant.
+
+**Amendment.** `plugins/<id>/` is built into the repo and committed on `dev` and `main` (ADR-0003); `upstream/`, `artifacts/` and the layers stay gitignored. The text below is the original decision; read it with that substitution.
 
 ## Context
 

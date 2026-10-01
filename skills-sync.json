@@ -5,11 +5,14 @@
     "owner": "oneezy",
     "homepage": "https://github.com/oneezy/skills"
   },
+  "generate": {
+    "skills": true,
+    "plugins": true
+  },
   "sources": {
     "matt-pocock": {
       "repo": "mattpocock/skills",
       "ref": "main",
-      "policy": "follow",
       "root": "skills",
       "skills": [
         "ask-matt",
@@ -61,7 +64,6 @@
     "pstack": {
       "repo": "cursor/plugins",
       "ref": "main",
-      "policy": "follow",
       "root": "pstack/skills",
       "skills": {
         "architect": "architect",
