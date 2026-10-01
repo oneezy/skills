@@ -1,5 +1,5 @@
 skill: oneezy-skills
-purpose: Keep Justin's skills in sync from the library by running the sync tool through the script beside the skill, then report what changed.
+purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill, then report what it printed.
 runtime: [npx (Node 20+), git]
 refs:
   - token: scripts/sync.ps1
@@ -12,6 +12,11 @@ refs:
     id: skills/oneezy/oneezy-skills/scripts/sync.sh
     need: conditional
     when: Linux, macOS, WSL, cloud
+  - token: skills-sync.json
+    kind: file
+    id: skills-sync.json
+    need: mention
+    when: a skill is reported gone upstream; the fix the tool names edits the config
 unresolved:
   - token: "@oneezy/skills-sync"
     note: the npm package name of the sync tool, written as a command argument; not a plugin or app
@@ -24,14 +29,22 @@ steps:
       done: arguments chosen
   - id: run-script
     after: map-request
-    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere with those arguments; add runs npx skills add <owner/repo> --all inside the library and update runs npx skills update -p -y there, each followed by npx --yes @oneezy/skills-sync --quiet; anything else goes to npx --yes @oneezy/skills-sync as is; a first run on a machine clones oneezy/skills into ~/.skills-sync, restores the lock's skills and links every skill into the user folders
+    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere; each is one call to npx --yes @oneezy/skills-sync with the arguments mapped (none → --quiet; add <owner/repo> → add <owner/repo> --quiet; update → refresh --quiet; status, unlink and --plan as they are); a first run on a machine clones the library into ~/.skills-sync; a sync pulls it, moves third-party skills to upstream's tip when a pull is due, rebuilds the layers and links the user folders; add and refresh write the library only
     needs: [npx, git]
     outcome:
-      done: the tool's summary line printed
-  - id: report
+      done: the tool's output on screen (nothing when a quiet run changed nothing)
+      fail: the tool exits non-zero → report its failed lines and stop
+  - id: link-new
     after: run-script
-    does: one line per change the tool printed, then its summary line; say plainly when a skill is reported gone upstream or left alone as a conflict
+    if: add or update changed the library
+    does: run the script again with no arguments, so the skills add or refresh brought into the library are linked into the user folders
+    needs: [npx, git]
+    outcome:
+      done: the new skills linked
+  - id: report
+    after: [run-script, link-new]
+    does: one line per change the tool printed, then its summary line; say plainly when a skill is reported gone upstream (the tool names the fix) or left alone as a conflict
     returns: the change lines and the summary
     outcome:
       done: report on screen
-      fail: a skill Justin asked for is still missing after the sync → say which and stop, without improvising a copy
+      fail: a skill Justin asked for is still missing after the sync → say which and stop; the fix belongs in the library
