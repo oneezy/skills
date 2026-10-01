@@ -1,18 +1,18 @@
-# ADR-0003: Built plugins live on the `plugins` branch; the catalogs on `main` point there with `git-subdir`
+# ADR-0003: Built plugins are committed in the library; the catalogs point at `./plugins/<id>`
 
-Date: 2026-09-30. Status: accepted. Decided on oneezy/skills#18 and #20 under Justin's autopilot grant.
+Date: 2026-09-30, superseded 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item A). The original text proposed a generated `plugins` branch fed by CI; that design is withdrawn.
 
 ## Context
 
-A git-hosted Claude Code marketplace resolves relative plugin paths from its own clone, so a package listed as `./plugins/x` must be committed on the branch users add. Committing built packages on `dev`/`main` would duplicate every `SKILL.md`, which makes `npx skills update` treat the library's own skills as ambiguous, and would put generated files under review on every change. Claude Code's `github` source reaches a ref but not a subdirectory; `git-subdir` reaches both. Codex's catalog has the same source type.
+A Claude Code marketplace resolves relative plugin paths from its own clone, so packages listed as `./plugins/<id>` must be committed on the branch users add. The first draft kept generated files off `dev`/`main` by publishing them to a `plugins` branch from CI. Justin's rule for this library: CI only checks; it never pushes or publishes; the library is its own marketplace.
 
 ## Decision
 
-`build --plugins` writes `plugins/<id>/`, gitignored. CI's publish job commits `plugins/` (with the lock it was built from) to the branch `plugins`, append-only, skipping unchanged trees, recording the `main` commit and every upstream commit in the message, and refusing an older `main` than the one last published. The committed catalogs on `dev`/`main` list each plugin as `{ "source": "git-subdir", "url": "oneezy/skills", "path": "plugins/<id>", "ref": "plugins" }`. The `.claude-plugin/plugin.json` inside a package carries no `version`, so Claude Code tracks the `plugins` commit; the portable and legacy manifests carry `0.<commit count>.0+<sha>`.
+`build --plugins` writes `plugins/<id>/` beside the source and the result is committed on `dev` and `main` like any other change, by Justin or by an agent on a task branch. The root catalogs `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json` list each plugin with a `./plugins/<id>` source. Both forms stay: the loose-skill form (`skills/`, linked into harnesses) and the plugin form, each behind a boolean in `skills-sync.json` (`skills`, `plugins`, default true). `.claude-plugin/plugin.json` inside a package carries no `version`, so Claude Code tracks commits; the portable and legacy manifests carry `0.<commit count>.0+<sha12>`. CI runs `check` (including `build --check`) and fails on drift.
 
 ## Consequences
 
-- `/plugin marketplace add oneezy/skills` clones `main` and pulls packages from `plugins`; a new publish is a new version for every user on `marketplace update`.
-- Builds are a pure function of the committed lock (CI refreshes frozen), so the `plugins` branch is reproducible from `main`.
-- The workflow never commits to `dev` or `main` and ignores pushes to `plugins`, so a generated commit cannot trigger another.
-- Reversal means committing `plugins/` on `main` and switching the catalogs to relative paths, at the cost above.
+- `/plugin marketplace add oneezy/skills` and `codex plugin marketplace add oneezy/skills` work from the default branch with nothing else running.
+- Every `SKILL.md` of an own skill exists twice in the tree (`skills/…` and `plugins/<id>/skills/…`); how `npx skills add oneezy/skills` lists such a skill is a verification item on tools #72, and a duplicate listing is fixed there, not ignored.
+- Reviews contain generated files; `build --check` in CI keeps them honest.
+- Reversal to a generated branch is the original text of this ADR, in git history.

@@ -1,6 +1,8 @@
 # ADR-0004: Prose references are backticked host-neutral tokens; the registry is generated; flows are authored
 
-Date: 2026-09-30. Status: accepted. Decided on oneezy/skills#19 under Justin's autopilot grant.
+Date: 2026-09-30. Status: accepted, amended 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item 8). Decided on oneezy/skills#19 under the autopilot grant.
+
+**Amendment.** The token convention and the authored `flow.yaml` files stand. `skills-registry.json` and the token-resolution check are deferred to a follow-up once the Skills app exists to consume them; until then `check` validates frontmatter, `flow.yaml` against its schema, and generated-file drift. The registry and token sections below describe the deferred design.
 
 ## Context
 

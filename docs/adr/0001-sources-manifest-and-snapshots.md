@@ -1,6 +1,8 @@
-# ADR-0001: A sources manifest and snapshots replace the `npx skills` lock as the source of truth
+# ADR-0001: A committed config and snapshots replace `npx skills` at the library root
 
-Date: 2026-09-30. Status: accepted. Decided on oneezy/skills#16 under Justin's autopilot grant.
+Date: 2026-09-30. Status: accepted, amended 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item C). Decided on oneezy/skills#16 under the autopilot grant.
+
+**Amendment.** The committed config is `skills-sync.json` (not `skills-sources.json`); there is no `skills-sources-lock.json`: `skills-lock.json` stays the one record of what is installed, byte-compatible with `npx skills` plus the resolved commit; per-machine answers move to `skills-sync.local.json`, gitignored; the default is latest (every unpinned third-party skill moves to upstream's tip on `sync` and `refresh`), a pin is the explicit exception. The text below is the original decision; read it with those substitutions.
 
 ## Context
 
