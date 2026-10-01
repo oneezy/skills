@@ -16,3 +16,7 @@ A Claude Code marketplace resolves relative plugin paths from its own clone, so 
 - Every `SKILL.md` of an own skill exists twice in the tree (`skills/…` and `plugins/<id>/skills/…`); how `npx skills add oneezy/skills` lists such a skill is a verification item on tools #72, and a duplicate listing is fixed there, not ignored.
 - Reviews contain generated files; `build --check` in CI keeps them honest.
 - Reversal to a generated branch is the original text of this ADR, in git history.
+
+## Amendment 2026-10-01: the copies carry `metadata.internal: true`
+
+The duplicate-listing probe (`docs/research/duplicate-listing-probe.md`) showed that committed plugin copies make `npx skills update` in a consumer project skip every own skill as ambiguous. Justin chose fix d1: `build --plugins` inserts `metadata.internal: true` into the frontmatter of every skill copy under `plugins/<id>/skills/` (own and third-party), `build --check` compares after that transform, and `INSTALL_INTERNAL_SKILLS=1` re-exposes the copies. The copies therefore differ from their sources by that one line; everything else in this ADR stands.

@@ -97,3 +97,12 @@ steps:
 ```
 
 Rules the schema enforces: `skill` matches the folder; step ids are unique and `after` names existing ids; a `parallel` step lists member ids and a `join` id; `loop` needs `until`; `if` is free text; `outcome` keys are `done`, `fail`, `input` (the step stops for a human). Everything else is free text kept short. Third-party dependency metadata, when someone authors it, goes in `meta/<source>/<skill>.yaml` with the same `refs` shape, never in `upstream/`.
+
+## Rules added 2026-10-01
+
+From the flow review (`docs/research/flow-review.md`) and Justin's third set of decisions on #27:
+
+- Code fences are exempt from the token rule: `@render`, `@sveltejs/kit` and the like inside a fenced block are code, not references.
+- In a multi-word backticked span (`/wayfinder Work through map #<map> …`) the first word is the token; the rest is argument text.
+- A path in another repository is written bare (Trident's `packages/ui/AGENTS.md` names a file this library does not hold); a bare path is never a token.
+- `need: mention` joins the taxonomy for a skill named as a boundary or as a thing never called (`/wayfinder` in `oneezy-brain`, `/oneezy-merge` in `oneezy-status`). `example` stays for a skill named only as an example.
