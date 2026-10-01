@@ -45,7 +45,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Check out the library
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: library
           persist-credentials: false
@@ -120,7 +120,7 @@ jobs:
       group: library-refresh
     steps:
       - name: Check out dev
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: dev
           path: library
