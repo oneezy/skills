@@ -1,10 +1,10 @@
 # Build @oneezy/skills-sync from a checkout of oneezy/tools at one commit, for the jobs in
-# .github/workflows/library.yml. The package is found by the name in its package.json (it is under
-# clis/skills-sync today and moves to packages/skills-sync with tools #75), never by folder. pnpm comes
-# from npm so a `packageManager` field in the tools root, when one appears, is honoured rather than
+# .github/workflows/library.yml. The package is found by the name in its package.json, never by folder
+# (the @oneezy/skills-sync package in oneezy/tools sits in the pnpm workspace's packages/skills-sync since
+# tools #75). pnpm comes from npm so a `packageManager` field in the tools root is honoured rather than
 # fought: pnpm switches itself to the version that field names.
 name: skills-sync CLI
-description: Check out oneezy/tools at a commit, locate @oneezy/skills-sync by name, build it, and list the commands it knows.
+description: Check out oneezy/tools at a commit, locate @oneezy/skills-sync by name and build it.
 
 inputs:
   ref:
@@ -21,9 +21,6 @@ outputs:
   cli:
     description: The built CLI entry (the package's bin), run with node
     value: ${{ steps.locate.outputs.cli }}
-  commands:
-    description: The commands the built tool lists under "Commands" in --help, space-separated with a space on each side
-    value: ${{ steps.probe.outputs.commands }}
 
 runs:
   using: composite
@@ -59,11 +56,3 @@ runs:
         pnpm install --frozen-lockfile
         pnpm run build
         node "${{ steps.locate.outputs.cli }}" --help | head -n 1
-
-    - name: Which commands this build knows
-      id: probe
-      shell: bash
-      run: |
-        commands=$(node "${{ steps.locate.outputs.cli }}" --help | awk '/^Commands/ { on = 1; next } /^[A-Z]/ { on = 0 } on && /^  [a-z]/ { print $1 }' | tr '\n' ' ')
-        echo "commands: $commands"
-        echo "commands= $commands" >> "$GITHUB_OUTPUT"
