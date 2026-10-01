@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Locate the @oneezy/skills-sync package inside a checkout of oneezy/tools by the name in its package.json,
-// never by folder: the package lives under clis/skills-sync today and moves to packages/skills-sync (tools #75).
+// never by folder: the @oneezy/skills-sync package in oneezy/tools sits in packages/skills-sync since tools #75.
 //
 //   node find-package.mjs <checkout> [name]
 //

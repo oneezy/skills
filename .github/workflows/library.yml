@@ -7,16 +7,18 @@
 #            against this checkout: `refresh --frozen` (every third-party skill at the commit skills-lock.json
 #            records), `build --check` (the committed plugins/ and catalogs match what the config, the lock and
 #            skills/ produce), `check` (frontmatter, flow.yaml, generated-file drift), then `claude plugin
-#            validate` on every committed package and on the catalog when the Claude Code CLI installs. A
-#            command the pinned build does not know yet is skipped with a warning annotation, so re-pinning
-#            SKILLS_SYNC_REF is the one edit that turns a check on.
+#            validate` on every committed package and on the catalog when the Claude Code CLI installs. The
+#            default shallow checkout is enough: none of the three needs the library's history.
 #   refresh  only when started by hand from the Actions tab (workflow_dispatch; no schedule, ever). An unfrozen
 #            `refresh` moves every unpinned third-party skill to upstream's tip; when skills-lock.json changed,
 #            a pull request to dev titled `chore(sources): refresh <ids>` carries the lock, the rebuilt packages
-#            and a diff summary. That PR's own branch is the only ref this workflow ever writes.
+#            and a diff summary. That PR's own branch is the only ref this workflow ever writes. Its checkout
+#            takes the whole history (`fetch-depth: 0`): `build` versions a changed package by HEAD's commit
+#            count and refuses to in a shallow clone.
 #
-# SKILLS_SYNC_REF is the oneezy/tools commit under review on feature/skills-sync-plugins (#70, #71). #32 re-pins
-# it once the tools PR lands; `build` and `check` arrive with tools #72.
+# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: `dev` at 23667d5, @oneezy/skills-sync 0.3.0,
+# the first with `build` and `check` (tools #72), in `packages/skills-sync` since tools #75. Re-pin it when the
+# library needs a newer tool.
 #
 # Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
 # A pull request opened with the default GITHUB_TOKEN does not start this workflow's own `check` job on itself
@@ -30,7 +32,7 @@ on:
   workflow_dispatch:
 
 env:
-  SKILLS_SYNC_REF: 2bd0e78b3f77bb10c95cc667ee012d48b4f5f712
+  SKILLS_SYNC_REF: 23667d577fb6e7a411c87530167c61287751ac0b
 
 permissions: {}
 
@@ -64,24 +66,12 @@ jobs:
       - name: build --check
         env:
           CLI: ${{ steps.tool.outputs.cli }}
-          COMMANDS: ${{ steps.tool.outputs.commands }}
-        run: |
-          if [[ "$COMMANDS" == *" build "* ]]; then
-            node "$CLI" build --check --repo library
-          else
-            echo "::warning title=build --check skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no build command yet (tools #72); re-pin SKILLS_SYNC_REF to turn this check on"
-          fi
+        run: node "$CLI" build --check --repo library
 
       - name: check
         env:
           CLI: ${{ steps.tool.outputs.cli }}
-          COMMANDS: ${{ steps.tool.outputs.commands }}
-        run: |
-          if [[ "$COMMANDS" == *" check "* ]]; then
-            node "$CLI" check --repo library
-          else
-            echo "::warning title=check skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no check command yet (tools #72); re-pin SKILLS_SYNC_REF to turn this check on"
-          fi
+        run: node "$CLI" check --repo library
 
       - name: claude plugin validate
         env:
@@ -124,6 +114,8 @@ jobs:
         with:
           ref: dev
           path: library
+          # The whole history: `build` takes a changed package's version from HEAD's commit count.
+          fetch-depth: 0
 
       - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
         id: tool
@@ -139,13 +131,7 @@ jobs:
       - name: build --plugins --catalogs (so the PR carries the rebuilt packages)
         env:
           CLI: ${{ steps.tool.outputs.cli }}
-          COMMANDS: ${{ steps.tool.outputs.commands }}
-        run: |
-          if [[ "$COMMANDS" == *" build "* ]]; then
-            node "$CLI" build --plugins --catalogs --repo library
-          else
-            echo "::warning title=build skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no build command yet (tools #72); the PR carries the lock only"
-          fi
+        run: node "$CLI" build --plugins --catalogs --repo library
 
       - name: What the lock says moved
         id: diff
