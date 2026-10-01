@@ -1,0 +1,170 @@
+# library: CI for the skills library. It only checks. It never pushes to dev or main, never publishes, and
+# nothing here is a git hook (oneezy/skills#27, decisions 5 and A; ticket #30). Before committing, run
+# `npx @oneezy/skills-sync check` yourself; this workflow is what catches a skipped one.
+#
+#   check    every pull request, and every push to dev and main. Checks out oneezy/tools at SKILLS_SYNC_REF,
+#            builds @oneezy/skills-sync (found by the name in its package.json, never by folder) and runs it
+#            against this checkout: `refresh --frozen` (every third-party skill at the commit skills-lock.json
+#            records), `build --check` (the committed plugins/ and catalogs match what the config, the lock and
+#            skills/ produce), `check` (frontmatter, flow.yaml, generated-file drift), then `claude plugin
+#            validate` on every committed package and on the catalog when the Claude Code CLI installs. A
+#            command the pinned build does not know yet is skipped with a warning annotation, so re-pinning
+#            SKILLS_SYNC_REF is the one edit that turns a check on.
+#   refresh  only when started by hand from the Actions tab (workflow_dispatch; no schedule, ever). An unfrozen
+#            `refresh` moves every unpinned third-party skill to upstream's tip; when skills-lock.json changed,
+#            a pull request to dev titled `chore(sources): refresh <ids>` carries the lock, the rebuilt packages
+#            and a diff summary. That PR's own branch is the only ref this workflow ever writes.
+#
+# SKILLS_SYNC_REF is the oneezy/tools commit under review on feature/skills-sync-plugins (#70, #71). #32 re-pins
+# it once the tools PR lands; `build` and `check` arrive with tools #72.
+#
+# Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
+# A pull request opened with the default GITHUB_TOKEN does not start this workflow's own `check` job on itself
+# (GitHub's rule for token-created PRs); with REFRESH_TOKEN it does. Without it, close and reopen the PR.
+name: library
+
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+  workflow_dispatch:
+
+env:
+  SKILLS_SYNC_REF: 2bd0e78b3f77bb10c95cc667ee012d48b4f5f712
+
+permissions: {}
+
+jobs:
+  check:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: library-check-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Check out the library
+        uses: actions/checkout@v4
+        with:
+          path: library
+          persist-credentials: false
+
+      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+        id: tool
+        uses: ./library/.github/actions/skills-sync-cli
+        with:
+          ref: ${{ env.SKILLS_SYNC_REF }}
+
+      - name: refresh --frozen
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+        run: node "$CLI" refresh --frozen --repo library
+
+      - name: build --check
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+          COMMANDS: ${{ steps.tool.outputs.commands }}
+        run: |
+          if [[ "$COMMANDS" == *" build "* ]]; then
+            node "$CLI" build --check --repo library
+          else
+            echo "::warning title=build --check skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no build command yet (tools #72); re-pin SKILLS_SYNC_REF to turn this check on"
+          fi
+
+      - name: check
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+          COMMANDS: ${{ steps.tool.outputs.commands }}
+        run: |
+          if [[ "$COMMANDS" == *" check "* ]]; then
+            node "$CLI" check --repo library
+          else
+            echo "::warning title=check skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no check command yet (tools #72); re-pin SKILLS_SYNC_REF to turn this check on"
+          fi
+
+      - name: claude plugin validate
+        env:
+          # No account on the runner: validate reads files only, and a fresh config dir keeps it that way.
+          CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
+        run: |
+          shopt -s nullglob
+          targets=(library/plugins/*/)
+          if [[ -f library/.claude-plugin/marketplace.json ]]; then
+            targets+=(library)
+          fi
+          if (( ${#targets[@]} == 0 )); then
+            echo "::notice title=claude plugin validate::no committed packages under plugins/ and no catalog yet; nothing to validate"
+            exit 0
+          fi
+          if ! npm install -g @anthropic-ai/claude-code > /dev/null 2>&1 || ! claude --version; then
+            echo "::warning title=claude plugin validate skipped::the Claude Code CLI did not install on this runner"
+            exit 0
+          fi
+          status=0
+          for t in "${targets[@]}"; do
+            t=${t%/}
+            echo "::group::claude plugin validate $t"
+            claude plugin validate "$t" || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
+  refresh:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: library-refresh
+    steps:
+      - name: Check out dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: library
+
+      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+        id: tool
+        uses: ./library/.github/actions/skills-sync-cli
+        with:
+          ref: ${{ env.SKILLS_SYNC_REF }}
+
+      - name: refresh (every unpinned skill to upstream's tip)
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+        run: node "$CLI" refresh --repo library
+
+      - name: build --plugins --catalogs (so the PR carries the rebuilt packages)
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+          COMMANDS: ${{ steps.tool.outputs.commands }}
+        run: |
+          if [[ "$COMMANDS" == *" build "* ]]; then
+            node "$CLI" build --plugins --catalogs --repo library
+          else
+            echo "::warning title=build skipped::the tool at SKILLS_SYNC_REF=$SKILLS_SYNC_REF has no build command yet (tools #72); the PR carries the lock only"
+          fi
+
+      - name: What the lock says moved
+        id: diff
+        run: node library/.github/scripts/lock-diff.mjs library
+
+      - name: Open the pull request to dev
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          path: library
+          token: ${{ secrets.REFRESH_TOKEN || secrets.GITHUB_TOKEN }}
+          base: dev
+          branch: chore/sources-refresh
+          branch-suffix: timestamp
+          delete-branch: true
+          commit-message: ${{ steps.diff.outputs.title }}
+          title: ${{ steps.diff.outputs.title }}
+          body: ${{ steps.diff.outputs.body }}
+
+      - name: Nothing moved
+        if: steps.diff.outputs.changed != 'true'
+        run: echo "::notice title=refresh::every unpinned skill is already at upstream's tip; skills-lock.json is unchanged and no pull request is opened"
