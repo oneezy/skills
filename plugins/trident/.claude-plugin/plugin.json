@@ -1,0 +1,15 @@
+{
+  "name": "trident",
+  "displayName": "Trident",
+  "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
+  "author": {
+    "name": "oneezy",
+    "url": "https://github.com/oneezy"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/oneezy/skills",
+  "keywords": [
+    "skills",
+    "trident"
+  ]
+}

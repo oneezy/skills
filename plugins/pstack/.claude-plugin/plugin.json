@@ -1,0 +1,16 @@
+{
+  "name": "pstack",
+  "displayName": "PStack",
+  "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
+  "author": {
+    "name": "cursor",
+    "url": "https://github.com/cursor"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/cursor/plugins",
+  "keywords": [
+    "skills",
+    "pstack"
+  ]
+}

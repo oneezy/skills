@@ -1,0 +1,16 @@
+{
+  "name": "matt-pocock",
+  "displayName": "Matt Pocock",
+  "description": "Matt Pocock's skills from mattpocock/skills, following main; writing-for-agents pinned.",
+  "author": {
+    "name": "mattpocock",
+    "url": "https://github.com/mattpocock"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/mattpocock/skills",
+  "keywords": [
+    "skills",
+    "matt-pocock"
+  ]
+}
