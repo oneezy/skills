@@ -1,6 +1,6 @@
 {
   "name": "pstack",
-  "version": "0.23.0+69c043411fdf",
+  "version": "0.15.0+727dd402c6af",
   "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
   "author": {
     "name": "cursor",
