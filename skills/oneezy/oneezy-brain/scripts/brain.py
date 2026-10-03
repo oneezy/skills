@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Justin's brain: a GitHub-issues memory behind the oneezy-brain skill.
 
-Everything runs through the gh CLI; nothing else is required. The brain lives in
+Everything runs through `gh api` REST calls; nothing else is required. No GraphQL
+and no `gh issue`: cloud sessions block both. The brain lives in
 one repo (default oneezy/brain) as a tree of issues: Brain > area > category >
 entry. Categories are sub-issues of their area, entries are sub-issues of their
 category. Every entry carries labels so the agenda is one label query.
@@ -76,16 +77,33 @@ def sub_issues(number: int) -> list[dict]:
         page += 1
 
 
+def list_issues(query: str) -> list[dict]:
+    """Every issue (pull requests dropped) matching a REST list query such as "labels=brain&state=open"."""
+    items: list[dict] = []
+    page = 1
+    while True:
+        batch = api(f"repos/{REPO}/issues?{query}&per_page=100&page={page}") or []
+        items.extend(i for i in batch if "pull_request" not in i)
+        if len(batch) < 100:
+            return items
+        page += 1
+
+
+def issue_number(url: str | None) -> int | None:
+    return int(url.rstrip("/").rsplit("/", 1)[-1]) if url else None
+
+
+def close_issue(number: int, comment: str) -> None:
+    api(f"repos/{REPO}/issues/{number}/comments", "POST", body=comment)
+    api(f"repos/{REPO}/issues/{number}", "PATCH", state="closed", state_reason="completed")
+
+
 def label_names(issue: dict) -> set[str]:
     return {lab["name"] if isinstance(lab, dict) else lab for lab in issue.get("labels", [])}
 
 
 def find_root() -> dict:
-    out = gh(
-        "issue", "list", "-R", REPO, "--label", "brain", "--state", "open",
-        "--search", f"{ROOT_TITLE} in:title", "--json", "number,title,labels", "--limit", "50",
-    )
-    for issue in json.loads(out):
+    for issue in list_issues("labels=brain&state=open"):
         if issue["title"] == ROOT_TITLE and "category" not in label_names(issue):
             return issue
     raise SystemExit(f"No open issue titled {ROOT_TITLE!r} with label brain in {REPO}")
@@ -158,8 +176,9 @@ def resolve_category(tree: dict, area: str, category: str) -> tuple[int, str]:
 
 
 def create_issue(title: str, body: str, labels: list[str]) -> int:
-    out = gh("issue", "create", "-R", REPO, "--title", title, "--body", body, "--label", ",".join(labels))
-    return int(out.strip().rsplit("/", 1)[-1])
+    out = gh("api", f"repos/{REPO}/issues", "--method", "POST", "--input", "-",
+             input_text=json.dumps({"title": title, "body": body, "labels": labels}))
+    return json.loads(out)["number"]
 
 
 def link(parent: int, child: int) -> None:
@@ -172,35 +191,32 @@ def unlink(parent: int, child: int) -> None:
     api(f"repos/{REPO}/issues/{parent}/sub_issue", "DELETE", sub_issue_id=child_id)
 
 
-SEARCH_QUERY = """
-query($q: String!, $after: String) {
-  search(query: $q, type: ISSUE, first: 100, after: $after) {
-    pageInfo { hasNextPage endCursor }
-    nodes { ... on Issue {
-      number title body url createdAt updatedAt
-      labels(first: 20) { nodes { name } }
-      parent { title parent { title } }
-    } }
-  }
-}
-"""
-
-
 def open_entries() -> list[dict]:
-    issues: list[dict] = []
-    after = None
-    while True:
-        args = ["api", "graphql", "-f", f"query={SEARCH_QUERY}", "-f", f"q=repo:{REPO} is:issue is:open label:brain"]
-        if after:
-            args += ["-f", f"after={after}"]
-        data = json.loads(gh(*args))["data"]["search"]
-        issues.extend(n for n in data["nodes"] if n)
-        if not data["pageInfo"]["hasNextPage"]:
-            break
-        after = data["pageInfo"]["endCursor"]
+    issues = list_issues("labels=brain&state=open")
+    by_number = {i["number"]: i for i in issues}
+
+    def parent_of(issue: dict | None) -> dict | None:
+        number = issue_number((issue or {}).get("parent_issue_url"))
+        if number is None:
+            return None
+        if number not in by_number:
+            by_number[number] = api(f"repos/{REPO}/issues/{number}")
+        return by_number[number]
+
+    slim = []
+    for issue in issues:
+        parent = parent_of(issue)
+        grand = parent_of(parent)
+        slim.append({
+            "number": issue["number"], "title": issue["title"], "body": issue.get("body"),
+            "url": issue["html_url"], "createdAt": issue["created_at"], "updatedAt": issue["updated_at"],
+            "labels": issue["labels"],
+            "parent": {"title": parent["title"], "parent": {"title": grand["title"]} if grand else None} if parent else None,
+        })
+    issues = slim
     entries = []
     for issue in issues:
-        issue["labels"] = issue["labels"]["nodes"]
+        issue["labels"] = [{"name": name} for name in sorted(label_names(issue))]
         names = label_names(issue)
         if "category" in names or issue["title"] == ROOT_TITLE:
             continue
@@ -336,12 +352,12 @@ def cmd_find(args) -> None:
 
 def cmd_done(args) -> None:
     note = args.note or "done"
-    gh("issue", "close", str(args.number), "-R", REPO, "--comment", note)
+    close_issue(args.number, note)
     print(f"Closed #{args.number} ({note})")
 
 
 def cmd_trash(args) -> None:
-    gh("issue", "close", str(args.number), "-R", REPO, "--comment", "trashed")
+    close_issue(args.number, "trashed")
     print(f"Trashed #{args.number}")
 
 
@@ -356,7 +372,9 @@ def cmd_move(args) -> None:
         link(new_parent, args.number)
     old_area = next((a for a in AREAS if a in label_names(issue)), None)
     if old_area and old_area != args.area.lower():
-        gh("issue", "edit", str(args.number), "-R", REPO, "--remove-label", old_area, "--add-label", args.area.lower())
+        api(f"repos/{REPO}/issues/{args.number}/labels/{old_area}", "DELETE")
+        gh("api", f"repos/{REPO}/issues/{args.number}/labels", "--method", "POST", "--input", "-",
+           input_text=json.dumps({"labels": [args.area.lower()]}))
     print(f"Moved #{args.number} to {tree['areas'][args.area.lower()]['title']}/{path}")
 
 

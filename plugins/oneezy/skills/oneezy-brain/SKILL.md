@@ -57,7 +57,7 @@ Run `agenda` (with `--area` when Justin names one) and print its block as is. Th
 
 ## Rules
 
-- Write only through `remember`, `update`, `done`, `trash`, `move` and `gh issue comment` on entries. Never edit the tree, the labels, or a wayfinder ticket from this skill.
+- Write only through `remember`, `update`, `done`, `trash`, `move` and a REST comment on entries (`gh api repos/oneezy/brain/issues/<n>/comments -f body=...`; `gh issue` and GraphQL fail in cloud sessions). Never edit the tree, the labels, or a wayfinder ticket from this skill.
 - The tree is dumb on purpose. Wayfinder map oneezy/brain#3, ticket #4, decides the real layout; until then, file into the nearest category and move on.
 - Read back every write. Report the number the tool returned, not a guess.
 - One entry per thing. Dates go in `Due:` lines, never in titles.
