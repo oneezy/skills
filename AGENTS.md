@@ -6,9 +6,13 @@ Own skills live in `skills/<plugin>/<skill>/` in bare Agent Skills form plus a `
 
 Third-party skills come from the sources in `skills-sync.json` (`matt-pocock`, `pstack`), snapshotted under `upstream/` by `refresh` and never edited here; latest is the default, and a `pin` in the config holds one skill at one commit. Generated and committed, never hand-edited: `skills-lock.json`, `plugins/<id>/`, `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`; regenerate them with `npx @oneezy/skills-sync build`, and run `npx @oneezy/skills-sync check` before committing (CI, `.github/workflows/library.yml`, runs the same check on every pull request and only checks; it is a command, never a git hook). Uploading a plugin to ChatGPT is Justin's hand-run checklist, `docs/agents/chatgpt-upload.md`. Generated and ignored: `upstream/`, `artifacts/`, the layers and `skills-sync.local.json`, this machine's answers.
 
+### Running a skill by name
+
+A message that starts with `/<name>` runs that skill, even in a project thread, where it reaches you as plain text rather than a command. If the skill is in your list, invoke it. If it is not, which is always the case for skills marked `disable-model-invocation` (`/wayfinder`, `/grill-me`, `/to-tickets`, `/oneezy-merge` and others), Read `~/.claude/skills/<name>/SKILL.md` and follow it, with the rest of the message as its arguments. Never strip `disable-model-invocation` to make a skill appear: refresh puts it back, and it keeps skills that push or merge from starting on their own. If a library skill is missing from the session, run `npx --yes @oneezy/skills-sync -y --agents claude-code --global --no-projects --no-wsl --quiet` first.
+
 ### Issue tracker
 
-Issues are tracked as GitHub Issues on `oneezy/skills` via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues are tracked as GitHub Issues on `oneezy/skills`, operated through `gh api` REST calls (never `gh issue` or GraphQL, which cloud sessions block). See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
