@@ -1,0 +1,48 @@
+{
+  "name": "oneezy-skills",
+  "interface": {
+    "displayName": "oneezy/skills"
+  },
+  "plugins": [
+    {
+      "name": "oneezy",
+      "source": "./plugins/oneezy",
+      "description": "Justin's own skills: brain, estimate, merge, remote, skills, status.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "trident",
+      "source": "./plugins/trident",
+      "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "matt-pocock",
+      "source": "./plugins/matt-pocock",
+      "description": "Matt Pocock's skills from mattpocock/skills, following main; writing-for-agents pinned.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "pstack",
+      "source": "./plugins/pstack",
+      "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

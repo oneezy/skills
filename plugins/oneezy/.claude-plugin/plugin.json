@@ -1,0 +1,15 @@
+{
+  "name": "oneezy",
+  "displayName": "Oneezy",
+  "description": "Justin's own skills: brain, estimate, merge, remote, skills, status.",
+  "author": {
+    "name": "oneezy",
+    "url": "https://github.com/oneezy"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/oneezy/skills",
+  "keywords": [
+    "skills",
+    "oneezy"
+  ]
+}

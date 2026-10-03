@@ -1,0 +1,26 @@
+{
+  "name": "oneezy",
+  "version": "0.25.0+d5b0644567db",
+  "description": "Justin's own skills: brain, estimate, merge, remote, skills, status.",
+  "author": {
+    "name": "oneezy",
+    "url": "https://github.com/oneezy"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/oneezy/skills",
+  "keywords": [
+    "skills",
+    "oneezy"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Oneezy",
+    "shortDescription": "Justin's own skills",
+    "longDescription": "Justin's own skills: brain, estimate, merge, remote, skills, status.",
+    "developerName": "oneezy",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive"
+    ]
+  }
+}

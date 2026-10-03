@@ -1,0 +1,58 @@
+# Build @oneezy/skills-sync from a checkout of oneezy/tools at one commit, for the jobs in
+# .github/workflows/library.yml. The package is found by the name in its package.json, never by folder
+# (the @oneezy/skills-sync package in oneezy/tools sits in the pnpm workspace's packages/skills-sync since
+# tools #75). pnpm comes from npm so a `packageManager` field in the tools root is honoured rather than
+# fought: pnpm switches itself to the version that field names.
+name: skills-sync CLI
+description: Check out oneezy/tools at a commit, locate @oneezy/skills-sync by name and build it.
+
+inputs:
+  ref:
+    description: The oneezy/tools commit to build (SKILLS_SYNC_REF)
+    required: true
+  tools-path:
+    description: Where to check oneezy/tools out, relative to the workspace
+    default: tools
+  library-path:
+    description: The library checkout whose .github/scripts hold the package lookup
+    default: library
+
+outputs:
+  cli:
+    description: The built CLI entry (the package's bin), run with node
+    value: ${{ steps.locate.outputs.cli }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check out oneezy/tools at the pinned commit
+      uses: actions/checkout@v5
+      with:
+        repository: oneezy/tools
+        ref: ${{ inputs.ref }}
+        path: ${{ inputs.tools-path }}
+        persist-credentials: false
+
+    - name: Set up Node
+      uses: actions/setup-node@v5
+      with:
+        node-version: 24
+
+    - name: Set up pnpm
+      shell: bash
+      run: |
+        npm install -g pnpm@12
+        pnpm --version
+
+    - name: Locate @oneezy/skills-sync by name
+      id: locate
+      shell: bash
+      run: node "${{ inputs.library-path }}/.github/scripts/find-package.mjs" "${{ inputs.tools-path }}"
+
+    - name: Build it
+      shell: bash
+      working-directory: ${{ steps.locate.outputs.dir }}
+      run: |
+        pnpm install --frozen-lockfile
+        pnpm run build
+        node "${{ steps.locate.outputs.cli }}" --help | head -n 1
