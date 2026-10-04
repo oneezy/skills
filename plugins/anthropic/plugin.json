@@ -1,0 +1,30 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "anthropic",
+  "version": "0.16.0+13f45d588f9e",
+  "description": "Anthropic's own skills from anthropics/skills: frontend-design.",
+  "author": {
+    "name": "anthropics",
+    "url": "https://github.com/anthropics"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/anthropics/skills",
+  "keywords": [
+    "skills",
+    "anthropic"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Anthropic",
+        "shortDescription": "Anthropic's own skills from",
+        "longDescription": "Anthropic's own skills from anthropics/skills: frontend-design.",
+        "developerName": "oneezy",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive"
+        ]
+      }
+    }
+  }
+}

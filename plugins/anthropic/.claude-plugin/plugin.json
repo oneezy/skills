@@ -1,0 +1,15 @@
+{
+  "name": "anthropic",
+  "displayName": "Anthropic",
+  "description": "Anthropic's own skills from anthropics/skills: frontend-design.",
+  "author": {
+    "name": "anthropics",
+    "url": "https://github.com/anthropics"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/anthropics/skills",
+  "keywords": [
+    "skills",
+    "anthropic"
+  ]
+}

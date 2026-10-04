@@ -43,6 +43,26 @@
         "authentication": "ON_USE"
       },
       "category": "Developer Tools"
+    },
+    {
+      "name": "anthropic",
+      "source": "./plugins/anthropic",
+      "description": "Anthropic's own skills from anthropics/skills: frontend-design.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "diagram-design",
+      "source": "./plugins/diagram-design",
+      "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
     }
   ]
 }

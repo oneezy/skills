@@ -1,0 +1,16 @@
+{
+  "name": "diagram-design",
+  "displayName": "Diagram Design",
+  "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
+  "author": {
+    "name": "cathrynlavery",
+    "url": "https://github.com/cathrynlavery"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/cathrynlavery/diagram-design",
+  "keywords": [
+    "skills",
+    "diagram-design"
+  ]
+}
