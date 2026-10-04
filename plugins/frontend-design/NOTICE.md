@@ -1,6 +1,6 @@
 # NOTICE
 
-`anthropic` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
+`frontend-design` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: anthropics/skills (ref `main`, skills under `skills`)
 - Commit: 8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4 (2026-09-28T19:20:03-07:00)

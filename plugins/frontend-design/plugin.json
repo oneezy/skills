@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "anthropic",
-  "version": "0.16.0+13f45d588f9e",
-  "description": "Anthropic's own skills from anthropics/skills: frontend-design.",
+  "name": "frontend-design",
+  "version": "0.18.0+49cee058b958",
+  "description": "Anthropic's frontend-design skill from anthropics/skills: distinctive UI that avoids the generic AI look.",
   "author": {
     "name": "anthropics",
     "url": "https://github.com/anthropics"
@@ -11,14 +11,15 @@
   "repository": "https://github.com/anthropics/skills",
   "keywords": [
     "skills",
+    "frontend-design",
     "anthropic"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Anthropic",
-        "shortDescription": "Anthropic's own skills from",
-        "longDescription": "Anthropic's own skills from anthropics/skills: frontend-design.",
+        "displayName": "Frontend Design",
+        "shortDescription": "Anthropic's frontend-design",
+        "longDescription": "Anthropic's frontend-design skill from anthropics/skills: distinctive UI that avoids the generic AI look.",
         "developerName": "oneezy",
         "category": "Developer Tools",
         "capabilities": [

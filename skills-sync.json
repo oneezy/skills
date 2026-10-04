@@ -165,15 +165,15 @@
       "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
       "source": "pstack"
     },
-    "anthropic": {
-      "displayName": "Anthropic",
-      "description": "Anthropic's own skills from anthropics/skills: frontend-design.",
-      "source": "anthropic"
-    },
     "diagram-design": {
       "displayName": "Diagram Design",
       "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
       "source": "diagram-design"
+    },
+    "frontend-design": {
+      "displayName": "Frontend Design",
+      "description": "Anthropic's frontend-design skill from anthropics/skills: distinctive UI that avoids the generic AI look.",
+      "source": "anthropic"
     }
   }
 }
