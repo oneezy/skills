@@ -17,7 +17,7 @@ Releases are immutable: the job publishes a draft only once every asset is up, a
 2. `npx @oneezy/skills-sync build`, then `check`. Commit on a branch, PR to `dev`.
 3. `/oneezy-merge release` lands it in `dev` on green checks and promotes `dev` to `main` with a merge commit. The push to `main` runs `check`, then `release`.
 
-An add needs none of this by hand: asking any agent to add a library or a skill (`/oneezy-skills` add) runs all three steps in a clone of its own and links the new release on that machine.
+Or skip the PR: push a branch named `land/<topic>` and `.github/workflows/land.yml` checks it, squashes it into `dev`, promotes `main` and starts the release, with no review (Justin's call, #48). A branch that changes `.github/` is refused. Asking any agent to add a library or a skill (`/oneezy-skills` add) does exactly this and links the new release on that machine.
 
 ## Consuming a release
 
