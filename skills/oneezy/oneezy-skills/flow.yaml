@@ -1,6 +1,6 @@
 skill: oneezy-skills
-purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill, then report what it printed.
-runtime: [npx (Node 20+), git]
+purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill, and land an add in the library as a release, then report what it printed.
+runtime: [npx (Node 20+), git, gh]
 refs:
   - token: scripts/sync.ps1
     kind: file
@@ -17,6 +17,11 @@ refs:
     id: skills-sync.json
     need: mention
     when: a skill is reported gone upstream; the fix the tool names edits the config
+  - token: /oneezy-merge
+    kind: skill
+    id: oneezy-merge
+    need: conditional
+    when: add; it lands the clone's branch in dev and promotes dev to main
 unresolved:
   - token: "@oneezy/skills-sync"
     note: the npm package name of the published sync tool; not a plugin or app
@@ -24,25 +29,40 @@ agents:
   max: 0
 steps:
   - id: map-request
-    does: match Justin's words to the script's arguments (none for sync, update, my skills are missing or nothing; add <owner/repo> for a new third-party library; update for third-party skills to upstream; status; unlink; --plan)
+    does: match Justin's words to the script's arguments (none for sync, update, my skills are missing or nothing; update for third-party skills to upstream; status; unlink; --plan), or to the add steps for add <owner/repo> or a link to one skill
     outcome:
-      done: arguments chosen
+      done: arguments chosen, or add
   - id: run-script
     after: map-request
-    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere; one call to npx --yes @oneezy/skills-sync with Justin's words mapped to its arguments (no arguments is a quiet sync, which clones the library into ~/.skills-sync on a machine's first run, pulls it, moves unpinned third-party skills to upstream's tip when a pull is due, rebuilds the layers and links every skill into the user folders; add and update are the tool's add and refresh, which write the library and nothing outside it; status, unlink and --plan pass through as they are); no WSL fan-out here, that happens only when Justin runs the tool himself without --quiet
+    if: not an add
+    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere; one call to npx --yes @oneezy/skills-sync@latest with Justin's words mapped to its arguments (no arguments is a quiet sync, which clones the library into ~/.skills-sync on a machine's first run, pulls it, moves unpinned third-party skills to upstream's tip when a pull is due, rebuilds the layers and links every skill into the user folders; update is the tool's refresh; status, unlink and --plan pass through as they are); no WSL fan-out here, that happens only when Justin runs the tool himself without --quiet
     needs: [npx, git]
     outcome:
       done: the tool's output on screen (nothing when a quiet sync changed nothing)
+  - id: add-source
+    after: map-request
+    if: an add
+    does: name the source (owner/repo, or owner/repo#ref with --root and --skills for a link to one skill; an already declared source gets its skills list edited instead); clone oneezy/skills at dev into a temporary folder on branch feat/add-<id>, never the library this machine syncs from; there run the script with add <source> --repo ., then build --repo ., then check --repo .
+    needs: [npx, git]
+    outcome:
+      done: check exits 0 and the new plugin is under plugins/
+      fail: the tool refuses the source → its error line, stop
+  - id: land-release
+    after: add-source
+    does: from the temporary folder, follow /oneezy-merge release; Justin's add is his word to commit, merge into dev, promote to main and release
+    needs: [git, gh]
+    outcome:
+      done: the /oneezy-merge report names the release tag the push to main cut
+      fail: push or merge refused for lack of access to oneezy/skills → one line naming a session that has it, stop
   - id: link-new
-    after: run-script
-    if: add or update changed the library
-    does: run the script again with no arguments, so what add or refresh brought into the library gets linked
+    after: land-release
+    does: run the script with --pull --quiet, so the release is linked on this machine now, then delete the temporary folder
     needs: [npx, git]
     outcome:
       done: the new skills linked
   - id: report
     after: [run-script, link-new]
-    does: one line per change the tool printed, then its summary line; say plainly when a skill is reported gone upstream (the tool names the fix, deselect it in skills-sync.json or keep a copy under skills/ as an own skill) and when something was left alone as a conflict
+    does: one line per change the tool printed, then its summary line, after the /oneezy-merge report for an add; say plainly when a skill is reported gone upstream (the tool names the fix, deselect it in skills-sync.json or keep a copy under skills/ as an own skill) and when something was left alone as a conflict
     returns: the change lines and the summary
     outcome:
       done: report on screen
