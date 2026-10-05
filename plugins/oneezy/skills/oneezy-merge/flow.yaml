@@ -1,6 +1,6 @@
 skill: oneezy-merge
 purpose: Land the current branch and end with one status report.
-runtime: [git, gh, Vercel commit statuses]
+runtime: [git, gh, GitHub check runs, commit statuses]
 refs:
   - token: /oneezy-status
     kind: skill
@@ -31,19 +31,20 @@ steps:
     outcome:
       done: PR number returned
       fail: PR refused → one line, stop
-  - id: wait-builds
+  - id: wait-checks
     after: open-pr
     if: not a promotion-only release
-    does: read the PR's combined status
+    does: read the head commit's check runs (every Actions job and app check) and commit statuses (Vercel and other status apps)
+    needs: [gh]
     loop:
-      until: every Vercel status is success or failure
+      until: no check run is queued or in progress and no status is pending
       every: 90s
     outcome:
-      done: all green
-      fail: any failure → skip land and promote
+      done: every check run success, skipped or neutral and every status success; none at all after the first wait counts as green with nothing checked
+      fail: any other conclusion or status → skip land and promote
   - id: land
-    after: wait-builds
-    if: mode is land or release, not a promotion-only release, and all builds green
+    after: wait-checks
+    if: mode is land or release, not a promotion-only release, and all checks green
     does: squash-merge with the expected head SHA, title = PR title plus (#<pr>); then one shell call; fetch, verify origin/<base> contains the squash, check out the base, fast-forward, delete the remote and local branch once; another session's worktree is never touched
     needs: [gh, git]
     outcome:
@@ -52,13 +53,13 @@ steps:
   - id: promote
     after: [mode, land]
     if: mode is release
-    does: fast-forward main to dev on origin; when origin refuses, open a release PR dev → main, merge it with a merge commit, verify origin/main contains it; then fast-forward the local main ref
+    does: fast-forward main to dev on origin; when origin refuses, open a release PR dev → main, merge it with a merge commit, verify origin/main contains it; then fast-forward the local main ref, verify origin/dev is an ancestor of origin/main with an identical tree, and wait for the checks on main's new head (a release job among them) as in wait-checks
     needs: [git, gh]
     outcome:
-      done: origin/main equals origin/dev
-      fail: promotion refused → one line, stop
+      done: origin/main contains origin/dev, the trees are identical, main's checks are green (a merge-commit promotion never makes the two commits equal)
+      fail: promotion refused, containment or tree differs, or main's checks red → one line, stop
   - id: report
-    after: [wait-builds, land, promote]
+    after: [wait-checks, land, promote]
     calls:
       skill: oneezy-status
     returns: the status report, the only message

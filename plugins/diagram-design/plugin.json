@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "diagram-design",
+  "version": "0.17.0+045e02e35f49",
+  "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
+  "author": {
+    "name": "cathrynlavery",
+    "url": "https://github.com/cathrynlavery"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/cathrynlavery/diagram-design",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "diagram-design"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Diagram Design",
+        "shortDescription": "Cathryn Lavery's",
+        "longDescription": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
+        "developerName": "oneezy",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive"
+        ]
+      }
+    }
+  }
+}
