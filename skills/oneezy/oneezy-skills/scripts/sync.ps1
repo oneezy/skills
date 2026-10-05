@@ -9,5 +9,5 @@ $mapped = @(switch ($first) {
   "update" { "refresh"; $Argv | Select-Object -Skip 1; "--quiet" }
   default  { $Argv }
 })
-npx --yes @oneezy/skills-sync @mapped
+npx --yes @oneezy/skills-sync@latest @mapped
 exit $LASTEXITCODE
