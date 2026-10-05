@@ -4,7 +4,7 @@ Justin-only, by hand, about two minutes per plugin (decision oneezy/skills#22). 
 
 Before starting: `dev` or `main` is checked out with a green `check`, and `npx @oneezy/skills-sync check` passes locally.
 
-1. **Build the archives.** `npx @oneezy/skills-sync build --artifacts` writes `artifacts/<id>-<version>.zip` per plugin and `artifacts/releases.json` (each archive's sha256, the source commit, the last recorded release). A plugin whose sha256 equals its recorded one has not changed: skip it.
+1. **Get the archives.** The latest GitHub release (`release-<n>`, `docs/agents/release.md`) holds every plugin's archive and, in `release.json`, its sha256 and files, and lists which plugins changed; download the changed ones. Or build them: `npx @oneezy/skills-sync build --artifacts` writes `artifacts/<id>-<version>.zip` per plugin and `artifacts/releases.json` (each archive's sha256, the source commit, the last recorded release). A plugin whose sha256 equals its recorded one has not changed: skip it.
 2. **Open ChatGPT** on the web (upload the zip in the chat) or the Codex desktop app (give the archive's local path).
 3. **First upload of a plugin:** say `@Plugin Creator create a plugin from <archive>`. Record what comes back: `plugin_id` and `release_id`.
 4. **Update an uploaded plugin:** say `@Plugin Creator update plugin <plugin_id> with <archive>, expected release <release_id>`, giving the recorded release. A release mismatch means the plugin was updated since the record: ask `@Plugin Creator` for the current release, record it, then retry. Record the new `release_id`.

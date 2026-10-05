@@ -1,23 +1,33 @@
-# library: CI for the skills library. It only checks. It never pushes to dev or main, never publishes, and
-# nothing here is a git hook (oneezy/skills#27, decisions 5 and A; ticket #30). Before committing, run
-# `npx @oneezy/skills-sync check` yourself; this workflow is what catches a skipped one.
+# library: CI for the skills library. It checks every change, and cuts a release for every `main` commit that changes
+# a package. It never pushes to dev or main, and nothing here is a git hook (oneezy/skills#27, decisions 5 and A; ticket
+# #30; releases: #48). Before committing, run `npx @oneezy/skills-sync check` yourself; this workflow is what catches a
+# skipped one.
 #
 #   check    every pull request, and every push to dev and main. Checks out oneezy/tools at SKILLS_SYNC_REF,
 #            builds @oneezy/skills-sync (found by the name in its package.json, never by folder) and runs it
 #            against this checkout: `refresh --frozen` (every third-party skill at the commit skills-lock.json
 #            records), `build --check` (the committed plugins/ and catalogs match what the config, the lock and
 #            skills/ produce), `check` (frontmatter, flow.yaml, generated-file drift), then `claude plugin
-#            validate` on every committed package and on the catalog when the Claude Code CLI installs. The
-#            default shallow checkout is enough: none of the three needs the library's history.
+#            validate` on every committed package and on the catalog when the Claude Code CLI installs, and the release
+#            script's own tests. The default shallow checkout is enough: none of them needs the library's history.
+#   release  every push to main, after check passes on that commit. `build --artifacts` makes one archive per plugin,
+#            .github/scripts/release.mjs writes release.json (source commit and tree, digests of the config and the
+#            lock, the tool commit, per plugin its version, archive sha256 and every file's sha256) against the previous
+#            release, and a GitHub release `release-<n>` is published with the archives and release.json. A commit
+#            that changes no package (a promotion merge, a replay of the job) releases nothing; a plugin whose version
+#            would go backwards fails the job and releases nothing. The release is created as a draft and published
+#            once every asset is up, so a failed upload leaves no half release; a leftover draft is deleted and redone.
+#            A published release is never edited or deleted here; the repository's release immutability setting
+#            locks its assets and tag.
 #   refresh  only when started by hand from the Actions tab (workflow_dispatch; no schedule, ever). An unfrozen
 #            `refresh` moves every unpinned third-party skill to upstream's tip; when skills-lock.json changed,
 #            a pull request to dev titled `chore(sources): refresh <ids>` carries the lock, the rebuilt packages
-#            and a diff summary. That PR's own branch is the only ref this workflow ever writes. Its checkout
-#            takes the whole history (`fetch-depth: 0`): `build` versions a changed package by HEAD's commit
-#            count and refuses to in a shallow clone.
+#            and a diff summary. That PR's own branch and the release tags are the only refs this workflow ever
+#            writes. A changed package takes the next version after the one it carries (skills-sync 0.4.0, tools
+#            #90), so no job needs the library's history.
 #
-# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: `dev` at 23667d5, @oneezy/skills-sync 0.3.0,
-# the first with `build` and `check` (tools #72), in `packages/skills-sync` since tools #75. Re-pin it when the
+# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: `dev` at 12ee4db, @oneezy/skills-sync 0.4.0
+# (tools #91: versions that only go up, one NOTICE date spelling, `add` declares the plugin). Re-pin it when the
 # library needs a newer tool.
 #
 # Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
@@ -32,7 +42,7 @@ on:
   workflow_dispatch:
 
 env:
-  SKILLS_SYNC_REF: 23667d577fb6e7a411c87530167c61287751ac0b
+  SKILLS_SYNC_REF: 12ee4dbd2fcdbc51c27eaedf9be7d7a71c015fac
 
 permissions: {}
 
@@ -73,6 +83,9 @@ jobs:
           CLI: ${{ steps.tool.outputs.cli }}
         run: node "$CLI" check --repo library
 
+      - name: release script tests
+        run: node --test library/.github/scripts/*.test.mjs
+
       - name: claude plugin validate
         env:
           # No account on the runner: validate reads files only, and a fresh config dir keeps it that way.
@@ -100,6 +113,74 @@ jobs:
           done
           exit $status
 
+  release:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: library-release
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Check out main at the pushed commit
+        uses: actions/checkout@v5
+        with:
+          path: library
+          persist-credentials: false
+
+      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+        id: tool
+        uses: ./library/.github/actions/skills-sync-cli
+        with:
+          ref: ${{ env.SKILLS_SYNC_REF }}
+
+      - name: refresh --frozen, then the archives
+        env:
+          CLI: ${{ steps.tool.outputs.cli }}
+        run: |
+          node "$CLI" refresh --frozen --repo library --quiet > /dev/null
+          node "$CLI" build --artifacts --repo library --quiet
+
+      - name: The previous release
+        id: previous
+        run: |
+          mkdir -p "$RUNNER_TEMP/previous"
+          tag=$(gh api "repos/$GH_REPO/releases/latest" --jq .tag_name 2>/dev/null || true)
+          if [[ -n "$tag" ]] && gh release download "$tag" --pattern release.json --dir "$RUNNER_TEMP/previous"; then
+            echo "file=$RUNNER_TEMP/previous/release.json" >> "$GITHUB_OUTPUT"
+            echo "previous release: $tag"
+          else
+            echo "no previous release"
+          fi
+
+      - name: The release record
+        id: plan
+        run: node library/.github/scripts/release.mjs library ${{ steps.previous.outputs.file && format('--previous "{0}"', steps.previous.outputs.file) || '' }} --tool-ref "$SKILLS_SYNC_REF" --repo "$GH_REPO"
+
+      - name: Publish the release
+        if: steps.plan.outputs.release == 'true'
+        env:
+          TAG: ${{ steps.plan.outputs.tag }}
+        working-directory: library
+        run: |
+          # a draft left by a failed run is not a release yet: delete it and start again
+          if gh release view "$TAG" --json isDraft --jq .isDraft 2>/dev/null | grep -qx true; then
+            gh release delete "$TAG" --yes
+          fi
+          gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "$TAG" --notes-file artifacts/release-notes.md artifacts/*.zip artifacts/release.json
+          gh release edit "$TAG" --draft=false --latest
+          echo "::notice title=released::$TAG at $GITHUB_SHA, $(gh release view "$TAG" --json url --jq .url)"
+
+      - name: Nothing to release
+        if: steps.plan.outputs.release != 'true'
+        env:
+          REASON: ${{ steps.plan.outputs.reason }}
+        run: echo "::notice title=no release::$REASON"
+
   refresh:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
@@ -114,7 +195,7 @@ jobs:
         with:
           ref: dev
           path: library
-          # The whole history: `build` takes a changed package's version from HEAD's commit count.
+          # The whole history, for the pull request's branch; versions no longer need it (skills-sync 0.4.0).
           fetch-depth: 0
 
       - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
