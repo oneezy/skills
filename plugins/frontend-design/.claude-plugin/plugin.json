@@ -1,0 +1,16 @@
+{
+  "name": "frontend-design",
+  "displayName": "Frontend Design",
+  "description": "Anthropic's frontend-design skill from anthropics/skills: distinctive UI that avoids the generic AI look.",
+  "author": {
+    "name": "anthropics",
+    "url": "https://github.com/anthropics"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/anthropics/skills",
+  "keywords": [
+    "skills",
+    "frontend-design",
+    "anthropic"
+  ]
+}

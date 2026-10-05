@@ -119,6 +119,29 @@
         "pstack/LICENSE",
         "pstack/README.md"
       ]
+    },
+    "anthropic": {
+      "repo": "anthropics/skills",
+      "ref": "main",
+      "root": "skills",
+      "skills": [
+        "frontend-design"
+      ],
+      "attribution": [
+        "README.md"
+      ]
+    },
+    "diagram-design": {
+      "repo": "cathrynlavery/diagram-design",
+      "ref": "main",
+      "root": "skills",
+      "skills": [
+        "diagram-design"
+      ],
+      "attribution": [
+        "LICENSE",
+        "README.md"
+      ]
     }
   },
   "plugins": {
@@ -141,6 +164,16 @@
       "displayName": "PStack",
       "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
       "source": "pstack"
+    },
+    "diagram-design": {
+      "displayName": "Diagram Design",
+      "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
+      "source": "diagram-design"
+    },
+    "frontend-design": {
+      "displayName": "Frontend Design",
+      "description": "Anthropic's frontend-design skill from anthropics/skills: distinctive UI that avoids the generic AI look.",
+      "source": "anthropic"
     }
   }
 }
