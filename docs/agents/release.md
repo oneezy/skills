@@ -17,6 +17,8 @@ Releases are immutable: the job publishes a draft only once every asset is up, a
 2. `npx @oneezy/skills-sync build`, then `check`. Commit on a branch, PR to `dev`.
 3. `/oneezy-merge release` lands it in `dev` on green checks and promotes `dev` to `main` with a merge commit. The push to `main` runs `check`, then `release`.
 
+An add needs none of this by hand: asking any agent to add a library or a skill (`/oneezy-skills` add) runs all three steps in a clone of its own and links the new release on that machine.
+
 ## Consuming a release
 
 - **Claude Code**: `claude plugin marketplace add oneezy/skills` once, `claude plugin install <plugin>@oneezy-skills` per plugin, `claude plugin marketplace update oneezy-skills` for new releases. `main` always holds the latest release's packages; `oneezy/skills#release-<n>` pins one. Open sessions need `/reload-plugins` or a restart.
