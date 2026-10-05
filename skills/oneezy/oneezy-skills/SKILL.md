@@ -26,18 +26,18 @@ No arguments is a quiet sync: the first run on a machine clones the library into
 
 ## Add
 
-Justin asking for an add is his word to land it: commit, merge into `dev`, promote to `main`, release. The add is done when the new release is out and the skills are linked on this machine. The add is written in a fresh clone of its own, never in the library this machine syncs from (`~/.skills-sync`, or the checkout it links to): a library with local changes stops pulling.
+Justin asking for an add is his word to land it with no review. Pushing a `land/<topic>` branch is the whole hand-off: the `land` workflow (`.github/workflows/land.yml`) checks it, squashes it into `dev`, promotes `main` and releases, so no session merges anything. The add is done when the new release is out and the skills are linked on this machine. The add is written in a fresh clone of its own, never in the library this machine syncs from (`~/.skills-sync`, or the checkout it links to): a library with local changes stops pulling.
 
 1. **Name the source.** `owner/repo` takes every skill under the repo's `skills/` (or its root). A link to one skill, `https://github.com/<owner>/<repo>/tree/<ref>/<path>/<name>`, is `<owner>/<repo>#<ref>` with `--root <path> --skills <name>`. Several named skills of one repo go in one `--skills a,b`. A source already declared in `skills-sync.json` is not added again: edit its `skills` list in the clone instead, then run the tool's `refresh` there.
-2. **Write it in a clone.** Clone `https://github.com/oneezy/skills` at `dev` into a temporary folder, branch `feat/add-<id>`, then in that folder run the script with `add <source> [flags] --repo .`, then `build --repo .`, then `check --repo .`. Done when `check` exits 0 and the new plugin is under `plugins/`.
-3. **Land and release.** From that folder, follow `/oneezy-merge` with `release` (read its `SKILL.md`; it is never in the skill list). Its report is this skill's report. Done when it names the release tag the push to `main` cut.
+2. **Write it in a clone.** Clone `https://github.com/oneezy/skills` at `dev` into a temporary folder, branch `land/add-<id>`, then in that folder run the script with `add <source> [flags] --repo .`, then `build --repo .`, then `check --repo .`. Done when `check` exits 0 and the new plugin is under `plugins/`.
+3. **Push and wait.** Commit (conventional subject, the harness's attribution trailers) and `git push -u origin land/add-<id>`. Then watch over REST (`gh api`): the `land` run for that branch (`repos/oneezy/skills/actions/runs?branch=land/add-<id>`), then the `library` release run it starts on `main`. Done when `repos/oneezy/skills/releases/latest` is a new `release-<n>`. A red `land` run lands nothing: report its failing step and stop.
 4. **Link it here.** Run the script with `--pull --quiet` and delete the temporary folder.
 
-A push or merge refused for lack of access to oneezy/skills ends the add: say so in one line, and that a session with oneezy/skills in scope (the AI Workflow project, or Claude Code on the PC) can run the same add.
+A push refused for lack of access to oneezy/skills ends the add: say so in one line, and that a session with oneezy/skills in scope (the AI Workflow project, or Claude Code on the PC) can run the same add.
 
 ## Report
 
-One line per change the tool printed, then its summary line; an add ends with the `/oneezy-merge` report and the skills it linked. Say plainly when a skill is reported gone upstream (the tool names the fix: deselect it in `skills-sync.json`, or keep a copy under `skills/` as an own skill) and when something was left alone as a conflict. If a skill Justin asked for is still missing after a sync, say which and stop; the fix belongs in the library.
+One line per change the tool printed, then its summary line; an add ends with the release tag and the skills it linked. Say plainly when a skill is reported gone upstream (the tool names the fix: deselect it in `skills-sync.json`, or keep a copy under `skills/` as an own skill) and when something was left alone as a conflict. If a skill Justin asked for is still missing after a sync, say which and stop; the fix belongs in the library.
 
 ## Boundaries
 

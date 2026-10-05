@@ -1,5 +1,5 @@
 # library: CI for the skills library. It checks every change, and cuts a release for every `main` commit that changes
-# a package. It never pushes to dev or main, and nothing here is a git hook (oneezy/skills#27, decisions 5 and A; ticket
+# a package. It never pushes to dev or main (land.yml does, for land/* branches), and nothing here is a git hook (oneezy/skills#27, decisions 5 and A; ticket
 # #30; releases: #48). Before committing, run `npx @oneezy/skills-sync check` yourself; this workflow is what catches a
 # skipped one.
 #
@@ -10,7 +10,8 @@
 #            skills/ produce), `check` (frontmatter, flow.yaml, generated-file drift), then `claude plugin
 #            validate` on every committed package and on the catalog when the Claude Code CLI installs, and the release
 #            script's own tests. The default shallow checkout is enough: none of them needs the library's history.
-#   release  every push to main, after check passes on that commit. `build --artifacts` makes one archive per plugin,
+#   release  every push to main, after check passes on that commit; and a workflow_dispatch with job=release on
+#            main, which is how land.yml starts it (a GITHUB_TOKEN push to main starts no workflow). `build --artifacts` makes one archive per plugin,
 #            .github/scripts/release.mjs writes release.json (source commit and tree, digests of the config and the
 #            lock, the tool commit, per plugin its version, archive sha256 and every file's sha256) against the previous
 #            release, and a GitHub release `release-<n>` is published with the archives and release.json. A commit
@@ -19,7 +20,7 @@
 #            once every asset is up, so a failed upload leaves no half release; a leftover draft is deleted and redone.
 #            A published release is never edited or deleted here; the repository's release immutability setting
 #            locks its assets and tag.
-#   refresh  only when started by hand from the Actions tab (workflow_dispatch; no schedule, ever). An unfrozen
+#   refresh  only when started by hand from the Actions tab (workflow_dispatch, job=refresh; no schedule, ever). An unfrozen
 #            `refresh` moves every unpinned third-party skill to upstream's tip; when skills-lock.json changed,
 #            a pull request to dev titled `chore(sources): refresh <ids>` carries the lock, the rebuilt packages
 #            and a diff summary. That PR's own branch and the release tags are the only refs this workflow ever
@@ -40,6 +41,12 @@ on:
   push:
     branches: [dev, main]
   workflow_dispatch:
+    inputs:
+      job:
+        description: refresh (third-party skills to upstream's tip, as a PR to dev) or release (cut a release from main; started by land.yml)
+        type: choice
+        options: [refresh, release]
+        default: refresh
 
 env:
   SKILLS_SYNC_REF: 12ee4dbd2fcdbc51c27eaedf9be7d7a71c015fac
@@ -48,7 +55,7 @@ permissions: {}
 
 jobs:
   check:
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' || inputs.job == 'release'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -115,7 +122,7 @@ jobs:
 
   release:
     needs: check
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.job == 'release')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -182,7 +189,7 @@ jobs:
         run: echo "::notice title=no release::$REASON"
 
   refresh:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.job != 'release'
     runs-on: ubuntu-latest
     permissions:
       contents: write
