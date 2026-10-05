@@ -17,11 +17,11 @@ refs:
     id: skills-sync.json
     need: mention
     when: a skill is reported gone upstream; the fix the tool names edits the config
-  - token: /oneezy-merge
-    kind: skill
-    id: oneezy-merge
+  - token: .github/workflows/land.yml
+    kind: file
+    id: .github/workflows/land.yml
     need: conditional
-    when: add; it lands the clone's branch in dev and promotes dev to main
+    when: add; it lands a pushed land/* branch in dev and main and starts the release
 unresolved:
   - token: "@oneezy/skills-sync"
     note: the npm package name of the published sync tool; not a plugin or app
@@ -42,18 +42,18 @@ steps:
   - id: add-source
     after: map-request
     if: an add
-    does: name the source (owner/repo, or owner/repo#ref with --root and --skills for a link to one skill; an already declared source gets its skills list edited instead); clone oneezy/skills at dev into a temporary folder on branch feat/add-<id>, never the library this machine syncs from; there run the script with add <source> --repo ., then build --repo ., then check --repo .
+    does: name the source (owner/repo, or owner/repo#ref with --root and --skills for a link to one skill; an already declared source gets its skills list edited instead); clone oneezy/skills at dev into a temporary folder on branch land/add-<id>, never the library this machine syncs from; there run the script with add <source> --repo ., then build --repo ., then check --repo .
     needs: [npx, git]
     outcome:
       done: check exits 0 and the new plugin is under plugins/
       fail: the tool refuses the source → its error line, stop
   - id: land-release
     after: add-source
-    does: from the temporary folder, follow /oneezy-merge release; Justin's add is his word to commit, merge into dev, promote to main and release
+    does: commit and push land/add-<id>; the land workflow checks it, squashes it into dev, promotes main and starts the release, so the session merges nothing; watch its run and the release run over gh api REST
     needs: [git, gh]
     outcome:
-      done: the /oneezy-merge report names the release tag the push to main cut
-      fail: push or merge refused for lack of access to oneezy/skills → one line naming a session that has it, stop
+      done: releases/latest is a new release-<n>
+      fail: the land run is red → its failing step, stop (nothing landed); push refused for lack of access to oneezy/skills → one line naming a session that has it, stop
   - id: link-new
     after: land-release
     does: run the script with --pull --quiet, so the release is linked on this machine now, then delete the temporary folder
@@ -62,7 +62,7 @@ steps:
       done: the new skills linked
   - id: report
     after: [run-script, link-new]
-    does: one line per change the tool printed, then its summary line, after the /oneezy-merge report for an add; say plainly when a skill is reported gone upstream (the tool names the fix, deselect it in skills-sync.json or keep a copy under skills/ as an own skill) and when something was left alone as a conflict
+    does: one line per change the tool printed, then its summary line, after the release tag for an add; say plainly when a skill is reported gone upstream (the tool names the fix, deselect it in skills-sync.json or keep a copy under skills/ as an own skill) and when something was left alone as a conflict
     returns: the change lines and the summary
     outcome:
       done: report on screen
