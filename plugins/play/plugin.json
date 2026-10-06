@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "oneezy",
-  "version": "0.31.0+38a7a362823b",
-  "description": "Justin's own skills: brain, estimate, merge, migrate, remote, skills, status.",
+  "name": "play",
+  "version": "0.2.0+38a7a362823b",
+  "description": "Justin's playground: skills he is trying out, each named play-<name>, before they move into oneezy or trident.",
   "author": {
     "name": "oneezy",
     "url": "https://github.com/oneezy"
@@ -11,14 +11,14 @@
   "repository": "https://github.com/oneezy/skills",
   "keywords": [
     "skills",
-    "oneezy"
+    "play"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Oneezy",
-        "shortDescription": "Justin's own skills",
-        "longDescription": "Justin's own skills: brain, estimate, merge, migrate, remote, skills, status.",
+        "displayName": "Play",
+        "shortDescription": "Justin's playground",
+        "longDescription": "Justin's playground: skills he is trying out, each named play-<name>, before they move into oneezy or trident.",
         "developerName": "oneezy",
         "category": "Developer Tools",
         "capabilities": [

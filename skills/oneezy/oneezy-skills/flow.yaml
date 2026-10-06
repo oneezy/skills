@@ -86,7 +86,7 @@ steps:
   - id: playground
     after: clone
     if: playground
-    does: copy (a skill folder from its repo into skills/play/play-<name>, frontmatter name set, origin-repo, origin-path and origin-commit in metadata), create (a new play-<name> skill with flow.yaml), remove (delete skills/play/play-<name>) or promote (git mv to skills/oneezy/oneezy-<name> or skills/trident/trident-<name> unless Justin names it, rename frontmatter, flow and tokens, add it to the plugin description)
+    does: copy (a skill folder from its repo into skills/play/play-<name>, frontmatter name set, origin-repo, origin-path and origin-commit in metadata, the upstream LICENSE beside it), create (a new play-<name> skill with flow.yaml), remove (delete skills/play/play-<name>) or promote (git mv to skills/oneezy/oneezy-<name> or skills/trident/trident-<name> unless Justin names it, rename frontmatter, flow and tokens, add it to the plugin description)
     needs: [git]
     outcome:
       done: the skill folder written, removed or moved
