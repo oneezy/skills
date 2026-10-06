@@ -16,6 +16,7 @@
       "root": "skills",
       "skills": [
         "ask-matt",
+        "chief-of-staff",
         "claude-handoff",
         "code-review",
         "codebase-design",
