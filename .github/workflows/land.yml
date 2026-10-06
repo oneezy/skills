@@ -20,7 +20,7 @@ on:
     branches: ['land/**']
 
 env:
-  SKILLS_SYNC_REF: 12ee4dbd2fcdbc51c27eaedf9be7d7a71c015fac
+  SKILLS_SYNC_REF: 87d4f9808fce492a1a1e0ad2c27a84b8bfde219d
 
 permissions: {}
 

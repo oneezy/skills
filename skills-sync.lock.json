@@ -1,0 +1,390 @@
+{
+  "version": 2,
+  "sources": {
+    "anthropic": {
+      "repo": "anthropics/skills",
+      "ref": "main",
+      "version": null,
+      "commit": "683bc88e56f3e09ba94f7055977f3d3aa499f202",
+      "date": "2026-10-05T06:46:42-07:00",
+      "skills": {
+        "frontend-design": {
+          "path": "skills/frontend-design",
+          "hash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+        }
+      }
+    },
+    "diagram-design": {
+      "repo": "cathrynlavery/diagram-design",
+      "ref": "main",
+      "version": "2.6.59",
+      "commit": "3996c1607503ec4bcdb60b018568359d20f71d15",
+      "date": "2026-10-06T06:44:34Z",
+      "skills": {
+        "diagram-design": {
+          "path": "skills/diagram-design",
+          "hash": "c8ef832dc60d84aa7b02129bb956eb0908261751cbb73cb1c1a517127ae5f5f6"
+        }
+      }
+    },
+    "matt-pocock": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "version": "1.3.1",
+      "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+      "date": "2026-10-05T12:17:18+01:00",
+      "skills": {
+        "ask-matt": {
+          "path": "skills/engineering/ask-matt",
+          "hash": "16554b785353aabf3880228755d317a3193a8359772f25ecb5f2a1f762d6e12d"
+        },
+        "chief-of-staff": {
+          "path": "skills/in-progress/chief-of-staff",
+          "hash": "60b34cb86626421d1bae61e9174f7600e4521a6d0103b3ca49ccfce3ce6a2fb7"
+        },
+        "claude-handoff": {
+          "path": "skills/in-progress/claude-handoff",
+          "hash": "f8c4754a25aa4e12601ce69db4388bb0d30ca526b225351180c5b0d2a4649a95"
+        },
+        "code-review": {
+          "path": "skills/engineering/code-review",
+          "hash": "caa9a086baaf9e0f7cd71f64edfa83da6821c05e826b083221f3d02e3d6a1905"
+        },
+        "codebase-design": {
+          "path": "skills/engineering/codebase-design",
+          "hash": "b2888e4f4e8c0af3bfd557575a64b905c44e6248c3101d72077816882b3a92b9"
+        },
+        "diagnosing-bugs": {
+          "path": "skills/engineering/diagnosing-bugs",
+          "hash": "b35c6a6e37c61ca3169532fbab2300dea26f2ad190e1d2dac065800b8b2bb0aa"
+        },
+        "domain-modeling": {
+          "path": "skills/engineering/domain-modeling",
+          "hash": "b3eb40152b81f0c98fd2095a023c019452dbdce56f7540cc67fece2972db8369"
+        },
+        "git-guardrails-claude-code": {
+          "path": "skills/misc/git-guardrails-claude-code",
+          "hash": "ccf581d304132095c2787b0a3bcb7b4ff125863c9f796fb16311d8f1cacef470"
+        },
+        "grill-me": {
+          "path": "skills/productivity/grill-me",
+          "hash": "9cdbb4b8f7a3aeaef82e6230c9e823500d4a8a1214c726cf342cf9829d34fc7d"
+        },
+        "grill-with-docs": {
+          "path": "skills/engineering/grill-with-docs",
+          "hash": "35e62aa423aaeab6a414bcac273f56dfb17802ef2334b41b6a3b00f28196c8cf"
+        },
+        "grilling": {
+          "path": "skills/productivity/grilling",
+          "hash": "4dd886b0196bf43729d954ae326016f2bd9f5f79d892500b407c33a753362f14"
+        },
+        "handoff": {
+          "path": "skills/productivity/handoff",
+          "hash": "20e5f4afdef502637510bc5c64d27645d3c85c88df9cb006824bbb0980166319"
+        },
+        "implement": {
+          "path": "skills/engineering/implement",
+          "hash": "2139cfedf24791adbc839aaab6019cff158af1e28bfead020ec6e0ce01b3e74d"
+        },
+        "implement-spec": {
+          "path": "skills/engineering/implement-spec",
+          "hash": "f0db7dafd236fff9dc40da566cb72bbad6802674f64617b06959b00a436c7d5b"
+        },
+        "improve-codebase-architecture": {
+          "path": "skills/engineering/improve-codebase-architecture",
+          "hash": "ac2c94885f34ff8492dc12aa4543182f661f32ea1722b8d6b6c2c7045af33ae3"
+        },
+        "loop-me": {
+          "path": "skills/in-progress/loop-me",
+          "hash": "72e01a16929dbf6583afc469a49d64b28b1be4a6034c900decd94cd5a69ba6e6"
+        },
+        "migrate-to-shoehorn": {
+          "path": "skills/misc/migrate-to-shoehorn",
+          "hash": "6397731ced114f3657aa88b55ed13d1344a56d77ca449c568e3200c21740fa99"
+        },
+        "pr": {
+          "path": "skills/engineering/pr",
+          "hash": "22a15d4d469344b38e03eb0e95772478393975836289393b1bad3c0febcdc679"
+        },
+        "prototype": {
+          "path": "skills/engineering/prototype",
+          "hash": "d3fc74689bd993e39c44bfae510d014eecffbeec2922764b065377fd1327c0f6"
+        },
+        "research": {
+          "path": "skills/engineering/research",
+          "hash": "c8c1cba327a6f824b554cd978079a3dadd7406d73174f8fb9bfef58824691970"
+        },
+        "retro": {
+          "path": "skills/engineering/retro",
+          "hash": "b8d55851a2909e26c2dbb2e8563719c87b3b700559f604e4df344f8c27e21047"
+        },
+        "scaffold-exercises": {
+          "path": "skills/misc/scaffold-exercises",
+          "hash": "354c91f6dbc9b058632f30594aacb4edc6d25012596585abb00402af8d7ec5e9"
+        },
+        "setup-matt-pocock-skills": {
+          "path": "skills/engineering/setup-matt-pocock-skills",
+          "hash": "09f2ffc146213ba0d02f385f20e8d340ef04858ba7d90e71963fbd96fdba78d8"
+        },
+        "setup-pre-commit": {
+          "path": "skills/misc/setup-pre-commit",
+          "hash": "7fc7b680161a5cb834b165e36efc2378ff63a1f80df0a9efd18448d366bea98a"
+        },
+        "setup-ts-deep-modules": {
+          "path": "skills/in-progress/setup-ts-deep-modules",
+          "hash": "61508216ede38d8cfa712879197a76f75f4896615dbf7abc3f62571f8f5923cc"
+        },
+        "tdd": {
+          "path": "skills/engineering/tdd",
+          "hash": "9ce12c4a1e209e557fcf9d02086ade3d7ffdb976186018fc1b063b4164246004"
+        },
+        "teach": {
+          "path": "skills/productivity/teach",
+          "hash": "b8a69574c7a019bed84e84313dc8bf02e1d1bf925ba43057d433217c63863206"
+        },
+        "to-questionnaire": {
+          "path": "skills/productivity/to-questionnaire",
+          "hash": "befbec7005695163741a57bc94810dc5048fb766baaa485d5160b1d7f86335c1"
+        },
+        "to-spec": {
+          "path": "skills/engineering/to-spec",
+          "hash": "3fa1a0695d4ea242fae9e569e4d22aa1788623197abb33bfadafae7315789bbf"
+        },
+        "to-tickets": {
+          "path": "skills/engineering/to-tickets",
+          "hash": "bf5e6ebcb4f1272de0c188d5b3901f265a03d1fa9935a21a7a56938e21e2e761"
+        },
+        "triage": {
+          "path": "skills/engineering/triage",
+          "hash": "a683e69163e23630f39c05a50fb9d83a3795a6a6fbd317357669e082cd43a158"
+        },
+        "wait-what": {
+          "path": "skills/productivity/wait-what",
+          "hash": "1921c02ea4046fd8f9c219140780233fe6e22e2fe4442961378da2ac31f3f403"
+        },
+        "wayfinder": {
+          "path": "skills/engineering/wayfinder",
+          "hash": "fa790eb4255b13d24d7e33ff4891ccd3d621558cc0ab87ae226777538ea16a8f"
+        },
+        "wizard": {
+          "path": "skills/engineering/wizard",
+          "hash": "dee7f1a523994a1e063c69fe09c2f5b4da97a41ad68107722664e6e472cb2423"
+        },
+        "writing-beats": {
+          "path": "skills/in-progress/writing-beats",
+          "hash": "220b163698de9c1e551b801795cc8ca38132b69018f82188875b3675226fc888"
+        },
+        "writing-for-agents": {
+          "path": "skills/productivity/writing-for-agents",
+          "hash": "95da47fc97af998e85b7d7e6d57b3ac76727c1e290cfe9ea09005aacb826959f",
+          "commit": "321658273cb1d20b76026717d027d505790106d4"
+        },
+        "writing-fragments": {
+          "path": "skills/in-progress/writing-fragments",
+          "hash": "cbd8c4ed24ebc292017831ef76bc8798719b3adcd18f7781a632a37844a1c369"
+        },
+        "writing-shape": {
+          "path": "skills/in-progress/writing-shape",
+          "hash": "0d0ac1150c4d65f8370ad194fc097ee17855247f6e5943d05f075806980e7401"
+        }
+      }
+    },
+    "pstack": {
+      "repo": "cursor/plugins",
+      "ref": "main",
+      "version": "0.15.15",
+      "commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "date": "2026-10-05T18:05:41-07:00",
+      "skills": {
+        "architect": {
+          "path": "pstack/skills/architect",
+          "hash": "6acfbc3170c658319b9f13066c3abbdddc35d7c5aa3ad1134c6c20ff5bd91573"
+        },
+        "arena": {
+          "path": "pstack/skills/arena",
+          "hash": "a1c5ddca24add2f3fd56f1f4bcc8993691a4443e8e06e16878ab9d8ca29241d9"
+        },
+        "automate-me": {
+          "path": "pstack/skills/automate-me",
+          "hash": "08b9c387f2a3da3faa0ba0a3519292a6025ef1f1b3a48273e451f84688142ede"
+        },
+        "blast-radius": {
+          "path": "pstack/skills/blast-radius",
+          "hash": "e59c40c6882599243a2988e8001e968d0e92ae982273ed3369eec58c4b956d30"
+        },
+        "bro": {
+          "path": "pstack/skills/bro",
+          "hash": "b651827a1c11465d79500780e53414fdccffd12ce3b640138dee2d04133a9a33"
+        },
+        "create-verification-skill": {
+          "path": "pstack/skills/create-verification-skill",
+          "hash": "a2e50d21892772174225073b3e4864f853883ae2bc13b33eca64c3b67fe06be5"
+        },
+        "figure-it-out": {
+          "path": "pstack/skills/figure-it-out",
+          "hash": "51198a82ceca004899526f906781783c6b76314dd50b063e68b771b0d042e5a6"
+        },
+        "how": {
+          "path": "pstack/skills/how",
+          "hash": "9cad136d4ad51c45abdb6af5283c2f8ac5606b2d1b5f0e1d62ea27ad8889c80f"
+        },
+        "interrogate": {
+          "path": "pstack/skills/interrogate",
+          "hash": "944bf92985f029efb5302f8ba16a5144b33dc693f25beaf5ee5dbdfccfc7ea50"
+        },
+        "maintain-verification-skill": {
+          "path": "pstack/skills/maintain-verification-skill",
+          "hash": "283083c9547641392a58c38edeb147e75aa99912e7fba55edaa7b1a02021ffec"
+        },
+        "make-bot-ui": {
+          "path": "pstack/skills/make-bot-ui",
+          "hash": "cefd0c691dae9ece412bab9d70f53281397f0459ba2f7604e486b4e01733c8ec"
+        },
+        "no-comments": {
+          "path": "pstack/skills/no-comments",
+          "hash": "0104443baedded93b3419249c9449bd50d0e0c9e4135a059210661923c295bf4"
+        },
+        "poteto-mode": {
+          "path": "pstack/skills/poteto-mode",
+          "hash": "9e5d716a4e582321d7dde87854fac7a0b031813bb7a2caf7d1e7a63f84a887cd"
+        },
+        "principle-attack-the-premise": {
+          "path": "pstack/skills/principle-attack-the-premise",
+          "hash": "3221a3db4e40420696747af169813e685cfe831cf473f00e205cb78ee576e449"
+        },
+        "principle-boundary-discipline": {
+          "path": "pstack/skills/principle-boundary-discipline",
+          "hash": "51f995752ff3bad613526eb7779872e01d01ac141a88c9ca050075a074ee5b70"
+        },
+        "principle-build-the-lever": {
+          "path": "pstack/skills/principle-build-the-lever",
+          "hash": "e1f77c1844113e90ed231ef51a6717fb76804723269c23436c65e30c30a42718"
+        },
+        "principle-encode-lessons-in-structure": {
+          "path": "pstack/skills/principle-encode-lessons-in-structure",
+          "hash": "13cb9b8bbf0aecd3c03a30803bbdfc012f6123f1a7d44db134bc8cce88a02d63"
+        },
+        "principle-exhaust-the-design-space": {
+          "path": "pstack/skills/principle-exhaust-the-design-space",
+          "hash": "bf5f30c97afa75da12e1f982bffc3176d2172bd124072f6d9e74d06b0cf2b965"
+        },
+        "principle-experience-first": {
+          "path": "pstack/skills/principle-experience-first",
+          "hash": "bd0254d8a460c145a148214cbc136f84dbba6edc9acc48c00a8af660efc88856"
+        },
+        "principle-fix-root-causes": {
+          "path": "pstack/skills/principle-fix-root-causes",
+          "hash": "a6fe6d14109670ba52904a95a18711816b7cf464f2730fa6d34ed5d9f362edb6"
+        },
+        "principle-foundational-thinking": {
+          "path": "pstack/skills/principle-foundational-thinking",
+          "hash": "bb6beaf165b3a3a454c20d243e5be96b0a7b2a8bc7b217be3d214a70a3bf3f14"
+        },
+        "principle-guard-the-context-window": {
+          "path": "pstack/skills/principle-guard-the-context-window",
+          "hash": "cd6568d5872c74198787156412c94da0f57bac29f8ee50cde112e2571b79aa32"
+        },
+        "principle-laziness-protocol": {
+          "path": "pstack/skills/principle-laziness-protocol",
+          "hash": "5c6a19fca468569ee4f31fe71148a1c09e36d4b4c7d3ee30d05ebc7c4e840ea8"
+        },
+        "principle-make-operations-idempotent": {
+          "path": "pstack/skills/principle-make-operations-idempotent",
+          "hash": "8293bf10530fdffa13216645432989a14b3ca4a1b6a6f0e12bf9a141ba48f802"
+        },
+        "principle-migrate-callers-then-delete-legacy-apis": {
+          "path": "pstack/skills/principle-migrate-callers-then-delete-legacy-apis",
+          "hash": "fc645cc45560cb8e0fd655759a9d11553605942c014910e33a3c2182da276e96"
+        },
+        "principle-minimize-reader-load": {
+          "path": "pstack/skills/principle-minimize-reader-load",
+          "hash": "094bf45ca1440596057715d2124c96534917087b730a4ba25c0314eff2447368"
+        },
+        "principle-model-the-domain": {
+          "path": "pstack/skills/principle-model-the-domain",
+          "hash": "ecefa086214024c8ea375193657a2464aa0f2c582e327c3f507db6ea35506a56"
+        },
+        "principle-never-block-on-the-human": {
+          "path": "pstack/skills/principle-never-block-on-the-human",
+          "hash": "fcee298eea871f7bc7edd19bfa2067d9a6eb326e239ea2507c6cfd1750906ce1"
+        },
+        "principle-outcome-oriented-execution": {
+          "path": "pstack/skills/principle-outcome-oriented-execution",
+          "hash": "c6ba3d622fe1e3d28a83d391ceaa150aaeafac9c935c154df9b1826f6423bc0b"
+        },
+        "principle-prove-it-works": {
+          "path": "pstack/skills/principle-prove-it-works",
+          "hash": "6777a72ed3c15bbd73f0d264ba4eb701e5e733de70dd519c72fc2698a32379a2"
+        },
+        "principle-redesign-from-first-principles": {
+          "path": "pstack/skills/principle-redesign-from-first-principles",
+          "hash": "149fec5da594ae56df069d2e79a01a2d1e003c49770d79fc683096d559c94213"
+        },
+        "principle-separate-before-serializing-shared-state": {
+          "path": "pstack/skills/principle-separate-before-serializing-shared-state",
+          "hash": "d372812c2617e5226df5bd60950dd9d3e8f5758a9a1e4fefc63114ad53253769"
+        },
+        "principle-sequence-verifiable-units": {
+          "path": "pstack/skills/principle-sequence-verifiable-units",
+          "hash": "f72a42fb823a8531a6a243a2e8616813cc71cc2796f3bf775d7717b4e6a916bb"
+        },
+        "principle-subtract-before-you-add": {
+          "path": "pstack/skills/principle-subtract-before-you-add",
+          "hash": "c85188049e825fe715bb76bb0aa53adfa7f2f719a0b52db2b0c72daf6dd9aac7"
+        },
+        "principle-test-behavior-not-implementation": {
+          "path": "pstack/skills/principle-test-behavior-not-implementation",
+          "hash": "41a7140188cc96559c6af4bde7ca3e9611458490846d2dc446776e962ad9f430"
+        },
+        "principle-type-system-discipline": {
+          "path": "pstack/skills/principle-type-system-discipline",
+          "hash": "dbd4efbb3e6da61329f23b43301b8aa73fde79d6fca75be3d518f51abfd30e32"
+        },
+        "pstack-tdd": {
+          "path": "pstack/skills/tdd",
+          "hash": "d3316fbb89ac596c91bb8d529180393c3b69fb6408f7d5cdccb74ead97cbf188"
+        },
+        "pstack-teach": {
+          "path": "pstack/skills/teach",
+          "hash": "371a2a40807cc1c0611d50b8170b2395f9c0297f7eb475e071018e12aa766bc5"
+        },
+        "recall": {
+          "path": "pstack/skills/recall",
+          "hash": "54d4bc5b457ca098f9272d4bd1a95b31bf49086aff50e5c6d5034a5c544d12bd"
+        },
+        "reflect": {
+          "path": "pstack/skills/reflect",
+          "hash": "cce07a13795bc08d12417626ac51ce4110e9323739dca6849e7f6d5678a960ad"
+        },
+        "setup-pstack": {
+          "path": "pstack/skills/setup-pstack",
+          "hash": "f4e8674229c4169d63593af9e22a018cda4d9cf052fb57ad204dbddb3e9a6fcb"
+        },
+        "show-me-your-work": {
+          "path": "pstack/skills/show-me-your-work",
+          "hash": "d75ac64d16061da25f412780367f71f90b857d8eb1627f96d02ec5f9cca9d38c"
+        },
+        "swarm": {
+          "path": "pstack/skills/swarm",
+          "hash": "00e1e38b5d970845aec27b3665e018ab01997f242d9835c7fae95707d0388c69"
+        },
+        "technical-writing": {
+          "path": "pstack/skills/technical-writing",
+          "hash": "d8ecca1f5bfa2d531f5ead6da72001b320d293eebd4435a2e3e11f79fa3f6949"
+        },
+        "typescript-best-practices": {
+          "path": "pstack/skills/typescript-best-practices",
+          "hash": "155a44ac5f8cc9254dfccf27e6c9c9c6dd964b25bf7cb299c8f9e9c53127efe1"
+        },
+        "unslop": {
+          "path": "pstack/skills/unslop",
+          "hash": "6018ca8c329ba87c6b4298207f58d6b773fe23e44ff52a00a9a4d160c19bedc0"
+        },
+        "why": {
+          "path": "pstack/skills/why",
+          "hash": "dcd1f2f7153173b03578053910038fd7dfd4e488aaed255d9051cc27cfccaa9d"
+        }
+      }
+    }
+  }
+}

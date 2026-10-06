@@ -18,7 +18,7 @@ function library(packages) {
   const record = { plugins: {} };
   fs.mkdirSync(path.join(root, "artifacts"));
   fs.writeFileSync(path.join(root, "skills-sync.json"), "{}\n");
-  fs.writeFileSync(path.join(root, "skills-lock.json"), '{"version":1}\n');
+  fs.writeFileSync(path.join(root, "skills-sync.lock.json"), '{"version":2}\n');
   for (const [id, p] of Object.entries(packages)) {
     for (const [rel, text] of Object.entries(p.files)) {
       fs.mkdirSync(path.dirname(path.join(root, "plugins", id, rel)), { recursive: true });
@@ -46,7 +46,7 @@ test("the first release is release-1: every plugin new, its version, archive sha
   assert.deepEqual(rec.source, { repo: "oneezy/skills", commit: COMMIT, tree: TREE });
   assert.equal(rec.tool.commit, "d".repeat(40));
   assert.equal(rec.digests["skills-sync.json"], sha256("{}\n"));
-  assert.equal(rec.digests["skills-lock.json"], sha256('{"version":1}\n'));
+  assert.equal(rec.digests["skills-sync.lock.json"], sha256('{"version":2}\n'));
   assert.deepEqual(rec.plugins.oneezy.files, { "plugin.json": sha256("{}"), "skills/a/SKILL.md": sha256("a") });
   assert.equal(rec.plugins.oneezy.version, v(25));
   assert.match(rec.plugins.oneezy.sha256, /^[0-9a-f]{64}$/);
