@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "oneezy",
-  "version": "0.31.0+38a7a362823b",
+  "version": "0.32.0+8fca99fb0e5e",
   "description": "Justin's own skills: brain, estimate, merge, migrate, remote, skills, status.",
   "author": {
     "name": "oneezy",
