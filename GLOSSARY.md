@@ -4,14 +4,18 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 
 - **Library**: this repository. One place holding every skill Justin uses: the ones he writes and the ones he pins from others.
 - **Own skill**: a skill authored here, under `skills/`. Edited here and nowhere else.
-- **Group**: a folder directly under `skills/` that holds own skills rather than a `SKILL.md`. A group's name is a plugin id (`oneezy`, `trident`). A folder under `skills/` that holds `SKILL.md` itself is a **flat** own skill, still accepted.
-- **Source**: a third-party repository the library takes skills from (`matt-pocock`, `pstack`), declared in the **config** with the `ref` it follows.
-- **Pin**: a commit in the config that holds one skill while its source follows its `ref`; the one exception to latest, moved by editing the commit. A `ref` that is itself a commit holds the whole source.
+- **Group**: a folder directly under `skills/` that holds own skills rather than a `SKILL.md`. A group's name is a plugin id (`oneezy`, `trident`, `play`). A folder under `skills/` that holds `SKILL.md` itself is a **flat** own skill, still accepted.
+- **Playground**: the `play` group, where Justin tries a skill (his own idea, or one copied from another repo) before **promoting** it into `oneezy` or `trident`. Every skill in it is named `play-<name>`.
+- **Source**: a third-party repository the library takes skills from (`matt-pocock`, `pstack`, `anthropic`, `diagram-design`), declared in the **config** with the `ref` it follows.
+- **Version**: a source's upstream release as plain semver (`1.3.1`, never `v1.3.1`): its nearest release tag, else its plugin or package manifest's version, else none. Shown as `1.3.1 (+4 commits)` when the commit is past the release.
+- **Hold**: a `version` on a source in the config; the source stays at that release until the config changes. No `version` means latest.
+- **Pin**: a commit in the config that holds one skill while its source follows its `ref`, moved by editing the commit. A `ref` that is itself a commit holds the whole source.
 - **Config**: `skills-sync.json`, the one committed, hand-edited declaration: library metadata, the two **switches** (`generate.skills`, `generate.plugins`), sources with selections, renames and pins, and plugin ids.
 - **Local file**: `skills-sync.local.json`, gitignored, the per-machine answers (harnesses, projects, WSL distros, unavailable skills, link mode).
-- **Lock**: `skills-lock.json`, the one tool-written record of what is installed: source, path, content hash and resolved commit per third-party skill, in the `npx skills` format so older tools keep restoring.
+- **Lock**: `skills-sync.lock.json`, the one tool-written record of what is installed, grouped per source: repo, ref, version, commit and date, then each skill's upstream path and content hash. Replaced `skills-lock.json` (the `npx skills` format) with skills-sync 0.5.0.
 - **Snapshot**: the selected folders of one source at its resolved commit, kept under `upstream/<source>/` at their upstream paths. Generated; never edited.
-- **Refresh**: resolving every source (latest by default; a **pin** is the exception), snapshotting, writing the lock, rebuilding the working set. **Frozen** refresh uses the lock's commits and moves nothing.
+- **Update**: resolving the named sources (every one when none is named) at latest, at their **hold**, or at the version asked for (`--to <version>|previous|latest`), snapshotting, writing the lock, rebuilding the working set, and reporting each moved source's old and new version with the upstream changelog between them. Only ever asked for. **Refresh** is its old name. **Frozen** refresh uses the lock's commits and moves nothing; every **sync** runs it.
+- **Migration note**: a changelog entry that asks something of a consumer (a renamed file convention, a removed skill). `/oneezy-migrate` applies them across Justin's repos.
 - **Working set**: `.agents/skills/`, one entry per skill the harnesses see: a link for an own skill, a copy of the snapshot for a third-party one (with its **transform** applied, such as a rename).
 - **Layer**: a harness's project folder inside the library (`.claude/skills/`, `.goose/skills/`, `.hermes/skills/`), one link per working-set entry.
 - **User folder**: a harness's home-level skills folder (`~/.claude/skills`, `~/.agents/skills`, …), one link per working-set entry, so every project on the machine sees the set.
