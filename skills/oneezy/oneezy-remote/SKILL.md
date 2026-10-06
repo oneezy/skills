@@ -11,8 +11,8 @@ Invoking this skill is Justin's word to run the command it maps to. A **thread**
 
 Run the main checkout's engine, which tracks `dev`, never a worktree's copy:
 
-- Windows: `py -3 V:/dev/tools/clis/remote-sessions-cli/remote_sessions.py`
-- Linux: `python3 ~/dev/tools/clis/remote-sessions-cli/remote_sessions.py`
+- Windows: `py -3 V:/dev/tools/packages/remote-sessions/remote_sessions.py`
+- Linux: `python3 ~/dev/tools/packages/remote-sessions/remote_sessions.py`
 
 The README beside the engine, and `--help`, own the flags and behavior. Always pass `--json`. Every mutation takes `--only <repo…>`: the repo Justin names, else the repo of the current working directory. "All" means every repo that `status --json` reports.
 
