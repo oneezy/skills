@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "diagram-design",
-  "version": "0.17.0+045e02e35f49",
+  "version": "0.18.0+1a3f69a69279",
   "description": "Cathryn Lavery's diagram-design skill from cathrynlavery/diagram-design: 42 editorial diagram types as HTML/SVG.",
   "author": {
     "name": "cathrynlavery",
