@@ -1,6 +1,6 @@
 # skills
 
-Justin's agent skills and the third-party skills he uses, in one library. Vocabulary in `CONTEXT.md`, decisions in `docs/adr/`, how skills name each other in `docs/agents/references.md`.
+Justin's agent skills and the third-party skills he uses, in one library. Vocabulary in `GLOSSARY.md`, decisions in `docs/adr/`, how skills name each other in `docs/agents/references.md`.
 
 ## Install
 
@@ -13,13 +13,13 @@ codex plugin marketplace add oneezy/skills   # Codex: the same four
 
 A plugin skill runs as `/<plugin>:<skill>` (`/oneezy:oneezy-status`); a linked skill keeps its bare name (`/oneezy-status`). The first `npx @oneezy/skills-sync` run asks which harnesses, whether to link the user folders, which projects to include and (on Windows) which WSL distros, and remembers the answers in `skills-sync.local.json`; every later run, and `--watch`, is silent and idempotent. The tool is the `@oneezy/skills-sync` package in `oneezy/tools`.
 
-`npx skills add oneezy/skills` installs the eight own skills, each once: the copies under `plugins/<id>/skills/` are marked `metadata.internal: true` and skipped, and `npx skills update` keeps them current. The same listing from a local path (`npx skills add <clone> --list`) shows those eight; with `--full-depth` on a clone that has been refreshed it shows the snapshots under `upstream/` too, 82 more (the third-party skills under their upstream names), because the ignored `upstream/` folder exists on disk there and never in a GitHub source.
+`npx skills add oneezy/skills` installs the nine own skills, each once: the copies under `plugins/<id>/skills/` are marked `metadata.internal: true` and skipped, and `npx skills update` keeps them current. The same listing from a local path (`npx skills add <clone> --list`) shows those nine; with `--full-depth` on a clone that has been refreshed it shows the snapshots under `upstream/` too, 82 more (the third-party skills under their upstream names), because the ignored `upstream/` folder exists on disk there and never in a GitHub source.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `skills/<plugin>/<skill>/` | own skills, grouped by the plugin that packages them: `oneezy/` holds Justin's six, `trident/` the two for the Trident monorepo |
+| `skills/<plugin>/<skill>/` | own skills, grouped by the plugin that packages them: `oneezy/` holds Justin's seven, `trident/` the two for the Trident monorepo |
 | `skills/<plugin>/<skill>/SKILL.md` | the skill, in bare Agent Skills form (plus optional `scripts/`, `references/`, `agents/openai.yaml`) |
 | `skills/<plugin>/<skill>/flow.yaml` | what the skill does today: steps with stable ids, references, outcomes |
 | `skills-sync.json` | the config: the library, the two switches (`generate.skills`, `generate.plugins`), third-party sources with their selections, renames, pins and attribution files, and the plugins |

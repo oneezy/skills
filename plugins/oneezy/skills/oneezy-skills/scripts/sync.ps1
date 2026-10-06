@@ -6,7 +6,6 @@ $first = if ($Argv.Count) { $Argv[0] } else { "" }
 $mapped = @(switch ($first) {
   ""       { "--quiet" }
   "add"    { $Argv; "--quiet" }
-  "update" { "refresh"; $Argv | Select-Object -Skip 1; "--quiet" }
   default  { $Argv }
 })
 npx --yes @oneezy/skills-sync@latest @mapped
