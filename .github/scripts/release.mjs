@@ -2,7 +2,7 @@
 // The release record of one `main` commit, for the release job in .github/workflows/library.yml. It reads what
 // `build --artifacts` wrote (artifacts/releases.json and the archives) and the committed packages under plugins/, and
 // writes artifacts/release.json and artifacts/release-notes.md: the source commit and tree, the digests of
-// skills-sync.json and skills-lock.json, the tool commit, and per plugin its version, archive sha256 and every file
+// skills-sync.json and skills-sync.lock.json, the tool commit, and per plugin its version, archive sha256 and every file
 // with its sha256.
 //
 //   node release.mjs <library> [--previous <release.json>] [--tool-ref <sha>] [--repo <owner/repo>]
@@ -18,7 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const SCHEMA = 1;
+export const SCHEMA = 2;
 const VERSION_RE = /^0\.(\d+)\.0\+([0-9a-f]{12,40}|nogit)$/;
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -105,7 +105,7 @@ export function plan({ library, previous, toolRef, repo, commit, tree }) {
     previous: previous?.release ?? null,
     source: { repo, commit, tree },
     tool: { repo: "oneezy/tools", package: "@oneezy/skills-sync", commit: toolRef ?? null },
-    digests: { "skills-sync.json": digest("skills-sync.json"), "skills-lock.json": digest("skills-lock.json") },
+    digests: { "skills-sync.json": digest("skills-sync.json"), "skills-sync.lock.json": digest("skills-sync.lock.json") },
     content,
     changes: { added: diff.added, changed: diff.changed, removed: diff.removed },
     plugins,

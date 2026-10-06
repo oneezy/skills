@@ -156,6 +156,11 @@
       "description": "Skills for the Trident monorepo (layerdbiz/tridentcubed): app routes and @layerd/ui components.",
       "group": "trident"
     },
+    "play": {
+      "displayName": "Play",
+      "description": "Justin's playground: skills he is trying out, each named play-<name>, before they move into oneezy or trident.",
+      "group": "play"
+    },
     "matt-pocock": {
       "displayName": "Matt Pocock",
       "description": "Matt Pocock's skills from mattpocock/skills, following main; writing-for-agents pinned.",
