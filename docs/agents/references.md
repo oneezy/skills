@@ -1,6 +1,6 @@
 # References, registry and flow
 
-How an authored document in this library names other things, and how a viewer reads what a skill does. Decided in ADR-0004. Vocabulary: `CONTEXT.md`.
+How an authored document in this library names other things, and how a viewer reads what a skill does. Decided in ADR-0004. Vocabulary: `GLOSSARY.md`.
 
 Status (2026-10-01): the tokens and `flow.yaml` are in force now; the registry and the token-resolution check are deferred until the Skills app exists, so `check` today validates frontmatter, `flow.yaml` and generated-file drift only. The registry section is the design that follow-up will build.
 

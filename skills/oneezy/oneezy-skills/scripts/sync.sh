@@ -4,6 +4,5 @@ set -euo pipefail
 case "${1:-}" in
   "") exec npx --yes @oneezy/skills-sync@latest --quiet ;;
   add) exec npx --yes @oneezy/skills-sync@latest "$@" --quiet ;;
-  update) shift; exec npx --yes @oneezy/skills-sync@latest refresh "$@" --quiet ;;
   *) exec npx --yes @oneezy/skills-sync@latest "$@" ;;
 esac
