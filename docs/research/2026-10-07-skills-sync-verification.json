@@ -1,6 +1,6 @@
 {
   "scope": "source and Linux fixtures only; desktop execution pending",
-  "toolsCommit": "8d39335271434559304b365ead86975172a09f30",
+  "toolsCommit": "93fe8b37448186928c38580bcb79302f5d4133f1",
   "skillsInputCommit": "fb2d968323dbdd3a5dcc0f294f184e80f64da42f",
   "tests": {
     "tools": {
@@ -10,7 +10,9 @@
     "capabilities": 5,
     "releaseScripts": 6,
     "lintErrors": 0,
-    "existingLintWarnings": 5
+    "existingLintWarnings": 5,
+    "statusExplicitTargets": "passed",
+    "archiveReproduction": "same sha256 after final tool commit"
   },
   "check": {
     "check": true,
@@ -66,5 +68,6 @@
     "PowerShell wrapper and fresh desktop agent/Drive access remain unverified.",
     "Automatic approval review rejected Claude plugin validation; route stopped.",
     "Standalone cloud Meeting delivery still stale; exact delivery refresh or separately approved retirement is held."
-  ]
+  ],
+  "skillsRuntimeArtifactCommit": "cf0afbb8429f27033daa41830909bf943137f334"
 }
