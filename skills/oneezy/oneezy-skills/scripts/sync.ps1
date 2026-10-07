@@ -8,5 +8,10 @@ $mapped = @(switch ($first) {
   "add"    { $Argv; "--quiet" }
   default  { $Argv }
 })
-npx --yes @oneezy/skills-sync@latest @mapped
+if ($env:SKILLS_SYNC_CLI) {
+  if (-not (Test-Path -LiteralPath $env:SKILLS_SYNC_CLI -PathType Leaf)) { throw "SKILLS_SYNC_CLI is not a built CLI file" }
+  node $env:SKILLS_SYNC_CLI @mapped
+} else {
+  npx --yes '@oneezy/skills-sync@^0.6.0' @mapped
+}
 exit $LASTEXITCODE

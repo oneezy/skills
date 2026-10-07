@@ -64,7 +64,8 @@ refs:
   kind: skill
   id: oneezy-brain
   need: conditional
-  when: Brain evidence is requested and the host permits the dependency; read-only GitHub fallback otherwise
+  when: Brain evidence is requested; resolve the current Drive skill route, or report the exact gap and continue only
+    independent sources
 - token: /oneezy-status
   kind: skill
   id: oneezy-status
@@ -75,6 +76,41 @@ refs:
   id: skills/oneezy/oneezy-brain/SKILL.md
   need: conditional
   when: resolve the current Brain workflow when that source is requested
+- token: references/evidence.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/evidence.md
+  need: conditional
+  when: the named operation/reference branch in SKILL.md
+- token: references/selection.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/selection.md
+  need: conditional
+  when: the named operation/reference branch in SKILL.md
+- token: references/capabilities/contract.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/capabilities/contract.md
+  need: required
+  when: before any dependency call
+- token: references/capabilities/chatgpt.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/capabilities/chatgpt.md
+  need: conditional
+  when: ChatGPT host
+- token: references/capabilities/claude.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/capabilities/claude.md
+  need: conditional
+  when: Claude host
+- token: references/capabilities/codex.md
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/capabilities/codex.md
+  need: conditional
+  when: Codex host
+- token: references/capabilities/catalog.json
+  kind: file
+  id: skills/oneezy/oneezy-meeting/references/capabilities/catalog.json
+  need: conditional
+  when: inventory, management or missing dependency
 unresolved:
 - token: /review
   note: May name this meeting selection or a separate sprint-review skill; resolve the user request and current catalog without

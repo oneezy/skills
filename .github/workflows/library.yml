@@ -71,6 +71,9 @@ jobs:
           path: library
           persist-credentials: false
 
+      - name: Authored Oneezy routing and capability preservation
+        run: node --test library/scripts/oneezy-capabilities.test.mjs
+
       - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
         id: tool
         uses: ./library/.github/actions/skills-sync-cli
