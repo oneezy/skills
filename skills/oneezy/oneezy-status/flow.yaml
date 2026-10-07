@@ -2,6 +2,16 @@ skill: oneezy-status
 purpose: Render the status report for the working tree, branch, PR or merged PR in the fixed shape of STATUS.md, ending with Next Up and the next session's prompt. Read-only.
 runtime: [git, gh, Vercel commit statuses and bot comments]
 refs:
+  - token: references/brain-daily.md
+    kind: file
+    id: skills/oneezy/oneezy-status/references/brain-daily.md
+    need: conditional
+    when: Brain agenda or status
+  - token: /oneezy-brain
+    kind: skill
+    id: oneezy-brain
+    need: conditional
+    when: Brain agenda or status
   - token: STATUS.md
     kind: file
     id: skills/oneezy/oneezy-status/STATUS.md
@@ -46,7 +56,15 @@ unresolved: []
 agents:
   max: 0
 steps:
+  - id: brain
+    if: request is Brain agenda or Brain status
+    does: load Brain daily reference and consume oneezy-brain's verified Drive snapshot
+    needs: [references/brain-daily.md, /oneezy-brain]
+    outcome:
+      done: compact Drive agenda and coverage; no repo merge prompt
+      fail: missing Drive route reported without historical fallback
   - id: state
+    if: request is a repository status report
     does: read one of closeout, blocked, open, branch, in that order, first match wins
     outcome:
       done: state chosen
