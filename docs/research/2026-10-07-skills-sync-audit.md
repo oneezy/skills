@@ -28,9 +28,9 @@ The live Plugin Creator `update_plugin` schema was inspected on October 7. It ac
 
 ## Verification and remaining environments
 
-The tool's focused I/O test creates a file where the first destination's parent directory should be. The write fails, its dependent copy stays blocked, and an independent instruction destination completes. Failed actions remain reported and produce failure status; the failure is not silently treated as success.
+The tool's focused I/O test creates a file where the first destination's parent directory should be. The write fails, its dependent copy stays blocked, and an independent instruction destination completes. Another test makes one project unavailable during instruction discovery and verifies that the healthy project's instructions still complete. Failed actions remain reported and produce failure status; the failure is not silently treated as success.
 
-Tool tests passed: 96 passed, two existing skips. Source capability tests passed: five. Existing release script tests passed: six. Canonical frozen refresh, build and check succeeded with no unlocked/gone sources, no check problems and no upstream plugin changes. Exact final commands, commits and build results belong in the handoff document.
+Tool tests passed: 97 passed, two existing skips. Source capability tests passed: five. Existing release script tests passed: six. Canonical frozen refresh, build and check succeeded with no unlocked/gone sources, no check problems and no upstream plugin changes. Exact final commands, commits and build results belong in the handoff document. `scripts/verify-oneezy-sync.mjs` makes the wrapper fixture verification reproducible with the reviewed `SKILLS_SYNC_CLI` override; its Windows branch has not been executed here.
 
 The canonical `sync.sh`, with the reviewed local tool override, executed plan/apply/repeat/status against a Linux fixture. Its actual changed paths were `/workspace/scratch/edcbf3aedf22/entrypoint-verification/fixture/AGENTS.md`, `AGENTS.override.md`, `CLAUDE.md` and `src/CLAUDE.local.md`. Readback was current, the repeat made zero instruction writes, and pinned history, imports, CRLF and unrelated dirty content were preserved. These are test fixtures, not desktop files.
 
