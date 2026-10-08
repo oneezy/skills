@@ -7,6 +7,36 @@ refs:
     id: oneezy-status
     need: required
     when: report
+  - token: references/modes.md
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/modes.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-merge/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
 unresolved: []
 agents:
   max: 0

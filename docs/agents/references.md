@@ -13,15 +13,7 @@ Status (2026-10-01): the tokens and `flow.yaml` are in force now; the registry a
 | a file in this repo or beside the skill | `` `<path>` `` | `docs/agents/references.md`, `scripts/sync.sh` |
 | a URL | bare | https://github.com/oneezy/skills |
 
-The token is the identity. Invoking is the host's business and is never spelled into prose:
-
-| Host | A skill named `/oneezy-status` is reached by |
-|---|---|
-| Claude Code, personal skill | the Skill tool with `oneezy-status`, or typing `/oneezy-status` |
-| Claude Code, from the `oneezy` plugin | `/oneezy:oneezy-status` |
-| Codex, personal skill | `$oneezy-status` |
-| Codex, from the `oneezy` plugin | `$oneezy:oneezy-status` |
-| ChatGPT | `@Oneezy` then the skill by name |
+The token is the identity, not an execution command. Read `docs/agents/capabilities.md` for the current host adapter and evidence. Host syntax belongs there; never infer invocation from a display token or assume a mention calls a tool. The registry design below is descriptive metadata, not runtime execution or proof of availability.
 
 Frontmatter, configuration ids, paths and URLs keep their native formats; the token rule is for prose only. A token must resolve in the registry, or the skill's `flow.yaml` declares it under `unresolved` with a note; `check` fails otherwise.
 
