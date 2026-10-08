@@ -28,7 +28,7 @@
 #            writes. A changed package takes the next version after the one it carries (skills-sync 0.4.0, tools
 #            #90), so no job needs the library's history.
 #
-# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: dev at 28aeac4, @oneezy/skills-sync 0.7.1
+# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: dev at 91012e7, @oneezy/skills-sync 0.7.2
 # as published to npm (tools #99: the per-source skills-sync.lock.json with upstream versions, a frozen sync,
 # `update --to`, `versions`, the play group). land.yml pins the same commit. Re-pin both when the library needs a
 # newer tool.
@@ -51,7 +51,7 @@ on:
         default: refresh
 
 env:
-  SKILLS_SYNC_REF: 28aeac40d0294b25724efec6d48ad1e54b7c4160
+  SKILLS_SYNC_REF: 91012e73431cb20d608135b5778b7e92bde7f4e0
 
 permissions: {}
 

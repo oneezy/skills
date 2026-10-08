@@ -35,6 +35,10 @@ function cell(v) {
   const key = typeof v === 'boolean' ? 'boolValue' : typeof v === 'number' ? 'numberValue' : 'stringValue';
   return {userEnteredValue: {[key]: v}};
 }
+function sameSource(left, right) {
+  return left.source_url === right.source_url &&
+    ['source_provider', 'source_account', 'source_scope_id', 'source_item_id'].every(key => !right[key] || left[key] === right[key]);
+}
 function editable(table) {
   if (!Array.isArray(table.editableFields) || !table.editableFields.length ||
       table.editableFields.some(key => !table.headers.includes(key))) throw new Error('Verified live Schema editableFields are required');
@@ -88,13 +92,13 @@ export function plan(state, operation) {
   if (kind === 'capture') {
     for (const key of Object.keys(data)) if (!state.tables.Inbox.headers.includes(key)) throw new Error(`Unknown Inbox field ${key}`);
     if (hit) {
-      if (hit.data.source_url !== data.source_url || hit.data.title !== data.title) throw new Error('Retry ID belongs to different material');
+      if (!sameSource(hit.data, data) || hit.data.title !== data.title) throw new Error('Retry ID belongs to different material');
       return {requests: [], result: 'already captured', id: hit.data.ID};
     }
     const normalized = data.title.trim().toLocaleLowerCase();
     for (const name of ['Inbox', 'Backlog']) {
       const duplicate = records(state.tables[name]).find(row =>
-        row.data.source_url === data.source_url && row.data.title.trim().toLocaleLowerCase() === normalized);
+        sameSource(row.data, data) && row.data.title.trim().toLocaleLowerCase() === normalized);
       if (duplicate) return {requests: [], result: 'source retry', id: duplicate.data.ID};
     }
     check(state, data);

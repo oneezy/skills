@@ -63,6 +63,16 @@ run('Exact-ID lookup distinguishes similar IDs across both tabs', () => {
   assert.equal(lookup(s, 'B-001').tab, 'Inbox'); assert.equal(lookup(s, 'B-0010').tab, 'Backlog');
   assert.equal(lookup(s, 'B-01'), null); return 'String equality, no title or prefix substitution.';
 });
+run('Same subject and empty URL across provider accounts remain distinct captures', () => {
+  const first = {...idea, source_provider: 'gmail', source_account: 'one@example.invalid', source_item_id: 'item-one'};
+  const second = {...first, ID: 'B-002', source_account: 'two@example.invalid', source_item_id: 'item-two'};
+  const s = state([first]);
+  assert.throws(() => plan(s, {kind: 'capture', data: {...second, ID: first.ID}}), /different material/);
+  const capture = plan(s, {kind: 'capture', data: second});
+  assert.equal(capture.result, 'captured'); apply(s, capture.requests);
+  assert.equal(records(s.tables.Inbox).length, 2);
+  assert.equal(plan(s, {kind: 'capture', data: {...second, ID: 'B-003'}}).id, second.ID);
+});
 run('Exact-ID lookup still works when live headers put ID after a blank column', () => {
   const s = state(); s.tables.Inbox.headers = ['collection', 'ID', 'title'];
   s.tables.Inbox.rows[0].cells = ['', 'B-HEADER', 'Header order test'].map(native);
