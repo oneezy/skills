@@ -10,6 +10,13 @@
       ],
       "requiredFiles": [
         "references/location.md",
+        "references/operations.md",
+        "references/routing.md",
+        "references/classification.md",
+        "references/ingestion.md",
+        "references/provider-capture.md",
+        "scripts/drive-plan.mjs",
+        "scripts/provider-capture.mjs",
         "references/capabilities/contract.md",
         "references/capabilities/chatgpt.md",
         "references/capabilities/claude.md",

@@ -145,11 +145,13 @@ steps:
     after: map-request
     if: change, add or playground
     does: inspect existing rollout and dirty work; use isolated dev/review checkout for source development, or land/<topic>
-      only for a normal change in authorized publication scope
+        only for a normal change in authorized publication scope; then run refresh --frozen --repo . before any build
+        so uncommitted third-party snapshots exist without moving pins
     needs:
     - git
+      - npx
     outcome:
-      done: an isolated checkout on the appropriate review or authorized land branch
+        done: an isolated checkout on the appropriate review or authorized land branch with its frozen snapshots
   - id: change-sources
     after: clone
     if: change
