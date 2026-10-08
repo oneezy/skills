@@ -48,7 +48,9 @@ test('generator detects stale packaged routing and preserves unrelated and upstr
 
 test('moved rules, templates and invocation boundaries retain reviewed behavior', () => {
   const hashes=JSON.parse(read('docs/research/2026-10-07-oneezy-rule-preservation.json'));
-  for (const [name, expected] of Object.entries(hashes)) assert.equal(createHash('sha256').update(read(`skills/oneezy/${name}`)).digest('hex'),expected,name);
+  const correction=JSON.parse(read('docs/research/2026-10-08-brain-capture-correction.json')).hashes;
+  assert.deepEqual(Object.keys(correction), ['oneezy-brain/references/routing.md']);
+  for (const [name, expected] of Object.entries(hashes)) assert.equal(createHash('sha256').update(read(`skills/oneezy/${name}`)).digest('hex'),correction[name] ?? expected,name);
   for(const name of ['estimate','merge','remote']) {
     assert.match(read(`skills/oneezy/oneezy-${name}/SKILL.md`),/disable-model-invocation: true/);
     assert.match(read(`skills/oneezy/oneezy-${name}/agents/openai.yaml`),/allow_implicit_invocation: false/);

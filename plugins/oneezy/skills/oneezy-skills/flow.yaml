@@ -2,6 +2,11 @@ skill: oneezy-skills
 purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill; land updates, downgrades, adds and playground changes in the library as a release, link them, and run oneezy-migrate.
 runtime: [npx (Node 20+), git, gh]
 refs:
+  - token: /oneezy-status
+    kind: skill
+    id: oneezy-status
+    need: required
+    when: after every canonical sync attempt, including partial failure
   - token: scripts/sync.ps1
     kind: file
     id: skills/oneezy/oneezy-skills/scripts/sync.ps1
@@ -218,7 +223,9 @@ steps:
     if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: report
     after: [run-script, migrate]
-    does: one line per change the tool printed, then its summary line; for a change each moved source's old and new version and the changelog's headings and breaking lines; the release tag; then the oneezy-migrate report; say plainly when a skill is reported gone upstream and when something was left alone as a conflict
+    calls:
+      skill: oneezy-status
+    does: invoke Oneezy Status Skills Sync mode with canonical actions, exit code and before/after readbacks; distinguish verified success, failure and every skipped or unreachable destination, separate source/generated/installed versions and SHAs
     returns: the change lines, versions, release tag and migrate report
     outcome:
       done: report on screen

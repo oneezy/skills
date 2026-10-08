@@ -139,6 +139,11 @@
       "invocation": "follow installed host policy",
       "dependencies": [
         {
+          "id": "oneezy-status",
+          "need": "required",
+          "when": "every canonical sync attempt and verified result"
+        },
+        {
           "id": "shell",
           "need": "conditional",
           "when": "canonical local sync/build"
