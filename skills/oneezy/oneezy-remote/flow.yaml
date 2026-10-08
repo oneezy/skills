@@ -1,7 +1,37 @@
 skill: oneezy-remote
 purpose: Start, resume, stop or list remote Claude threads through the remote-sessions engine in oneezy/tools.
 runtime: [python3, remote_sessions.py (oneezy/tools main checkout), Remote Control]
-refs: []
+refs:
+  - token: references/launcher.md
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/launcher.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-remote/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
 unresolved: []
 agents:
   max: 0

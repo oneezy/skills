@@ -31,3 +31,8 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **Registry**: `skills-registry.json`, the generated index of every skill's identity, host invocation forms, plugin, source and relationships. Deferred until the Skills app exists.
 - **Flow**: `flow.yaml` beside an own skill's `SKILL.md`: its steps, references and outcomes in machine-readable form, describing what the skill does today.
 - **Harness**: a coding agent product that reads skills (Claude Code, Codex, Goose, Hermes). **Host** is the same thing seen from a reference token.
+
+- **Capability contract**: the portable obligations for resolving, authorizing and verifying a dependency.
+- **Host adapter**: the supported discovery and action route for one product surface.
+- **Capability catalog**: the maintained inventory of dependency identities and dated evidence, including unknowns.
+- **Delivery**: one installed or saved instance of a source artifact; standalone and bundled skills are separate deliveries.

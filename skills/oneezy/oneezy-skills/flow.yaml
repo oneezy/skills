@@ -21,7 +21,7 @@ refs:
     kind: file
     id: .github/workflows/land.yml
     need: conditional
-    when: every change to the library; it lands a pushed land/* branch in dev and main and starts the release
+    when: normal explicitly requested upstream/add/playground change; held for review/no-publication scope
   - token: docs/agents/references.md
     kind: file
     id: docs/agents/references.md
@@ -30,13 +30,88 @@ refs:
   - token: /oneezy-migrate
     kind: skill
     id: oneezy-migrate
-    need: required
-    when: after every landed change, with the update report
+    need: conditional
+    when: after a normal landed change with update report; not a held development artifact
   - token: /unslop
     kind: skill
     id: unslop
     need: example
     when: the source's own copy stays when a skill is copied to the playground
+  - token: references/entrypoints.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/entrypoints.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/management.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/management.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/report.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/report.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/requests.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/requests.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/changes.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/changes.md
+    need: conditional
+    when: the named operation/reference branch in SKILL.md
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
+  - token: /skill-creator
+    kind: skill
+    id: skill-creator
+    need: conditional
+    when: skill authoring; actual runtime skill
+  - token: /writing-for-agents
+    kind: skill
+    id: writing-for-agents
+    need: conditional
+    when: authored agent instructions; Matt method governs
+  - token: /plugin-management:plugin-management
+    kind: skill
+    id: plugin-management:plugin-management
+    need: conditional
+    when: ChatGPT discovery/connection/permission inspection
+  - token: /plugin-creator:create-plugin
+    kind: skill
+    id: plugin-creator:create-plugin
+    need: conditional
+    when: authorized plugin creation
+  - token: /plugin-creator:update-plugin
+    kind: skill
+    id: plugin-creator:update-plugin
+    need: conditional
+    when: eligible plugin update/source inspection
 unresolved:
   - token: "@oneezy/skills-sync"
     note: the npm package name of the published sync tool; not a plugin or app
@@ -50,23 +125,33 @@ agents:
   max: 0
 steps:
   - id: map-request
-    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; versions <source>; status; unlink; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous or latest), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote)
+    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; versions
+      <source>; status; unlink; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
+      or latest), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
+      development/entrypoints or explicit creator/management action by current host
     outcome:
       done: arguments chosen, or change, add or playground
   - id: run-script
     after: map-request
     if: a plain run
-    does: run scripts/sync.ps1 on Windows or scripts/sync.sh elsewhere; one call to npx --yes @oneezy/skills-sync@latest (no arguments is a quiet sync that pulls the library and installs the committed lock exactly, moving nothing upstream, then links every skill into the user folders)
-    needs: [npx, git]
+    does: run the canonical platform script, using the supported version floor or reviewed SKILLS_SYNC_CLI; sync exact
+      lock, links and declared managed instruction blocks, then verify readback
+    needs:
+    - npx
+    - git
     outcome:
       done: the tool's output on screen (nothing when a quiet sync changed nothing)
   - id: clone
     after: map-request
     if: change, add or playground
-    does: clone oneezy/skills at dev into a temporary folder on branch land/<topic>, never the library this machine syncs from, then run the script with refresh --frozen --repo . so the uncommitted third-party snapshots exist for build and check
-    needs: [git, npx]
+    does: inspect existing rollout and dirty work; use isolated dev/review checkout for source development, or land/<topic>
+        only for a normal change in authorized publication scope; then run refresh --frozen --repo . before any build
+        so uncommitted third-party snapshots exist without moving pins
+    needs:
+    - git
+      - npx
     outcome:
-      done: a clean clone on land/<topic> with its snapshots
+        done: an isolated checkout on the appropriate review or authorized land branch with its frozen snapshots
   - id: change-sources
     after: clone
     if: change
@@ -91,31 +176,46 @@ steps:
     outcome:
       done: the skill folder written, removed or moved
   - id: build-check
-    after: [change-sources, add-source, playground]
-    does: run the script with build --repo . then check --repo .
-    needs: [npx]
+    after:
+    - change-sources
+    - add-source
+    - playground
+    does: for authored Oneezy/capability changes, generate packaged capability references and run source tests; run canonical
+      build then check; retain exact source/tool artifact for a held desktop handoff
+    needs:
+    - npx
     outcome:
       done: check exits 0
       fail: nothing changed in the clone → report there is nothing to land, stop
   - id: land-release
     after: build-check
-    does: commit and push land/<topic>; the land workflow checks it, squashes it into dev, promotes main and starts the release, so the session merges nothing; watch its run and the release run over gh api REST
-    needs: [git, gh]
+    does: commit and push land/<topic>; the land workflow checks it, squashes it into dev, promotes main and starts the
+      release, so the session merges nothing; watch its run and the release run over gh api REST
+    needs:
+    - git
+    - gh
     outcome:
       done: releases/latest is a new release-<n>
-      fail: the land run is red → its failing step, stop (nothing landed); push refused for lack of access to oneezy/skills → one line naming a session that has it, stop
+      fail: the land run is red → its failing step, stop (nothing landed); push refused for lack of access to oneezy/skills
+        → one line naming a session that has it, stop
+    if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: link-new
     after: land-release
     does: run the script with --pull --quiet, so the release is linked on this machine now, then delete the temporary folder
-    needs: [npx, git]
+    needs:
+    - npx
+    - git
     outcome:
       done: the new state linked
+    if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: migrate
     after: link-new
-    calls: { skill: oneezy-migrate }
+    calls:
+      skill: oneezy-migrate
     does: run oneezy-migrate with the update report (or none after an add or a playground change)
     outcome:
       done: its report, usually nothing to migrate
+    if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: report
     after: [run-script, migrate]
     does: one line per change the tool printed, then its summary line; for a change each moved source's old and new version and the changelog's headings and breaking lines; the release tag; then the oneezy-migrate report; say plainly when a skill is reported gone upstream and when something was left alone as a conflict
@@ -123,3 +223,21 @@ steps:
     outcome:
       done: report on screen
       fail: a skill Justin asked for is still missing after the sync → say which and stop; the fix belongs in the library
+  - id: management
+    after: map-request
+    if: explicit authoring/packaging/install/connect/update/audit request
+    does: read management reference and host adapter; load actual creator/management skill, inspect current help/API and
+      exact destination; perform supported native API or local CLI action only within authorized scope; an absent technical
+      route may use next documented route once, never around approval or access denial
+    outcome:
+      done: action performed and identity/version/source/readback verified, or source-only artifact prepared with delivery
+        held
+      fail: report blocked destination while independent destinations continue
+  - id: entrypoint-development
+    after: map-request
+    if: source development, entrypoint audit or desktop handoff
+    does: follow entrypoints reference with reviewed source/tool; plan, apply only in accessible authorized environment,
+      status/readback and idempotence; no hand edits and no default main substitution
+    outcome:
+      done: verified code/artifact and exact commands/prerequisites; actual execution distinguished from handoff
+      fail: exact inaccessible environment or conflict recorded
