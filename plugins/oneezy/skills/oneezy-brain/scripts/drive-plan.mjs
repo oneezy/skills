@@ -26,7 +26,7 @@ export function lookup(state, id) {
 function emptyRow(table) {
   const idColumn = table.headers.indexOf('ID');
   const row = table.rows.find(row => String(value(row.cells[idColumn])) === '' &&
-    row.cells.every(c => value(c) === '' || value(c) === false));
+    editable(table).every(key => { const c = row.cells[table.headers.indexOf(key)]; return c?.userEnteredValue?.formulaValue === undefined && (value(c) === '' || value(c) === false); }));
   if (!row) throw new Error('No bounded empty row; extend the grid and reread');
   return row.rowIndex;
 }
@@ -35,9 +35,31 @@ function cell(v) {
   const key = typeof v === 'boolean' ? 'boolValue' : typeof v === 'number' ? 'numberValue' : 'stringValue';
   return {userEnteredValue: {[key]: v}};
 }
-function write(table, rowIndex, data) {
-  return {updateCells: {start: {sheetId: table.sheetId, rowIndex, columnIndex: 0},
-    rows: [{values: table.headers.map(key => cell(data[key]))}], fields: 'userEnteredValue'}};
+function editable(table) {
+  if (!Array.isArray(table.editableFields) || !table.editableFields.length ||
+      table.editableFields.some(key => !table.headers.includes(key))) throw new Error('Verified live Schema editableFields are required');
+  return table.editableFields;
+}
+function protectedCell(table, row, column) {
+  return row.cells[column]?.userEnteredValue?.formulaValue !== undefined ||
+    table.headerCells?.[column]?.userEnteredValue?.formulaValue !== undefined ||
+    table.formulaOwnedFields?.includes(table.headers[column]) ||
+    table.formulaRanges?.some(range => row.rowIndex >= (range.startRowIndex ?? 0) &&
+      row.rowIndex < (range.endRowIndex ?? Infinity) && column >= (range.startColumnIndex ?? 0) && column < (range.endColumnIndex ?? Infinity));
+}
+function write(table, rowIndex, data, clear = false) {
+  const row = table.rows.find(item => item.rowIndex === rowIndex);
+  if (!row) throw new Error('Target row is outside the live snapshot');
+  const fields = editable(table);
+  if (clear && (!fields.includes('ID') || protectedCell(table, row, table.headers.indexOf('ID')))) throw new Error('ID is read-only; cannot clear this record');
+  const keys = clear ? fields.filter(key => !protectedCell(table, row, table.headers.indexOf(key))) : Object.keys(data);
+  return keys.map(key => {
+    const columnIndex = table.headers.indexOf(key);
+    if (!fields.includes(key)) throw new Error(`Schema makes ${key} read-only`);
+    if (protectedCell(table, row, columnIndex)) throw new Error(`Formula-owned cell ${key} is read-only`);
+    return {updateCells: {start: {sheetId: table.sheetId, rowIndex, columnIndex},
+      rows: [{values: [cell(clear ? '' : data[key])]}], fields: 'userEnteredValue'}};
+  });
 }
 function check(state, data) {
   if (!String(data.ID ?? '') || !data.title) throw new Error('ID and title are required');
@@ -77,7 +99,7 @@ export function plan(state, operation) {
     }
     check(state, data);
     const table = state.tables.Inbox;
-    return {requests: [write(table, emptyRow(table), data)], result: 'captured', id: data.ID};
+    return {requests: write(table, emptyRow(table), data), result: 'captured', id: data.ID};
   }
   if (!hit) throw new Error(`Exact ID ${id} is absent`);
   if (operation.expect_modified !== undefined && hit.data.date_modified !== operation.expect_modified) throw new Error('Record changed; reread');
@@ -87,23 +109,26 @@ export function plan(state, operation) {
     const next = {...hit.data, ...data, ID: String(id), views: 'Backlog'};
     for (const key of Object.keys(data)) if (!state.tables.Backlog.headers.includes(key)) throw new Error(`Unknown Backlog field ${key}`);
     check(state, next);
-    return {requests: [write(state.tables.Backlog, emptyRow(state.tables.Backlog), next),
-      write(state.tables.Inbox, hit.rowIndex, {})], result: 'promoted', id,
+    const target = state.tables.Backlog;
+    for (const key of Object.keys(data)) if (!editable(target).includes(key)) throw new Error(`Schema makes ${key} read-only`);
+    if (!editable(target).includes('ID')) throw new Error('ID is read-only; cannot promote');
+    const targetIndex = emptyRow(target);
+    const writable = Object.fromEntries(editable(target).map(key => [key, next[key] ?? '']));
+    const writes = write(target, targetIndex, writable);
+    const projected = structuredClone(target.rows.find(row => row.rowIndex === targetIndex).cells);
+    for (const {updateCells: request} of writes) projected[request.start.columnIndex] = request.rows[0].values[0];
+    const entered = c => c?.userEnteredValue?.formulaValue ?? c?.userEnteredValue?.stringValue ?? c?.userEnteredValue?.numberValue ?? c?.userEnteredValue?.boolValue ?? '';
+    return {requests: [...writes, ...write(state.tables.Inbox, hit.rowIndex, {}, true)], result: 'promoted', id,
       recovery: {tab: 'Inbox', rowIndex: hit.rowIndex, data: hit.data,
-        promoted: Object.fromEntries(state.tables.Backlog.headers.map(key => [key, next[key] ?? '']))}};
+        promoted: Object.fromEntries(target.headers.map((key, index) => [key, entered(projected[index])]))}};
   }
   if (kind === 'update') {
     if (data.ID !== undefined && String(data.ID) !== String(id)) throw new Error('ID is immutable');
     const next = {...hit.data, ...data};
     check(state, next);
     const table = state.tables[hit.tab];
-    const requests = [];
-    for (const [key, v] of Object.entries(data)) {
-      const columnIndex = table.headers.indexOf(key);
-      if (columnIndex < 0) throw new Error(`Unknown live field ${key}`);
-      requests.push({updateCells: {start: {sheetId: table.sheetId, rowIndex: hit.rowIndex, columnIndex},
-        rows: [{values: [cell(v)]}], fields: 'userEnteredValue'}});
-    }
+    for (const key of Object.keys(data)) if (!table.headers.includes(key)) throw new Error(`Unknown live field ${key}`);
+    const requests = write(table, hit.rowIndex, data);
     return {requests, result: 'updated', id};
   }
   if (kind === 'recover') {
@@ -116,13 +141,28 @@ export function plan(state, operation) {
     if (!receipt.promoted || state.tables.Backlog.headers.some((key, index) => entered(currentRow.cells[index]) !== receipt.promoted[key])) throw new Error('Backlog changed after promotion; reconcile without overwrite');
     const target = state.tables.Inbox.rows.find(row => row.rowIndex === receipt.rowIndex);
     const idColumn = state.tables.Inbox.headers.indexOf('ID');
-    if (!target || value(target.cells[idColumn]) !== '' || target.cells.some(c => value(c) !== '' && value(c) !== false)) throw new Error('Recovery slot is occupied');
-    return {requests: [write(state.tables.Inbox, receipt.rowIndex, receipt.data),
-      write(state.tables.Backlog, hit.rowIndex, {})], result: 'recovered', id};
+    if (!target || value(target.cells[idColumn]) !== '' || editable(state.tables.Inbox).some(key => { const c = target.cells[state.tables.Inbox.headers.indexOf(key)]; return c?.userEnteredValue?.formulaValue !== undefined || value(c) !== '' && value(c) !== false; })) throw new Error('Recovery slot is occupied');
+    const restore = Object.fromEntries(editable(state.tables.Inbox).map(key => [key, receipt.data[key] ?? '']));
+    return {requests: [...write(state.tables.Inbox, receipt.rowIndex, restore),
+      ...write(state.tables.Backlog, hit.rowIndex, {}, true)], result: 'recovered', id};
   }
   if (kind === 'remove-test') {
     if (!String(id).startsWith('TEST-') || !hit.data.title.startsWith('[TEST]')) throw new Error('Only labeled test records may be removed');
-    return {requests: [write(state.tables[hit.tab], hit.rowIndex, {})], result: 'test removed', id};
+    const receipt = operation.receipt, table = state.tables[hit.tab];
+    if (!receipt || receipt.tab !== hit.tab || receipt.rowIndex !== hit.rowIndex ||
+        String(receipt.fields?.ID) !== String(id) || receipt.fields?.title !== hit.data.title)
+      throw new Error('Fixture cleanup needs its exact owned-cell receipt');
+    for (const [key, expected] of Object.entries(receipt.fields)) {
+      if (!table.headers.includes(key) || hit.data[key] !== expected) throw new Error('Fixture changed; preserve it for review');
+    }
+    for (const [column, key] of table.headers.entries()) {
+      const entered = table.rows.find(row => row.rowIndex === hit.rowIndex).cells[column]?.userEnteredValue;
+      if (!(key in receipt.fields) && entered?.formulaValue === undefined &&
+          (entered?.stringValue || entered?.numberValue !== undefined || entered?.boolValue === true))
+        throw new Error('Fixture contains an unowned edit; preserve it for review');
+    }
+    const clear = Object.fromEntries(Object.keys(receipt.fields).map(key => [key, '']));
+    return {requests: write(table, hit.rowIndex, clear), result: 'test removed', id};
   }
   throw new Error(`Unknown operation ${kind}`);
 }

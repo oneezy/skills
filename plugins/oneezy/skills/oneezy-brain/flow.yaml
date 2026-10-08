@@ -22,6 +22,16 @@ refs:
     id: skills/oneezy/oneezy-brain/scripts/drive-plan.mjs
     need: conditional
     when: planning native Sheets requests
+  - token: references/provider-capture.md
+    kind: file
+    id: skills/oneezy/oneezy-brain/references/provider-capture.md
+    need: conditional
+    when: configured email/calendar ingestion
+  - token: scripts/provider-capture.mjs
+    kind: file
+    id: skills/oneezy/oneezy-brain/scripts/provider-capture.mjs
+    need: conditional
+    when: validating provider envelopes, readback receipts and checkpoints
   - token: scripts/brain.py
     kind: file
     id: skills/oneezy/oneezy-brain/scripts/brain.py

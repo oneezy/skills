@@ -9,7 +9,7 @@ const headers = ['ID', 'title', 'collection', 'views', 'status', 'priority_devel
 const native = value => value === '' || value == null ? {} : {userEnteredValue: {
   [typeof value === 'boolean' ? 'boolValue' : typeof value === 'number' ? 'numberValue' : 'stringValue']: value,
 }};
-const table = (sheetId, data) => ({sheetId, headers, rows: Array.from({length: 12}, (_, i) => ({
+const table = (sheetId, data) => ({sheetId, headers, editableFields: [...headers], rows: Array.from({length: 12}, (_, i) => ({
   rowIndex: i + 1, cells: headers.map(key => native(data[i]?.[key])),
 }))});
 const state = (inbox = [], backlog = []) => ({
@@ -38,6 +38,18 @@ const run = (name, fn) => {
   catch (error) { results.push({name, pass: false, observed: error.message}); }
 };
 
+run('Fixture cleanup clears only receipt-owned cells and refuses later human edits', () => {
+  const data = {ID: 'TEST-OWNED', title: '[TEST] temporary', details: 'Observed fixture'};
+  const s = state([data]), receipt = {tab: 'Inbox', rowIndex: 1, fields: data};
+  assert.throws(() => plan(s, {kind: 'remove-test', id: data.ID}), /receipt/);
+  const cleanup = plan(s, {kind: 'remove-test', id: data.ID, receipt});
+  assert.equal(cleanup.requests.length, 3);
+  s.tables.Inbox.rows[0].cells[headers.indexOf('context_doc')] = native('HUMAN EDIT');
+  assert.throws(() => plan(s, {kind: 'remove-test', id: data.ID, receipt}), /unowned edit/);
+  s.tables.Inbox.rows[0].cells[headers.indexOf('context_doc')] = {};
+  s.tables.Inbox.rows[0].cells[headers.indexOf('details')] = native('changed');
+  assert.throws(() => plan(s, {kind: 'remove-test', id: data.ID, receipt}), /changed/);
+});
 run('Tentative capture stays Inbox with one stable ID and unknown values blank', () => {
   const s = state(); const p = plan(s, {kind: 'capture', data: idea}); apply(s, p.requests);
   assert.equal(lookup(s, 'B-001').tab, 'Inbox'); assert.equal(records(s.tables.Backlog).length, 0);
@@ -117,6 +129,42 @@ run('Publication includes only approved visible Trident rows and allowed values'
   assert.equal(published[0].title, 'Approved client title'); assert.equal(published[0].details_summary, 'Approved summary');
   assert.doesNotMatch(JSON.stringify(published), /PRIVATE-DETAILS|PRIVATE-MAIL-LINK|PRIVATE-CONTEXT|PRIVATE-OWNER/);
   return 'Exact project and native TRUE filters; private/archived/other-project rows excluded; no private value leaked.';
+});
+
+run('Schema masks and formula spills survive capture, promotion, recovery and clearing', () => {
+  const s = state();
+  const column = headers.indexOf('estimation');
+  for (const table of [s.tables.Inbox, s.tables.Backlog]) {
+    table.editableFields = headers.filter(key => key !== 'estimation');
+    table.headerCells = headers.map(() => ({}));
+    table.headerCells[column] = {userEnteredValue: {formulaValue: '=ARRAYFORMULA(1)'}};
+    for (const row of table.rows) row.cells[column] = {effectiveValue: {numberValue: 1}};
+  }
+  const formulaBefore = structuredClone(s.tables.Backlog.headerCells[column]);
+  const data = {...idea}; delete data.estimation;
+  const capture = plan(s, {kind: 'capture', data});
+  assert.ok(capture.requests.every(request => request.updateCells.rows[0].values.length === 1 && request.updateCells.start.columnIndex !== column));
+  apply(s, capture.requests);
+  assert.throws(() => plan(s, {kind: 'update', id: idea.ID, data: {estimation: 2}}), /read-only/);
+  const promotion = plan(s, {kind: 'promote', id: idea.ID, selected: true}); apply(s, promotion.requests);
+  apply(s, plan(s, {kind: 'recover', id: idea.ID, recovery: promotion.recovery}).requests);
+  assert.equal(lookup(s, idea.ID).tab, 'Inbox');
+  assert.deepEqual(s.tables.Backlog.headerCells[column], formulaBefore);
+  assert.equal(s.tables.Backlog.rows[0].cells[column].effectiveValue.numberValue, 1);
+});
+run('A named-cell update preserves unrelated editable data and refuses a live formula or spill range', () => {
+  const s = state([idea]);
+  const row = s.tables.Inbox.rows[0], column = headers.indexOf('details');
+  const original = structuredClone(row.cells);
+  apply(s, plan(s, {kind: 'update', id: idea.ID, data: {title: 'Updated title'}}).requests);
+  for (let index = 0; index < headers.length; index++) if (headers[index] !== 'title') assert.deepEqual(row.cells[index], original[index]);
+  row.cells[column] = {userEnteredValue: {formulaValue: '=1'}, effectiveValue: {numberValue: 1}};
+  assert.throws(() => plan(s, {kind: 'update', id: idea.ID, data: {details: 'Overwrite'}}), /Formula-owned/);
+  row.cells[column] = {};
+  s.tables.Inbox.formulaRanges = [{startRowIndex: 1, endRowIndex: 5, startColumnIndex: column, endColumnIndex: column + 1}];
+  assert.throws(() => plan(s, {kind: 'update', id: idea.ID, data: {details: ''}}), /Formula-owned/);
+  delete s.tables.Inbox.editableFields;
+  assert.throws(() => plan(s, {kind: 'update', id: idea.ID, data: {title: 'No schema'}}), /Schema/);
 });
 
 // Manual forward agenda scenario: consume this synthetic snapshot by the current
