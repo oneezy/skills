@@ -26,7 +26,7 @@ A downgrade undoes notes: apply them in reverse only when Justin asked for the d
 
 | Repo | Base | Lands by |
 |---|---|---|
-| `oneezy/skills` | `dev` | push `land/migrate-<slug>`; `.github/workflows/land.yml` squashes it into `dev`, promotes `main` and releases (run `npx --yes @oneezy/skills-sync@latest build --repo .` and `check --repo .` first) |
+| `oneezy/skills` | `dev` | push `land/migrate-<slug>`; `.github/workflows/land.yml` squashes it into `dev`, promotes `main` and releases (run `npx --yes @oneezy/skills-sync@latest refresh --frozen --repo .`, then `build --repo .` and `check --repo .` first) |
 | `oneezy/brain` | `dev` | a ready pull request; its automerge workflow merges it on green |
 | `oneezy/tools` | `dev` | a ready pull request; its automerge workflow merges it on green |
 | `oneezy/ai-workflow` | `main` | a ready pull request; its automerge workflow merges it on green |

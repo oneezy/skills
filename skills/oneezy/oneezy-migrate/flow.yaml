@@ -69,7 +69,7 @@ steps:
   - id: apply-land
     after: check-repos
     if: a repo matches
-    does: apply the recipe on one branch, run the repo's fast checks, commit, then land it the repo's way (skills, land/migrate-<slug> after build and check; brain, tools and ai-workflow, a ready pull request their automerge merges; Trident, a ready pull request to its base); a .github/ change is a pull request that waits on Justin
+    does: apply the recipe on one branch, run the repo's fast checks, commit, then land it the repo's way (skills, land/migrate-<slug> after refresh --frozen, build and check; brain, tools and ai-workflow, a ready pull request their automerge merges; Trident, a ready pull request to its base); a .github/ change is a pull request that waits on Justin
     needs: [git, gh, npx]
     outcome:
       done: a land branch pushed or a pull request open per matching repo

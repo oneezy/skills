@@ -63,10 +63,10 @@ steps:
   - id: clone
     after: map-request
     if: change, add or playground
-    does: clone oneezy/skills at dev into a temporary folder on branch land/<topic>, never the library this machine syncs from
-    needs: [git]
+    does: clone oneezy/skills at dev into a temporary folder on branch land/<topic>, never the library this machine syncs from, then run the script with refresh --frozen --repo . so the uncommitted third-party snapshots exist for build and check
+    needs: [git, npx]
     outcome:
-      done: a clean clone on land/<topic>
+      done: a clean clone on land/<topic> with its snapshots
   - id: change-sources
     after: clone
     if: change
