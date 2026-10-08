@@ -28,7 +28,7 @@
 #            writes. A changed package takes the next version after the one it carries (skills-sync 0.4.0, tools
 #            #90), so no job needs the library's history.
 #
-# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: `main` at 87d4f98, @oneezy/skills-sync 0.5.0
+# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: dev at 91012e7, @oneezy/skills-sync 0.7.2
 # as published to npm (tools #99: the per-source skills-sync.lock.json with upstream versions, a frozen sync,
 # `update --to`, `versions`, the play group). land.yml pins the same commit. Re-pin both when the library needs a
 # newer tool.
@@ -51,7 +51,7 @@ on:
         default: refresh
 
 env:
-  SKILLS_SYNC_REF: 87d4f9808fce492a1a1e0ad2c27a84b8bfde219d
+  SKILLS_SYNC_REF: 91012e73431cb20d608135b5778b7e92bde7f4e0
 
 permissions: {}
 
@@ -91,6 +91,11 @@ jobs:
         env:
           CLI: ${{ steps.tool.outputs.cli }}
         run: node "$CLI" check --repo library
+
+      - name: Brain guarded native planner and provider contract
+        run: |
+          node library/tests/brain-drive.test.mjs
+          node --test library/tests/provider-capture.test.mjs
 
       - name: release script tests
         run: node --test library/.github/scripts/*.test.mjs

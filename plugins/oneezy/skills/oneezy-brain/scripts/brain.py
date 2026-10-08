@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Justin's brain: a GitHub-issues memory behind the oneezy-brain skill.
+"""Historical GitHub Brain reader. Current Brain operations use Drive.
+
+Only --historical-read tree|agenda|find is enabled. The legacy implementation
+below is retained for provenance; all GitHub writes are refused.
 
 Everything runs through `gh api` REST calls; nothing else is required. No GraphQL
 and no `gh issue`: cloud sessions block both. The brain lives in
@@ -57,9 +60,9 @@ def gh(*args: str, input_text: str | None = None) -> str:
 
 
 def api(path: str, method: str = "GET", **fields) -> object:
-    args = ["api", "-H", "Accept: application/vnd.github+json", path]
     if method != "GET":
-        args += ["--method", method]
+        raise SystemExit('Historical Brain access is read-only; GitHub writes are disabled.')
+    args = ["api", "--method", "GET", "-H", "Accept: application/vnd.github+json", path]
     for key, value in fields.items():
         args += ["-F" if isinstance(value, int) else "-f", f"{key}={value}"]
     out = gh(*args)
@@ -435,6 +438,9 @@ def cmd_update(args) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if not argv or argv.pop(0) != '--historical-read' or not argv or argv[0] not in {'tree', 'agenda', 'find'}:
+        raise SystemExit('GitHub Brain routing is retired. Use oneezy-brain for current Drive state. Explicit historical reads: brain.py --historical-read tree|agenda|find. Writes are disabled.')
     parser = argparse.ArgumentParser(prog="brain.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
 

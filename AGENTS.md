@@ -8,6 +8,8 @@ Third-party skills come from the sources in `skills-sync.json` (`matt-pocock`, `
 
 ### Running a skill by name
 
+For Justin's Brain capture, agenda, task updates, memory or knowledge, load /oneezy-brain. It owns current source routing and locations; do not maintain another Brain contract here.
+
 A message that starts with `/<name>` runs that skill, even in a project thread, where it reaches you as plain text rather than a command. If the skill is in your list, invoke it. If it is not, which is always the case for skills marked `disable-model-invocation` (`/wayfinder`, `/grill-me`, `/to-tickets`, `/oneezy-merge` and others), Read `~/.claude/skills/<name>/SKILL.md` and follow it, with the rest of the message as its arguments. Never strip `disable-model-invocation` to make a skill appear: refresh puts it back, and it keeps skills that push or merge from starting on their own. If a library skill is missing from the session, run `npx --yes @oneezy/skills-sync@latest -y --agents claude-code --global --no-projects --no-wsl --quiet` first.
 
 ### Issue tracker

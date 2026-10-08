@@ -1,11 +1,15 @@
 ---
 name: oneezy-status
-description: Render the status report for whatever is in front of you, a working tree, a branch, a PR or a merged PR, in the fixed shape in STATUS.md, always ending with Next Up and the next session's prompt. Read-only. Use when Justin asks for status, and as the last step of /oneezy-merge.
+description: Read-only status for Justin's Brain agenda or a working tree, branch, PR or merged PR. Brain requests use the verified Drive snapshot; repo reports keep the STATUS.md shape, Next Up and next-session prompt. Also used as the last step of /oneezy-merge.
 metadata:
   internal: true
 ---
 
-One message, built from `STATUS.md`. The shape never changes; the **sources** that fill it change with the state. Nothing is changed by this skill: no commit, no push, no merge, no tracker write, and it never calls `/oneezy-merge`.
+Choose Brain or repository mode below. Repository messages keep the fixed `STATUS.md` shape; sources change with state. This skill is read-only: no commit, push, merge or tracker write, and it never calls `/oneezy-merge`.
+
+## Brain or repository
+
+For today's agenda or Brain status, read `references/brain-daily.md` and load /oneezy-brain. Use its current Drive snapshot and agenda rules; skip repo State and Sources below. A missing Drive route is a coverage gap, not permission to use GitHub Brain issues. Repository reports retain the existing STATUS.md format and budget.
 
 ## State
 
