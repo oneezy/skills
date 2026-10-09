@@ -9,6 +9,7 @@ Before resolving locations, read `references/capabilities/contract.md` and this 
 Read `references/location.md` first. Resolve its private registry through the authorized Drive account, then read live List and Schema. Drive owns current Brain tasks and context. GitHub issues and Spaces are retained history; never use them as fallback task state. If the route is unavailable, report the exact gap and stop dependent writes.
 
 Choose the operation using `references/routing.md` before capture, agenda, lookup, promotion, update, disposition or ingestion.
+Meaningful requests, work and explicit captures require a visible Inbox record with supporting context Docs linked from it; ignore conversational filler. Deduplicate across Inbox and Backlog before saving. Capture is not execution approval.
 
 For classification, read `references/classification.md`; use the live crosswalk and evidence, never invented categories or unsupported cell values.
 

@@ -1,6 +1,6 @@
 ## Report
 
-One line per change the tool printed, then its summary line; a landed change ends with the release tag, then the `/oneezy-migrate` report. Say plainly when a skill is reported gone upstream (the tool names the fix: deselect it in `skills-sync.json`, or keep a copy under `skills/` as an own skill) and when something was left alone as a conflict. If a skill Justin asked for is still missing after a sync, say which and stop; the fix belongs in the library.
+After the canonical script, invoke `/oneezy-status` in Skills Sync mode with the command, exit code, complete actions and before/after readbacks. Its `references/skills-sync.md` owns the report shape. A landed change includes the actual release tag and `/oneezy-migrate` report; held source work includes its draft PR and tests. A missing requested skill remains a named blocker.
 
 ## Boundaries
 

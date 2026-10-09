@@ -9,4 +9,4 @@ if [[ -n "${SKILLS_SYNC_CLI:-}" ]]; then
   [[ -f "$SKILLS_SYNC_CLI" ]] || { printf 'SKILLS_SYNC_CLI is not a built CLI file\n' >&2; exit 1; }
   exec node "$SKILLS_SYNC_CLI" "$@"
 fi
-exec npx --yes '@oneezy/skills-sync@^0.7.2' "$@"
+exec npx --yes '@oneezy/skills-sync@^0.7.3' "$@"

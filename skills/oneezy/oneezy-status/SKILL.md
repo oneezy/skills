@@ -1,9 +1,11 @@
 ---
 name: oneezy-status
-description: Read-only status for Justin's Brain agenda or a working tree, branch, PR or merged PR. Brain requests use the verified Drive snapshot; repo reports keep the STATUS.md shape, Next Up and next-session prompt. Also used as the last step of /oneezy-merge.
+description: Read-only status for Skills Sync results, Justin's Brain agenda or a working tree, branch, PR or merged PR. Sync reports distinguish verified, failed and skipped destinations; Brain uses the verified Drive snapshot; repo reports keep STATUS.md. Also used as the last step of /oneezy-merge.
 ---
 
 This skill is read-only: no commit, push, merge or tracker write; never call `/oneezy-merge`.
+
+For Skills Sync results, read `references/skills-sync.md` and render the canonical script's actual output and verified before/after snapshots. This mode has its own report shape; the repository five-call budget and STATUS.md line cap apply only to repository reports.
 
 For a Brain agenda/status, read `references/brain-daily.md` and load `/oneezy-brain` with its verified Drive snapshot. Skip repository state and sources. Missing Drive is a coverage gap, never permission for GitHub Brain fallback.
 
