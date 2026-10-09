@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "oneezy",
-  "version": "0.39.0+d92eb6973684",
-  "description": "Justin's own skills: brain, estimate, meeting, merge, migrate, remote, skills, status.",
+  "version": "0.40.0+76b7468b9951",
+  "description": "Justin's own skills: brain, estimate, meeting, merge, migrate, naming, remote, skills, status.",
   "author": {
     "name": "oneezy",
     "url": "https://github.com/oneezy"
@@ -18,7 +18,7 @@
       "interface": {
         "displayName": "Oneezy",
         "shortDescription": "Justin's own skills",
-        "longDescription": "Justin's own skills: brain, estimate, meeting, merge, migrate, remote, skills, status.",
+        "longDescription": "Justin's own skills: brain, estimate, meeting, merge, migrate, naming, remote, skills, status.",
         "developerName": "oneezy",
         "category": "Developer Tools",
         "capabilities": [
