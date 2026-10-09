@@ -12,6 +12,6 @@ if ($env:SKILLS_SYNC_CLI) {
   if (-not (Test-Path -LiteralPath $env:SKILLS_SYNC_CLI -PathType Leaf)) { throw "SKILLS_SYNC_CLI is not a built CLI file" }
   node $env:SKILLS_SYNC_CLI @mapped
 } else {
-  npx --yes '@oneezy/skills-sync@^0.7.3' @mapped
+  npx --yes '@oneezy/skills-sync@^0.7.4' @mapped
 }
 exit $LASTEXITCODE

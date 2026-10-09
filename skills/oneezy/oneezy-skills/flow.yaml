@@ -2,6 +2,11 @@ skill: oneezy-skills
 purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill; land updates, downgrades, adds and playground changes in the library as a release, link them, and run oneezy-migrate.
 runtime: [npx (Node 20+), git, gh]
 refs:
+  - token: references/aliases.md
+    kind: file
+    id: skills/oneezy/oneezy-skills/references/aliases.md
+    need: conditional
+    when: explicitly approved historical Skills/Status alias handoff or rollback
   - token: /oneezy-status
     kind: skill
     id: oneezy-status
