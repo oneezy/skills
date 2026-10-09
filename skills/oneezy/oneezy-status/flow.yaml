@@ -2,6 +2,11 @@ skill: oneezy-status
 purpose: Render the status report for the working tree, branch, PR or merged PR in the fixed shape of STATUS.md, ending with Next Up and the next session's prompt. Read-only.
 runtime: [git, gh, Vercel commit statuses and bot comments]
 refs:
+  - token: references/skills-sync.md
+    kind: file
+    id: skills/oneezy/oneezy-status/references/skills-sync.md
+    need: conditional
+    when: canonical Skills Sync results
   - token: references/brain-daily.md
     kind: file
     id: skills/oneezy/oneezy-status/references/brain-daily.md
@@ -86,6 +91,11 @@ unresolved: []
 agents:
   max: 0
 steps:
+  - id: skills-sync
+    if: request is canonical Skills Sync results
+    does: read Skills Sync reference and render verified canonical command output and before/after snapshots; no mutation or installation
+    outcome:
+      done: successes, failures and all skipped destinations reported with exact paths and source/generated/installed versions
   - id: brain
     if: request is Brain agenda or Brain status
     does: load Brain daily reference and consume oneezy-brain's verified Drive snapshot

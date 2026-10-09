@@ -4,6 +4,8 @@
 
 Read live headers, List, Schema and both ID columns. Normalize omitted empty cells and trailing rows only within the exact requested, verified grid bounds. IDs are immutable strings, not row numbers. Reserve historical IDs. Match provider/account/source-item ID and meaning before capture; retries retain their ID and Doc.
 
+For the ongoing skills, plugins and AI-tools collection, reuse the existing context Doc `1kXhbxXlFayp0Qjd3y9uSdvf_LIlVDRQQL1U3lYIcALQ` and its collection heading `h.o87g7bj48jxg`. Recheck existing deferred-skills ID `57` and routing-fix ID `58` across Inbox and Backlog by immutable ID; their historical row numbers are not write targets. Retain the collection Doc link on its matched record, and ID 58's verified parent relationship to ID 30. These corrections already exist: preserve them, with one writable location each, rather than create a replacement Doc or duplicate task system. Resolve live fields and current user edits before any change.
+
 Map by header. Unsupported estimates, energy, dates and ownership remain blank with an Unknown/not-applicable note. Use literal native dates and the workbook timezone; change date_modified only on a real edit. Preserve source dates in source_updated and dated context. Promotion retains creation time. Creator, assigner and owner are different roles. Generated comments never masquerade as Justin.
 
 Serialize agent writers; reread targets and compare the full row to the planned before-image immediately before writing. Refuse a changed input. Sheets has no revision CAS, so a human can still race the batch; verify and reconcile discrepancies. Updates change only named fields.

@@ -88,6 +88,14 @@ function check(state, data) {
 }
 export function plan(state, operation) {
   const {kind, id, data = {}} = operation;
+  if (kind === 'capture' && operation.meaningful === false && operation.explicit !== true)
+    return {requests: [], result: 'ignored filler', id: null};
+  const identities = new Set();
+  for (const name of ['Inbox', 'Backlog']) for (const row of records(state.tables[name])) {
+    const identity = String(row.data.ID);
+    if (identities.has(identity)) throw new Error(`ID ${identity} occurs more than once; reconcile before writing`);
+    identities.add(identity);
+  }
   const hit = lookup(state, id ?? data.ID);
   if (kind === 'capture') {
     for (const key of Object.keys(data)) if (!state.tables.Inbox.headers.includes(key)) throw new Error(`Unknown Inbox field ${key}`);
