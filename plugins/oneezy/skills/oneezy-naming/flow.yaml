@@ -1,0 +1,32 @@
+skill: oneezy-naming
+purpose: Name anything with a title in Justin's repos (issues, phases, maps, specs, labels, branches, commits, PR titles, releases, chat titles) with one emoji, a name, a colon and plain words, leaving Matt Pocock's skills and labels untouched.
+runtime: []
+refs:
+  - token: /wayfinder
+    kind: skill
+    id: wayfinder
+    need: example
+    when: its maps and tickets take these titles
+  - token: /to-spec
+    kind: skill
+    id: to-spec
+    need: example
+    when: its spec takes the spec title
+  - token: /to-tickets
+    kind: skill
+    id: to-tickets
+    need: example
+    when: its tickets take the ticket titles
+unresolved: []
+agents:
+  max: 0
+steps:
+  - id: pick-kind
+    does: decide what is being named (phase, map, spec, ticket, label, branch, commit or PR title, release, chat) and read its section
+    outcome:
+      done: the section for that kind is read
+  - id: name-it
+    after: pick-kind
+    does: write the title in that section's shape; for a ticket pick the emoji (decision kind under a map, else app, package or repo) and the area folder name; add the kind label on build tickets beside Matt's labels
+    outcome:
+      done: the title matches the shape and every label Matt's skill set is still there
