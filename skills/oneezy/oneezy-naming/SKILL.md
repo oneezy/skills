@@ -5,6 +5,8 @@ description: "Justin's naming rules for anything with a title, in every repo: Gi
 
 Every title is **one emoji, a name, a colon, then plain words** an eighth grader reads at once: `✨ app: Sign in with Google`. Matt Pocock's skills find tickets by label and sub-issue link, never by title, so these rules change titles and add labels while every step and label of Matt's skills stays exactly as he wrote it.
 
+Before calling a dependency, read `references/capabilities/contract.md`, then the adapter for this host. Load its actual instructions and discover its tools; a name or mention does not execute it.
+
 ## Issues
 
 Three levels, each a GitHub sub-issue of the level above:

@@ -2,6 +2,31 @@ skill: oneezy-naming
 purpose: Name anything with a title in Justin's repos (issues, phases, maps, specs, labels, branches, commits, PR titles, releases, chat titles) with one emoji, a name, a colon and plain words, leaving Matt Pocock's skills and labels untouched.
 runtime: []
 refs:
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-naming/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-naming/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-naming/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-naming/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-naming/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
   - token: /wayfinder
     kind: skill
     id: wayfinder

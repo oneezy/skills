@@ -118,6 +118,17 @@
         }
       ]
     },
+    "oneezy-naming": {
+      "path": "skills/oneezy/oneezy-naming",
+      "invocation": "follow installed host policy",
+      "dependencies": [
+        {
+          "id": "github",
+          "need": "conditional",
+          "when": "creating or renaming issues, labels, branches or PRs"
+        }
+      ]
+    },
     "oneezy-remote": {
       "path": "skills/oneezy/oneezy-remote",
       "invocation": "explicit-only",
