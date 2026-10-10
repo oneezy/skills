@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pstack",
-  "version": "0.17.0+1a3f69a69279",
+  "version": "0.15.15",
   "description": "Lauren Tan's PStack skills from cursor/plugins (pstack/), with tdd and teach as pstack-tdd and pstack-teach.",
   "author": {
     "name": "cursor",
