@@ -27,13 +27,13 @@ function library(packages) {
     const archive = `artifacts/${id}-${p.version}.zip`;
     const bytes = Buffer.from(`zip of ${id} ${p.version} ${JSON.stringify(p.files)}`);
     fs.writeFileSync(path.join(root, archive), bytes);
-    record.plugins[id] = { archive, sha256: sha256(bytes), version: p.version, commit: COMMIT, files: Object.keys(p.files).map((f) => `${id}/${f}`).sort(), release: null };
+    record.plugins[id] = { archive, sha256: sha256(bytes), version: p.version, versionScheme: p.versionScheme ?? "authored", commit: COMMIT, files: Object.keys(p.files).map((f) => `${id}/${f}`).sort(), release: null };
   }
   fs.writeFileSync(path.join(root, "artifacts", "releases.json"), JSON.stringify(record, null, 2));
   return root;
 }
 
-const v = (n, sha = "c".repeat(12)) => `0.${n}.0+${sha}`;
+const v = (n) => `0.${n}.0`;
 const run = (lib, previous, commit = COMMIT) => plan({ library: lib, previous, toolRef: "d".repeat(40), repo: "oneezy/skills", commit, tree: TREE });
 
 test("the first release is release-1: every plugin new, its version, archive sha256 and every file with its sha256, plus the source commit and tree, the config and lock digests and the tool commit", () => {
@@ -52,7 +52,7 @@ test("the first release is release-1: every plugin new, its version, archive sha
   assert.match(rec.plugins.oneezy.sha256, /^[0-9a-f]{64}$/);
   assert.deepEqual(rec.changes, { added: ["oneezy", "pstack"], changed: [], removed: [] });
   assert.equal(rec.previous, null);
-  assert.match(r.notes, /\| oneezy \| `0\.25\.0\+c{12}` \| new \|/);
+  assert.match(r.notes, /\| oneezy \| `0\.25\.0` \| new \|/);
 });
 
 test("nothing is released for a replay of the same commit or for a commit that changes no package (a promotion merge)", () => {
@@ -82,9 +82,9 @@ test("a plugin may not go backwards: different files at the same version or a lo
   const same = run(library({ oneezy: { version: v(25), files: { "plugin.json": "{ }" } }, pstack: { version: v(15), files: { "plugin.json": "{}" } } }), first, "1".repeat(40));
   assert.equal(same.release, false);
   assert.match(same.problems.join("\n"), /oneezy: files changed since release-1 but the version is still/);
-  const lower = run(library({ oneezy: { version: v(18, "9".repeat(12)), files: { "plugin.json": "{ }" } }, pstack: { version: v(15), files: { "plugin.json": "{}" } } }), first, "2".repeat(40));
+  const lower = run(library({ oneezy: { version: v(18), files: { "plugin.json": "{ }" } }, pstack: { version: v(15), files: { "plugin.json": "{}" } } }), first, "2".repeat(40));
   assert.equal(lower.release, false);
-  assert.match(lower.problems.join("\n"), /oneezy: version 0\.18\.0\+9{12} is lower than 0\.25\.0/);
+  assert.match(lower.problems.join("\n"), /oneezy: version 0\.18\.0 is lower than 0\.25\.0/);
   // a version alone cannot move: plugin.json carries it, so a new version is always new files
   assert.match(compare(first, { pstack: { ...first.plugins.pstack, version: v(16) } }).problems.join("\n"), /pstack: same files as release-1 but version/);
 });
@@ -105,4 +105,25 @@ test("helpers: inventory is sorted with / paths, the content digest depends on p
   assert.equal(minor("0.26.0+abcdefabcdef"), 26);
   assert.equal(minor("1.0.0"), null);
   assert.deepEqual(compare(null, {}), { problems: [], changed: [], added: [], removed: [] });
+});
+
+
+test("legacy wrapper versions migrate to official upstream versions, including a numerically lower upstream minor", () => {
+  const previous = { release: "release-9", plugins: { pstack: { version: "0.17.0+abcdefabcdef", content: "old" } } };
+  assert.deepEqual(compare(previous, { pstack: { version: "0.15.15", versionScheme: "upstream", content: "new" } }).problems, []);
+});
+
+test("upstream snapshots keep their source version across changed files and intentional downgrades; unversioned sources remain null", () => {
+  const previous = { release: "release-1", plugins: { matt: { version: "1.3.1", versionScheme: "upstream", content: "old" } } };
+  for (const version of ["1.3.1", "1.2.9", null]) {
+    const diff = compare(previous, { matt: { version, versionScheme: "upstream", content: "new" } });
+    assert.deepEqual(diff.problems, []);
+    assert.deepEqual(diff.changed, ["matt"]);
+  }
+});
+
+test("authored patch and major releases use semantic precedence rather than only the minor component", () => {
+  const previous = { release: "release-1", plugins: { own: { version: "0.43.0+abcdefabcdef", content: "old" } } };
+  for (const version of ["0.43.1", "1.0.0"]) assert.deepEqual(compare(previous, { own: { version, versionScheme: "authored", content: "new" } }).problems, []);
+  for (const version of [null, "01.2.3", "0.43.1+abcdef", "0.43.1-rc.1"]) assert.match(compare(null, { own: { version, versionScheme: "authored", content: "new" } }).problems.join("\n"), /invalid authored semantic version/);
 });

@@ -3,7 +3,8 @@
   "library": {
     "name": "skills",
     "owner": "oneezy",
-    "homepage": "https://github.com/oneezy/skills"
+    "homepage": "https://github.com/oneezy/skills",
+    "version": "0.43.1"
   },
   "generate": {
     "skills": true,
