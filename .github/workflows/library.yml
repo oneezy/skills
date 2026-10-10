@@ -25,13 +25,11 @@
 #            at its pin); when skills-sync.lock.json changed, a pull request to dev titled `chore(sources): update <ids>`
 #            carries the lock, the rebuilt packages and a summary of each source's version and commit before and after.
 #            Day to day, `/oneezy-skills` does the same per source through a land/* branch, with no review. That PR's own branch and the release tags are the only refs this workflow ever
-#            writes. A changed package takes the next version after the one it carries (skills-sync 0.4.0, tools
-#            #90), so no job needs the library's history.
+#            writes. Authored versions come from library.version and upstream versions from the lock; no job bumps a
+#            plugin version or needs the library's history.
 #
-# SKILLS_SYNC_REF is the oneezy/tools commit the tool is built from: dev at 91012e7, @oneezy/skills-sync 0.7.2
-# as published to npm (tools #99: the per-source skills-sync.lock.json with upstream versions, a frozen sync,
-# `update --to`, `versions`, the play group). land.yml pins the same commit. Re-pin both when the library needs a
-# newer tool.
+# SKILLS_SYNC_REF pins the source-owned semantic version generator from oneezy/tools#143,
+# @oneezy/skills-sync 0.7.6. land.yml pins the same commit. Re-pin both together.
 #
 # Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
 # A pull request opened with the default GITHUB_TOKEN does not start this workflow's own `check` job on itself
@@ -51,7 +49,7 @@ on:
         default: refresh
 
 env:
-  SKILLS_SYNC_REF: 91012e73431cb20d608135b5778b7e92bde7f4e0
+  SKILLS_SYNC_REF: 914a0ab7a6531390ab072f3cdfbda03ef36f6019
 
 permissions: {}
 

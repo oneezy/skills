@@ -3,6 +3,7 @@
 `frontend-design` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: anthropics/skills (ref `main`, skills under `skills`)
+- Version: unversioned upstream
 - Commit: 683bc88e56f3e09ba94f7055977f3d3aa499f202 (2026-10-05T06:46:42-07:00)
 - License: no LICENSE among the source's attribution files
 - Skills: frontend-design

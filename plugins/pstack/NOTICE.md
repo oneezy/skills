@@ -3,6 +3,7 @@
 `pstack` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: cursor/plugins (ref `main`, skills under `pstack/skills`)
+- Version: 0.15.15
 - Commit: df581122cde17e6e27686b5a448bde23e4ad4318 (2026-10-05T18:05:41-07:00)
 - License: MIT, see LICENSE
 - Skills: architect, arena, automate-me, blast-radius, bro, create-verification-skill, figure-it-out, how, interrogate, maintain-verification-skill, make-bot-ui, no-comments, poteto-mode, principle-attack-the-premise, principle-boundary-discipline, principle-build-the-lever, principle-encode-lessons-in-structure, principle-exhaust-the-design-space, principle-experience-first, principle-fix-root-causes, principle-foundational-thinking, principle-guard-the-context-window, principle-laziness-protocol, principle-make-operations-idempotent, principle-migrate-callers-then-delete-legacy-apis, principle-minimize-reader-load, principle-model-the-domain, principle-never-block-on-the-human, principle-outcome-oriented-execution, principle-prove-it-works, principle-redesign-from-first-principles, principle-separate-before-serializing-shared-state, principle-sequence-verifiable-units, principle-subtract-before-you-add, principle-test-behavior-not-implementation, principle-type-system-discipline, recall, reflect, setup-pstack, show-me-your-work, swarm, pstack-tdd (renamed from tdd), pstack-teach (renamed from teach), technical-writing, typescript-best-practices, unslop, why
