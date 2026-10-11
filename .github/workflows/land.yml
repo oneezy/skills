@@ -19,9 +19,6 @@ on:
   push:
     branches: ['land/**']
 
-env:
-  SKILLS_SYNC_REF: 914a0ab7a6531390ab072f3cdfbda03ef36f6019
-
 permissions: {}
 
 jobs:
@@ -67,12 +64,10 @@ jobs:
           printf '\nLanded from %s by the land workflow.\n' "$BRANCH" >> "$RUNNER_TEMP/message"
           git commit --quiet -F "$RUNNER_TEMP/message"
 
-      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+      - name: Install the latest published @oneezy/skills-sync
         if: steps.squash.outputs.empty != 'true'
         id: tool
         uses: ./library/.github/actions/skills-sync-cli
-        with:
-          ref: ${{ env.SKILLS_SYNC_REF }}
 
       - name: Check the result (as library.yml check does)
         if: steps.squash.outputs.empty != 'true'

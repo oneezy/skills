@@ -3,8 +3,8 @@
 # #30; releases: #48). Before committing, run `npx @oneezy/skills-sync check` yourself; this workflow is what catches a
 # skipped one.
 #
-#   check    every pull request, and every push to dev and main. Checks out oneezy/tools at SKILLS_SYNC_REF,
-#            builds @oneezy/skills-sync (found by the name in its package.json, never by folder) and runs it
+#   check    every pull request, and every push to dev and main. Installs the latest published @oneezy/skills-sync
+#            from npm (.github/actions/skills-sync-cli; ADR-0008, every caller runs @latest) and runs it
 #            against this checkout: `refresh --frozen` (every third-party skill at the commit skills-sync.lock.json
 #            records), `build --check` (the committed plugins/ and catalogs match what the config, the lock and
 #            skills/ produce), `check` (frontmatter, flow.yaml, generated-file drift), then `claude plugin
@@ -13,7 +13,7 @@
 #   release  every push to main, after check passes on that commit; and a workflow_dispatch with job=release on
 #            main, which is how land.yml starts it (a GITHUB_TOKEN push to main starts no workflow). `build --artifacts` makes one archive per plugin,
 #            .github/scripts/release.mjs writes release.json (source commit and tree, digests of the config and the
-#            lock, the tool commit, per plugin its version, archive sha256 and every file's sha256) against the previous
+#            lock, the tool's npm version, per plugin its version, archive sha256 and every file's sha256) against the previous
 #            release, and a GitHub release `release-<n>` is published with the archives and release.json. A commit
 #            that changes no package (a promotion merge, a replay of the job) releases nothing; a plugin whose version
 #            would go backwards fails the job and releases nothing. The release is created as a draft and published
@@ -28,8 +28,8 @@
 #            writes. Authored versions come from library.version and upstream versions from the lock; no job bumps a
 #            plugin version or needs the library's history.
 #
-# SKILLS_SYNC_REF pins the source-owned semantic version generator from oneezy/tools#143,
-# @oneezy/skills-sync 0.7.6. land.yml pins the same commit. Re-pin both together.
+# Every job runs the latest published @oneezy/skills-sync, installed from npm by .github/actions/skills-sync-cli
+# (ADR-0008); nothing here checks out or builds oneezy/tools. land.yml uses the same action.
 #
 # Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
 # A pull request opened with the default GITHUB_TOKEN does not start this workflow's own `check` job on itself
@@ -47,9 +47,6 @@ on:
         type: choice
         options: [refresh, release]
         default: refresh
-
-env:
-  SKILLS_SYNC_REF: 914a0ab7a6531390ab072f3cdfbda03ef36f6019
 
 permissions: {}
 
@@ -72,11 +69,9 @@ jobs:
       - name: Authored Oneezy routing and capability preservation
         run: node --test library/scripts/oneezy-capabilities.test.mjs
 
-      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+      - name: Install the latest published @oneezy/skills-sync
         id: tool
         uses: ./library/.github/actions/skills-sync-cli
-        with:
-          ref: ${{ env.SKILLS_SYNC_REF }}
 
       - name: refresh --frozen
         env:
@@ -147,11 +142,9 @@ jobs:
           path: library
           persist-credentials: false
 
-      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+      - name: Install the latest published @oneezy/skills-sync
         id: tool
         uses: ./library/.github/actions/skills-sync-cli
-        with:
-          ref: ${{ env.SKILLS_SYNC_REF }}
 
       - name: refresh --frozen, then the archives
         env:
@@ -174,7 +167,9 @@ jobs:
 
       - name: The release record
         id: plan
-        run: node library/.github/scripts/release.mjs library ${{ steps.previous.outputs.file && format('--previous "{0}"', steps.previous.outputs.file) || '' }} --tool-ref "$SKILLS_SYNC_REF" --repo "$GH_REPO"
+        env:
+          TOOL_VERSION: ${{ steps.tool.outputs.version }}
+        run: node library/.github/scripts/release.mjs library ${{ steps.previous.outputs.file && format('--previous "{0}"', steps.previous.outputs.file) || '' }} --tool-version "$TOOL_VERSION" --repo "$GH_REPO"
 
       - name: Publish the release
         if: steps.plan.outputs.release == 'true'
@@ -213,11 +208,9 @@ jobs:
           # The whole history, for the pull request's branch; versions no longer need it (skills-sync 0.4.0).
           fetch-depth: 0
 
-      - name: Build @oneezy/skills-sync at SKILLS_SYNC_REF
+      - name: Install the latest published @oneezy/skills-sync
         id: tool
         uses: ./library/.github/actions/skills-sync-cli
-        with:
-          ref: ${{ env.SKILLS_SYNC_REF }}
 
       - name: update (every source not held at a version to upstream's tip)
         env:

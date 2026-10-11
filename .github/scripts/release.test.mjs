@@ -11,6 +11,7 @@ import { compare, contentDigest, inventory, minor, plan } from "./release.mjs";
 const sha256 = (b) => createHash("sha256").update(b).digest("hex");
 const COMMIT = "a".repeat(40);
 const TREE = "b".repeat(40);
+const TOOL_VERSION = "0.7.6";
 
 /** A library holding one package per entry: id -> { version, files: rel -> text }. */
 function library(packages) {
@@ -34,9 +35,9 @@ function library(packages) {
 }
 
 const v = (n) => `0.${n}.0`;
-const run = (lib, previous, commit = COMMIT) => plan({ library: lib, previous, toolRef: "d".repeat(40), repo: "oneezy/skills", commit, tree: TREE });
+const run = (lib, previous, commit = COMMIT) => plan({ library: lib, previous, toolVersion: TOOL_VERSION, repo: "oneezy/skills", commit, tree: TREE });
 
-test("the first release is release-1: every plugin new, its version, archive sha256 and every file with its sha256, plus the source commit and tree, the config and lock digests and the tool commit", () => {
+test("the first release is release-1: every plugin new, its version, archive sha256 and every file with its sha256, plus the source commit and tree, the config and lock digests and the tool's npm version", () => {
   const lib = library({ oneezy: { version: v(25), files: { "plugin.json": "{}", "skills/a/SKILL.md": "a" } }, pstack: { version: v(15), files: { "plugin.json": "{}" } } });
   const r = run(lib, null);
   assert.equal(r.release, true);
@@ -44,7 +45,7 @@ test("the first release is release-1: every plugin new, its version, archive sha
   const rec = r.record;
   assert.deepEqual(Object.keys(rec.plugins), ["oneezy", "pstack"]);
   assert.deepEqual(rec.source, { repo: "oneezy/skills", commit: COMMIT, tree: TREE });
-  assert.equal(rec.tool.commit, "d".repeat(40));
+  assert.deepEqual(rec.tool, { repo: "oneezy/tools", package: "@oneezy/skills-sync", version: TOOL_VERSION });
   assert.equal(rec.digests["skills-sync.json"], sha256("{}\n"));
   assert.equal(rec.digests["skills-sync.lock.json"], sha256('{"version":2}\n'));
   assert.deepEqual(rec.plugins.oneezy.files, { "plugin.json": sha256("{}"), "skills/a/SKILL.md": sha256("a") });
@@ -53,6 +54,15 @@ test("the first release is release-1: every plugin new, its version, archive sha
   assert.deepEqual(rec.changes, { added: ["oneezy", "pstack"], changed: [], removed: [] });
   assert.equal(rec.previous, null);
   assert.match(r.notes, /\| oneezy \| `0\.25\.0` \| new \|/);
+});
+
+test("the tool is named by its npm version alone: without one, or with an empty one, the record says null, and no tool commit is recorded", () => {
+  const lib = library({ oneezy: { version: v(25), files: { "plugin.json": "{}" } } });
+  for (const toolVersion of [undefined, ""]) {
+    const rec = plan({ library: lib, previous: null, toolVersion, repo: "oneezy/skills", commit: COMMIT, tree: TREE }).record;
+    assert.equal(rec.schema, 3);
+    assert.deepEqual(rec.tool, { repo: "oneezy/tools", package: "@oneezy/skills-sync", version: null });
+  }
 });
 
 test("nothing is released for a replay of the same commit or for a commit that changes no package (a promotion merge)", () => {

@@ -1,4 +1,4 @@
-# Sync Justin's skills from the library: one call to the published tool, the skill's words mapped to its commands.
+# Sync Justin's skills from the library: one call to the latest published tool (ADR-0008), the skill's words mapped to its commands.
 param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Argv)
 $ErrorActionPreference = "Stop"
 if ($null -eq $Argv) { $Argv = @() }
@@ -12,6 +12,6 @@ if ($env:SKILLS_SYNC_CLI) {
   if (-not (Test-Path -LiteralPath $env:SKILLS_SYNC_CLI -PathType Leaf)) { throw "SKILLS_SYNC_CLI is not a built CLI file" }
   node $env:SKILLS_SYNC_CLI @mapped
 } else {
-  npx --yes '@oneezy/skills-sync@^0.7.6' @mapped
+  npx --yes '@oneezy/skills-sync@latest' @mapped
 }
 exit $LASTEXITCODE
