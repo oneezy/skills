@@ -20,20 +20,15 @@
 #            once every asset is up, so a failed upload leaves no half release; a leftover draft is deleted and redone.
 #            A published release is never edited or deleted here; the repository's release immutability setting
 #            locks its assets and tag.
-#   refresh  only when started by hand from the Actions tab (workflow_dispatch, job=refresh; no schedule, ever). `update`
-#            moves every source the config does not hold at a `version` to the tip of its ref (a pinned skill stays
-#            at its pin); when skills-sync.lock.json changed, a pull request to dev titled `chore(sources): update <ids>`
-#            carries the lock, the rebuilt packages and a summary of each source's version and commit before and after.
-#            Day to day, `/oneezy-skills` does the same per source through a land/* branch, with no review. That PR's own branch and the release tags are the only refs this workflow ever
-#            writes. Authored versions come from library.version and upstream versions from the lock; no job bumps a
-#            plugin version or needs the library's history.
+#
+# Moving the third-party sources is run.yml's job (ADR-0009, ADR-0014): every day over every source not held at a
+# `version`, and on demand for one library command (update, add, versions, rename), landing any change through a land/*
+# branch that land.yml squashes into dev, promotes and releases. The release tags are the only refs this workflow
+# writes. Authored versions come from library.version and upstream versions from the lock; no job bumps a plugin
+# version or needs the library's history.
 #
 # Every job runs the latest published @oneezy/skills-sync, installed from npm by .github/actions/skills-sync-cli
-# (ADR-0008); nothing here checks out or builds oneezy/tools. land.yml uses the same action.
-#
-# Secret (optional): REFRESH_TOKEN, a fine-grained PAT for this repo with contents and pull requests read/write.
-# A pull request opened with the default GITHUB_TOKEN does not start this workflow's own `check` job on itself
-# (GitHub's rule for token-created PRs); with REFRESH_TOKEN it does. Without it, close and reopen the PR.
+# (ADR-0008); nothing here checks out or builds oneezy/tools. land.yml and run.yml use the same action.
 name: library
 
 on:
@@ -43,10 +38,10 @@ on:
   workflow_dispatch:
     inputs:
       job:
-        description: refresh (update every unheld source to upstream's tip, as a PR to dev) or release (cut a release from main; started by land.yml)
+        description: release (cut a release from main; started by land.yml after it promotes main). Source updates run in run.yml.
         type: choice
-        options: [refresh, release]
-        default: refresh
+        options: [release]
+        default: release
 
 permissions: {}
 
@@ -190,56 +185,3 @@ jobs:
         env:
           REASON: ${{ steps.plan.outputs.reason }}
         run: echo "::notice title=no release::$REASON"
-
-  refresh:
-    if: github.event_name == 'workflow_dispatch' && inputs.job != 'release'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    concurrency:
-      group: library-refresh
-    steps:
-      - name: Check out dev
-        uses: actions/checkout@v5
-        with:
-          ref: dev
-          path: library
-          # The whole history, for the pull request's branch; versions no longer need it (skills-sync 0.4.0).
-          fetch-depth: 0
-
-      - name: Install the latest published @oneezy/skills-sync
-        id: tool
-        uses: ./library/.github/actions/skills-sync-cli
-
-      - name: update (every source not held at a version to upstream's tip)
-        env:
-          CLI: ${{ steps.tool.outputs.cli }}
-        run: node "$CLI" update --repo library
-
-      - name: build --plugins --catalogs (so the PR carries the rebuilt packages)
-        env:
-          CLI: ${{ steps.tool.outputs.cli }}
-        run: node "$CLI" build --plugins --catalogs --repo library
-
-      - name: What the lock says moved
-        id: diff
-        run: node library/.github/scripts/lock-diff.mjs library
-
-      - name: Open the pull request to dev
-        if: steps.diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          path: library
-          token: ${{ secrets.REFRESH_TOKEN || secrets.GITHUB_TOKEN }}
-          base: dev
-          branch: chore/sources-refresh
-          branch-suffix: timestamp
-          delete-branch: true
-          commit-message: ${{ steps.diff.outputs.title }}
-          title: ${{ steps.diff.outputs.title }}
-          body: ${{ steps.diff.outputs.body }}
-
-      - name: Nothing moved
-        if: steps.diff.outputs.changed != 'true'
-        run: echo "::notice title=refresh::every source is already where the config says; skills-sync.lock.json is unchanged and no pull request is opened"

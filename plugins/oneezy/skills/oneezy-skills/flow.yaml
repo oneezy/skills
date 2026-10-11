@@ -32,6 +32,11 @@ refs:
     id: .github/workflows/land.yml
     need: conditional
     when: normal explicitly requested upstream/add/playground change; held for review/no-publication scope
+  - token: .github/workflows/run.yml
+    kind: file
+    id: .github/workflows/run.yml
+    need: conditional
+    when: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread); the library's daily upstream check
   - token: docs/agents/references.md
     kind: file
     id: docs/agents/references.md
@@ -185,6 +190,16 @@ steps:
     needs: [git]
     outcome:
       done: the skill folder written, removed or moved
+  - id: dispatch-run
+    after: map-request
+    if: change, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
+    does: dispatch the library's run workflow over gh api REST with the command and its arguments as one string, then
+      watch the run; a changed update or add pushes land/<command>-<args>-<run id>, versions only prints in the log
+    needs:
+    - gh
+    outcome:
+      done: the run completed; its land branch, or that nothing changed, known
+      fail: the run is red → its failing step, stop (nothing pushed)
   - id: build-check
     after:
     - change-sources
@@ -198,9 +213,10 @@ steps:
       done: check exits 0
       fail: nothing changed in the clone → report there is nothing to land, stop
   - id: land-release
-    after: build-check
-    does: commit and push land/<topic>; the land workflow checks it, squashes it into dev, promotes main and starts the
-      release, so the session merges nothing; watch its run and the release run over gh api REST
+    after: [build-check, dispatch-run]
+    does: commit and push land/<topic> (after dispatch-run, the branch the run pushed); the land workflow checks it,
+      squashes it into dev, promotes main and starts the release, so the session merges nothing; watch its run and the
+      release run over gh api REST
     needs:
     - git
     - gh
