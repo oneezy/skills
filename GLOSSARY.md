@@ -21,7 +21,7 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **Sync**: making every harness on a machine match the latest release, in its one **form**, with its **hook** and **global block** in place. Changes only what differs; silent when nothing changed.
 - **Wrapper**: the `oneezy-skills` skill and its scripts, the way an agent runs the tool. It ends every run with the open **manual steps**.
 - **Manual step**: something only a person can do (switch an account plugin on, trust the Codex hook once, uninstall a doubled Codex plugin, adopt or delete what sync leaves, replace a cloud setup line). `status --json` lists them as `manualSteps`; a machine is **done** when `ok` is true and none is open.
-- **Invocation table**: how each harness calls a skill (`/<plugin>:<skill>` on Claude Code, `$<skill>` on Codex, `/<skill>` on Hermes). Shown when a typed skill does not resolve; an agent never fetches a `SKILL.md` to run instead.
+- **Invocation table**: how each harness calls a skill (`/<plugin>:<skill>` on Claude Code, `$<skill>` on Codex, `/<skill>` for a loose Hermes skill, `/agent-plugin-<id>-<hash>:<skill>` for a plugin's). Shown when a typed skill does not resolve; an agent never fetches a `SKILL.md` to run instead.
 - **Rendering opt-in**: a key in the config (`renderings.hermes`) that switches on generator output a tool change added, so the tool releases first and the library takes the new output after.
 - **Plugin**: a package of skills a harness installs as one unit, namespaced by its id (`/oneezy:oneezy-brain`). The library builds one per group and one per source into `plugins/<id>/`, committed beside the source.
 - **Form**: how a harness gets the skills: the **plugin form** (an installed plugin: the account plugins on Claude Code, plugins from GitHub on Codex and Hermes) or, only where a harness has no plugin route, the **loose-skill form** (links). Each harness gets exactly one, never both.
@@ -38,7 +38,7 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **Hook**: the one session-start entry the tool writes into a harness's settings; it runs a quiet sync and reports checkout drift.
 - **Global block**: the tool's marked section in a harness's global instructions file (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`). Never in a repository.
 - **Upstream check**: the daily comparison of every unheld source with its upstream; any difference lands as an **update**.
-- **Machine command**: a command that acts on the machine or repositories it runs on (`sync`, `status`, `hook`, `branches`, `unlink`). A **library command** changes the library (`update`, `add`, `versions`, `rename`) and runs as a workflow in it.
+- **Machine command**: a command that acts on the machine or repositories it runs on (`sync`, `status`, `hook`, `branches`, `unlink`). A **library command** changes the library (`update`, `add`, `versions`) and runs as a workflow in it.
 - **Keep suffix**: `-keep` at the end of a branch name. Such a branch is never deleted; neither are `main` and `dev`.
 - **Archive tag**: `archive/<name>`, the tag a branch closed without merging gets before it is deleted.
 

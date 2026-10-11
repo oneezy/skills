@@ -17,7 +17,7 @@ pwsh -File $script sync --json
 if ($LASTEXITCODE) { throw 'apply conflict; preserve affected destinations' }
 pwsh -File $script status --json               # done is ok true and manualSteps []
 if ($LASTEXITCODE) { throw 'a red line; read it' }
-pwsh -File $script sync --json                 # a second run changes nothing
+pwsh -File $script sync --json                 # a second run changes nothing: its actions are all = (already right)
 if ($LASTEXITCODE) { throw 'repeat verification failed' }
 ```
 
