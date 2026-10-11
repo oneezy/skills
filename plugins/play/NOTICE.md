@@ -3,8 +3,8 @@
 `play` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: `skills/play` of oneezy/skills (https://github.com/oneezy/skills)
-- Version: 0.44.0
-- Commit: c59a43d4350c5a0e39af55a81b6271f29945a970 (2026-10-11T05:28:52Z)
+- Version: 0.45.0
+- Commit: 96faa429a8eb64f87392345e3a1041bd51e41f62 (2026-10-11T21:39:47Z)
 - License: no LICENSE file in the library
 - Skills: play-unslop
 

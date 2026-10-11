@@ -1,6 +1,6 @@
 ---
 name: oneezy-naming
-description: "Justin's naming rules for anything with a title, in every repo: GitHub issues, phases, maps, specs, labels, branches, commits, PR titles, releases and chat titles. Use before creating or renaming any of them, including the tickets /wayfinder, /to-spec and /to-tickets create."
+description: "Justin's naming rules for anything with a title, in every repo: GitHub issues, phases, maps, specs, labels, branches, commits, PR titles, releases, chat titles and worktrees. Use before creating or renaming any of them, including the tickets /wayfinder, /to-spec and /to-tickets create."
 ---
 
 Every title is **one emoji, a name, a colon, then plain words** an eighth grader reads at once: `✨ app: Sign in with Google`. Matt Pocock's skills find tickets by label and sub-issue link, never by title, so these rules change titles and add labels while every step and label of Matt's skills stays exactly as he wrote it.
@@ -71,4 +71,31 @@ One version for the whole repo, tagged `v<major>.<minor>.<patch>`, with the rele
 
 ## Chat titles
 
-A chat about an issue takes the issue title plus its number: `✨ app: Sign in with Google, Microsoft or email code #160`. A chat with no issue takes the same `<emoji> <area>: <the work>` shape.
+A chat title is an **origin marker**, a space, then the chat's name.
+
+- **Name**: a chat about an issue takes the issue title plus its number. Any other chat takes the ticket shape, `<emoji> <area>: <the work>`.
+- **Origin marker**: one to three emoji, in this order, each from a fact you verified (`references/titles.md` has the checks):
+  1. Where the session runs: 💻 Justin's computer (also when his phone drives it), ☁️ cloud, 🌐 SSH. ✴️ marks a Claude Code session or a chat imported from one; join it to a known place as ☁️✴️ or 🌐✴️, and use it alone on Justin's computer. 💬 holds the place until it is known.
+  2. 🤖 for a delegated subagent session.
+  3. 🌳 while the working directory is a linked Git worktree.
+
+```
+💻 ✨ app: Sign in with Google, Microsoft or email code #160
+☁️✴️🤖 🔎 app: Check Better Auth works with Supabase #171
+✴️🌳 🔧 repo: Add releases, versions and changelogs
+```
+
+- **Set** the title once the chat's purpose is clear, and retitle it when its issue, task or working location changes. Both are pre-authorized. A title Justin gives word for word wins.
+- **Rename** through this session's rename route (`references/titles.md`). With no route, put `Title: <title>` on the first line of your reply for Justin to apply.
+- **Pinned voice chats** keep their title until Justin asks for a new one. Work they hand to separate tasks is titled by these rules.
+- **Other chats** are renamed only in a cleanup Justin asks for.
+- A title is display only: the chat's folder and project keep their names.
+
+## Worktrees
+
+A task worktree's folder is `<repo>-issue-<n>-<slug>`, `<repo>-pr-<n>-<slug>`, or `<repo>-<slug>` with no ticket: lowercase words joined by hyphens, the repo and the number first, and `<slug>` a few words naming the work (`brain-issue-2-fix-login`, `tools-pr-20-session-continuity`).
+
+- Add a numeric suffix only on a collision.
+- Pass the name wherever the creation route takes one; `/oneezy-remote`'s `workspace` command does.
+- An existing worktree keeps its folder and its saved session paths.
+- When an app chose the folder before you ran, report that the name was not yours to set.
