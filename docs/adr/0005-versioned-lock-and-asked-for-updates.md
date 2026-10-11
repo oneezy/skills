@@ -1,6 +1,6 @@
 # ADR-0005: A per-source lock with upstream versions, and sources that move only when asked
 
-Date: 2026-10-06. Status: accepted. Supersedes ADR-0001's lock decisions (the `npx skills` format, latest on every sync). Decided in Justin's grilling session of 2026-10-06; spec oneezy/tools#99, built in @oneezy/skills-sync 0.5.0 (tools#100 to #105) and adopted here by tools#106 to #109.
+Date: 2026-10-06. Status: accepted; "nothing moves upstream on its own" superseded by ADR-0009. Supersedes ADR-0001's lock decisions (the `npx skills` format, latest on every sync). Decided in Justin's grilling session of 2026-10-06; spec oneezy/tools#99, built in @oneezy/skills-sync 0.5.0 (tools#100 to #105) and adopted here by tools#106 to #109.
 
 ## Context
 
