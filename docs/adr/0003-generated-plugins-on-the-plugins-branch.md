@@ -1,6 +1,6 @@
 # ADR-0003: Built plugins are committed in the library; the catalogs point at `./plugins/<id>`
 
-Date: 2026-09-30, superseded 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item A). The original text proposed a generated `plugins` branch fed by CI; that design is withdrawn.
+Date: 2026-09-30, superseded 2026-10-01 by Justin's decision (oneezy/skills#27, corrections item A). The original text proposed a generated `plugins` branch fed by CI; that design is withdrawn. On machines, "both forms stay" is amended by ADR-0007: the library builds both, each harness gets one.
 
 ## Context
 
