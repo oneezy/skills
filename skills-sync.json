@@ -4,11 +4,14 @@
     "name": "skills",
     "owner": "oneezy",
     "homepage": "https://github.com/oneezy/skills",
-    "version": "0.43.5"
+    "version": "0.44.0"
   },
   "generate": {
     "skills": true,
     "plugins": true
+  },
+  "renderings": {
+    "hermes": "dist/hermes"
   },
   "sources": {
     "matt-pocock": {
