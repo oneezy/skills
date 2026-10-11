@@ -40,7 +40,7 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **Global block**: the tool's marked section in a harness's global instructions file (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`). Never in a repository.
 - **Upstream check**: the daily comparison of every unheld source with its upstream; any difference lands as an **update**.
 - **Machine command**: a command that acts on the machine or repositories it runs on (`sync`, `status`, `hook`, `branches`, `unlink`). A **library command** changes the library (`update`, `add`, `versions`) and runs as a workflow in it.
-- **Keep suffix**: `-keep` at the end of a branch name. Such a branch is never deleted; neither are `main` and `dev`.
+- **Keep suffix**: `-keep` at the end of a branch name. Such a branch is never deleted; neither are `main`, `dev` and any branch starting with `research/` or `prototype/`.
 - **Archive tag**: `archive/<name>`, the tag a branch closed without merging gets before it is deleted.
 
 - **Capability contract**: the portable obligations for resolving, authorizing and verifying a dependency.
