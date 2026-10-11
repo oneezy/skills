@@ -9,7 +9,16 @@ For a normal requested update/add/playground change, use the landing path below.
 5. **Link it here.** The script with `--pull --quiet`, then delete the temporary folder.
 6. **Migrate.** Run `/oneezy-migrate` with the update report (the `--json` output from the change), or with "no update report" after a playground change. It changes nothing when no note applies.
 
-A push refused for lack of access to oneezy/skills ends the change: say so in one line, and that a session with oneezy/skills in scope (the AI Workflow project, or Claude Code on the PC) can run the same request.
+A session that cannot clone or push oneezy/skills (a cloud thread; a push refused for lack of access) takes **Dispatch** instead of steps 1 to 3: the library runs the command itself and pushes the branch.
+
+## Dispatch
+
+The library runs `update`, `add`, `versions` and `rename` itself in `.github/workflows/run.yml` (ADR-0014): the latest published tool against `dev`, and a push of `land/<command>-<args>-<run id>` when anything changed, so from the push on nothing differs from **Land**. The same workflow runs `update` with no arguments every day, the upstream check (ADR-0009).
+
+1. **Start it.** `command` is one of `update`, `add`, `versions`, `rename`; `args` is the command's arguments as one string, split on spaces, empty for `update` of every unheld source: `gh api repos/oneezy/skills/actions/workflows/run.yml/dispatches -f ref=dev -f 'inputs[command]=update' -f 'inputs[args]=matt-pocock --to 1.3.0'`. Success prints nothing (HTTP 204). Any client that can make that REST call does the same.
+2. **Find the run.** `gh api 'repos/oneezy/skills/actions/runs?event=workflow_dispatch&per_page=5' --jq '.workflow_runs[] | select(.path == ".github/workflows/run.yml") | "\(.id) \(.status) \(.conclusion) \(.html_url)"'`, newest first; poll `repos/oneezy/skills/actions/runs/<id>` until `status` is `completed`.
+3. **Read it.** `gh api repos/oneezy/skills/actions/runs/<id>/jobs --jq '.jobs[].steps[] | "\(.name): \(.conclusion)"'` names a failed step; the log is the run's page (`html_url`). `versions` only prints there. A changed `update` or `add` pushed `land/<command>-<args>-<run id>` and the run's notice names it: continue at **Land** step 4 with that branch. An unchanged run pushed nothing and says so.
+4. **Migrate.** As **Land** step 6, with the landed commit's body as the update report (`gh api repos/oneezy/skills/commits/dev --jq .commit.message` once the land run is green): each moved source's versions, the upstream changelog between them, and the lines flagged for `/oneezy-migrate`.
 
 ## Change
 

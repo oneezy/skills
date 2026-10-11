@@ -1,6 +1,7 @@
 # land: a branch named land/<topic> lands on its own, with no pull request and no review (Justin's call, 2026-10-05,
-# oneezy/skills#48): an agent that adds or changes a skill pushes such a branch and stops. Pushing is all it does;
-# merging and releasing happen here.
+# oneezy/skills#48): an agent that adds or changes a skill pushes such a branch and stops, and run.yml pushes one
+# (land/<command>-<args>-<run id>) when a library command, the daily update included, changed anything. Pushing is all
+# they do; merging and releasing happen here.
 #
 #   1. Squash the branch onto dev, as one commit carrying the branch tip's message. A branch that changes .github/
 #      is refused: workflow changes go through a pull request.
