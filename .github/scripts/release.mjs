@@ -147,7 +147,7 @@ function notes(r) {
     ...(r.changes.removed.length ? [`Removed: ${r.changes.removed.join(", ")}.`, ""] : []),
     "Install or update:",
     "",
-    "- Claude Code: `claude plugin marketplace add oneezy/skills` once, then `claude plugin install <plugin>@oneezy-skills` (or `claude plugin marketplace update oneezy-skills`). On claude.ai: https://claude.ai/customize/plugins.",
+    "- Claude Code: switch each plugin on at https://claude.ai/customize/plugins; it arrives as `<plugin>@synced` (ADR-0007). Do not `claude plugin install` it on a machine that runs Skills Sync: a CLI install hides the account plugin and `status` reports it red.",
     "- Every machine with Skills Sync (Claude Code, Codex, Hermes): `npx --yes @oneezy/skills-sync@latest`. It reads the latest release from GitHub, clones nothing and keeps nothing of its own; `npx --yes @oneezy/skills-sync@latest status` lists the manual steps still open.",
     "- ChatGPT: upload the changed archives by hand, `docs/agents/chatgpt-upload.md`.",
     "",
