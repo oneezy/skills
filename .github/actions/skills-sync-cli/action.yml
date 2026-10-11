@@ -1,58 +1,43 @@
-# Build @oneezy/skills-sync from a checkout of oneezy/tools at one commit, for the jobs in
-# .github/workflows/library.yml. The package is found by the name in its package.json, never by folder
-# (the @oneezy/skills-sync package in oneezy/tools sits in the pnpm workspace's packages/skills-sync since
-# tools #75). pnpm comes from npm so a `packageManager` field in the tools root is honoured rather than
-# fought: pnpm switches itself to the version that field names.
+# Install the published @oneezy/skills-sync from npm, for the jobs in .github/workflows/library.yml and land.yml.
+# Every caller runs the latest published version (ADR-0008); nothing here checks out or builds oneezy/tools. The CLI
+# entry comes from the installed package's bin field, never from a hard-coded folder, so every `node "$CLI" …` step
+# keeps working when the package moves it.
 name: skills-sync CLI
-description: Check out oneezy/tools at a commit, locate @oneezy/skills-sync by name and build it.
-
-inputs:
-  ref:
-    description: The oneezy/tools commit to build (SKILLS_SYNC_REF)
-    required: true
-  tools-path:
-    description: Where to check oneezy/tools out, relative to the workspace
-    default: tools
-  library-path:
-    description: The library checkout whose .github/scripts hold the package lookup
-    default: library
+description: Install the latest @oneezy/skills-sync from npm and locate its CLI entry.
 
 outputs:
   cli:
-    description: The built CLI entry (the package's bin), run with node
-    value: ${{ steps.locate.outputs.cli }}
+    description: The installed CLI entry (the package's bin, dist/src/cli.js today), run with node
+    value: ${{ steps.install.outputs.cli }}
+  version:
+    description: The version npm installed (what latest resolved to)
+    value: ${{ steps.install.outputs.version }}
 
 runs:
   using: composite
   steps:
-    - name: Check out oneezy/tools at the pinned commit
-      uses: actions/checkout@v5
-      with:
-        repository: oneezy/tools
-        ref: ${{ inputs.ref }}
-        path: ${{ inputs.tools-path }}
-        persist-credentials: false
-
     - name: Set up Node
       uses: actions/setup-node@v5
       with:
         node-version: 24
 
-    - name: Set up pnpm
+    - name: Install @oneezy/skills-sync@latest from npm
+      id: install
       shell: bash
       run: |
-        npm install -g pnpm@12
-        pnpm --version
-
-    - name: Locate @oneezy/skills-sync by name
-      id: locate
-      shell: bash
-      run: node "${{ inputs.library-path }}/.github/scripts/find-package.mjs" "${{ inputs.tools-path }}"
-
-    - name: Build it
-      shell: bash
-      working-directory: ${{ steps.locate.outputs.dir }}
-      run: |
-        pnpm install --frozen-lockfile
-        pnpm run build
-        node "${{ steps.locate.outputs.cli }}" --help | head -n 1
+        prefix="$RUNNER_TEMP/skills-sync"
+        mkdir -p "$prefix"
+        # --prefer-online resolves the dist-tag against the registry, never a cached packument
+        npm install --prefix "$prefix" --prefer-online --no-audit --no-fund @oneezy/skills-sync@latest
+        pkg="$prefix/node_modules/@oneezy/skills-sync/package.json"
+        version=$(node -p 'require(process.argv[1]).version' "$pkg")
+        bin=$(node -p 'const b = require(process.argv[1]).bin; typeof b === "string" ? b : Object.values(b ?? {})[0] ?? ""' "$pkg")
+        if [[ -z "$bin" ]]; then
+          echo "::error title=skills-sync CLI::@oneezy/skills-sync@$version has no bin entry"
+          exit 1
+        fi
+        cli="$(dirname "$pkg")/$bin"
+        node "$cli" --help | head -n 1
+        echo "cli=$cli" >> "$GITHUB_OUTPUT"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+        echo "::notice title=skills-sync CLI::@oneezy/skills-sync@$version from npm (latest)"

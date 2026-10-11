@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync Justin's skills from the library: one call to the published tool, the skill's words mapped to its commands.
+# Sync Justin's skills from the library: one call to the latest published tool (ADR-0008), the skill's words mapped to its commands.
 set -euo pipefail
 case "${1:-}" in
   "") set -- --quiet ;;
@@ -9,4 +9,4 @@ if [[ -n "${SKILLS_SYNC_CLI:-}" ]]; then
   [[ -f "$SKILLS_SYNC_CLI" ]] || { printf 'SKILLS_SYNC_CLI is not a built CLI file\n' >&2; exit 1; }
   exec node "$SKILLS_SYNC_CLI" "$@"
 fi
-exec npx --yes '@oneezy/skills-sync@^0.7.6' "$@"
+exec npx --yes '@oneezy/skills-sync@latest' "$@"
