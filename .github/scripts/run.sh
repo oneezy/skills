@@ -39,7 +39,9 @@ case $COMMAND in
   update | add | versions | rename) ;;
   *) fail "unknown command '$COMMAND'; the library commands are update, add, versions and rename" ;;
 esac
-help=$(node "$CLI" --help 2>&1 || true)
+if ! help=$(node "$CLI" --help 2>&1); then
+  fail "the tool's --help failed: $(head -n 1 <<< "$help")"
+fi
 if ! grep -Eq "^  $COMMAND( |\$)" <<< "$help"; then
   known=$(grep -oE '^  (update|add|versions|rename)\b' <<< "$help" | tr -d ' ' | paste -sd ',' | sed 's/,/, /g' || true)
   fail "$tool has no '$COMMAND' command (it has ${known:-none of update, add, versions, rename}); nothing run, nothing pushed"
@@ -111,10 +113,13 @@ if git -C "$LIBRARY" diff --cached --quiet; then
 fi
 touched=$(git -C "$LIBRARY" diff --cached --name-only -- .github)
 [[ -z $touched ]] || fail "$shown changed .github/ ($touched), which land.yml refuses; nothing pushed"
+# What land.yml would check, checked here first: a tree the checks refuse fails this run and leaves no land/* branch behind.
+node "$CLI" build --check --repo "$LIBRARY" && node "$CLI" check --repo "$LIBRARY" || fail "$shown left a tree check refuses; nothing pushed"
 stat=$(git -C "$LIBRARY" diff --cached --stat --no-color | tail -n 1 | sed 's/^ *//')
 
-# 7. The commit, named by the report, on land/<command>-<args>-<run id>; land.yml takes it from there.
-node "$scripts/run-report.mjs" message "$LIBRARY" "$tmp/report.json" --command "$COMMAND" --args "$ARGS" --tool-version "$TOOL_VERSION" --run "$RUN_URL" --out "$tmp/message"
+# 7. The commit, named by the report (the message goes to the step summary, never to stdout, where a changelog line
+#    starting with :: would read as a workflow command), on land/<command>-<args>-<run id>; land.yml takes it from there.
+node "$scripts/run-report.mjs" message "$LIBRARY" "$tmp/report.json" --command "$COMMAND" --args "$ARGS" --tool-version "$TOOL_VERSION" --run "$RUN_URL" --out "$tmp/message" > /dev/null
 slug=$(printf '%s' "${positional[*]:-all}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9.]+/-/g; s/\.{2,}/./g; s/^[-.]+//; s/[-.]+$//' | cut -c1-40 | sed -E 's/[-.]+$//; s/\.lock$/-lock/')
 branch="land/$COMMAND-${slug:-all}-$RUN_ID"
 git -C "$LIBRARY" -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --quiet -F "$tmp/message"

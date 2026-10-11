@@ -192,7 +192,7 @@ steps:
       done: the skill folder written, removed or moved
   - id: dispatch-run
     after: map-request
-    if: change, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
+    if: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread)
     does: dispatch the library's run workflow over gh api REST with the command and its arguments as one string, then
       watch the run; a changed update or add pushes land/<command>-<args>-<run id>, versions only prints in the log
     needs:

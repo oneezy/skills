@@ -30,7 +30,7 @@ const config = () => ({ version: 1, sources: { "matt-pocock": { repo: "mattpococ
 test("an upgrade: the subject names the command and the moved ids; the body carries both positions, the changelog range, the lines flagged for /oneezy-migrate, the tool and the run", () => {
   const text = message({ command: "update", args: "matt-pocock", report: { updated: [moved()] }, toolVersion: "0.7.6", run: "https://github.com/oneezy/skills/actions/runs/1" });
   const [subject, blank, first] = text.split("\n");
-  assert.equal(subject, "🔧 chore(sources): update matt-pocock");
+  assert.equal(subject, "🔧 chore(repo): update matt-pocock");
   assert.equal(blank, "");
   assert.match(first, /^`update matt-pocock`, run by \.github\/workflows\/run\.yml with @oneezy\/skills-sync 0\.7\.6, moved 1 source and rebuilt the packages\.$/);
   assert.match(text, /\nmatt-pocock: 1\.3\.1 \(7a030a8, \+5\) → 1\.4\.0 \(49dd158\), upgrade\n/);
@@ -44,7 +44,7 @@ test("several sources: every id in the subject, in the report's order, each with
     command: "update",
     report: { updated: [moved(), moved({ id: "pstack", from: { version: "0.15.15", commit: "df58112", ahead: 0 }, to: { version: "0.15.15", commit: "0123456", ahead: 3 }, changelog: null, changelogReason: "no release between them (both 0.15.15)" })] },
   });
-  assert.match(text, /^🔧 chore\(sources\): update matt-pocock, pstack\n/);
+  assert.match(text, /^🔧 chore\(repo\): update matt-pocock, pstack\n/);
   assert.match(text, /moved 2 sources and rebuilt/);
   assert.match(text, /\npstack: 0\.15\.15 \(df58112\) → 0\.15\.15 \(0123456, \+3\), upgrade\n  changelog: none \(no release between them \(both 0\.15\.15\)\)\n/);
 });
@@ -70,14 +70,14 @@ test("a long changelog is cut at 120 lines with a count of the rest", () => {
 
 test("a report that moved nothing is a rebuild of the packages alone; one with no report at all names the command and leaves the diff as the report", () => {
   const rebuild = message({ command: "update", report: { updated: [] }, toolVersion: "0.7.6" });
-  assert.match(rebuild, /^🔧 chore\(sources\): rebuild plugins with skills-sync 0\.7\.6\n\n`update`, run by .*, moved no source; the packages it rebuilt differ from the committed ones, so this commit carries the rebuild alone\.\n/);
+  assert.match(rebuild, /^🔧 chore\(repo\): rebuild plugins with skills-sync 0\.7\.6\n\n`update`, run by .*, moved no source; the packages it rebuilt differ from the committed ones, so this commit carries the rebuild alone\.\n/);
   const plain = message({ command: "rename", args: "old new", report: {}, run: "https://example.test/run/2" });
-  assert.equal(plain, "🔧 chore(sources): rename old new\n\n`rename old new`, run by .github/workflows/run.yml with @oneezy/skills-sync, changed the library; the diff is the report.\n\nRun: https://example.test/run/2\n");
+  assert.equal(plain, "🔧 chore(repo): rename old new\n\n`rename old new`, run by .github/workflows/run.yml with @oneezy/skills-sync, changed the library; the diff is the report.\n\nRun: https://example.test/run/2\n");
 });
 
 test("an add: the new source is new to the lock, with no position to compare", () => {
   const text = message({ command: "add", args: "mattpocock/skills --id probe", report: { updated: [moved({ id: "probe", from: null, changelog: null, changelogReason: "new to the lock: no version to compare with" })] } });
-  assert.match(text, /^🔧 chore\(sources\): add probe\n/);
+  assert.match(text, /^🔧 chore\(repo\): add probe\n/);
   assert.match(text, /\nprobe: \(new\) → 1\.4\.0 \(49dd158\), upgrade\n  changelog: none \(new to the lock: no version to compare with\)\n/);
   assert.equal(position(null), "(new)");
   assert.equal(position({ version: null, commit: "abcdef0123", ahead: null }), "no version (abcdef0)");
@@ -115,7 +115,7 @@ test("the CLI: apply-config rewrites skills-sync.json (2-space JSON, trailing ne
   const printed = execFileSync(process.execPath, [SCRIPT, "message", lib, report, "--command", "update", "--args", "matt-pocock --to 1.3.1", "--tool-version", "0.7.6", "--out", out], { encoding: "utf8" });
   assert.equal(printed, fs.readFileSync(out, "utf8"));
   assert.match(printed, /\nConfig:\n  skills-sync\.json: sources\.matt-pocock\.version = "1\.3\.1"\n/);
-  assert.match(printed, /^🔧 chore\(sources\): update matt-pocock\n/);
+  assert.match(printed, /^🔧 chore\(repo\): update matt-pocock\n/);
   fs.rmSync(report);
   fs.rmSync(out);
 });

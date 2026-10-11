@@ -10,7 +10,7 @@
 // sets sources.<id>.version in skills-sync.json, or removes it for null, the way references/changes.md tells an agent
 // to; the tool never writes the config itself. Prints one line per change; a report with no `config` changes nothing.
 //
-// message: the commit message, printed and written to --out. Subject `🔧 chore(sources): <command> <ids>` (the ids
+// message: the commit message, printed and written to --out. Subject `🔧 chore(repo): <command> <ids>` (the ids
 // the report moved), then per moved source its version, commit and commits past that version before and after, the
 // upstream changelog range the move brings (an upgrade) or undoes (a downgrade), the lines of it that speak of a
 // breaking change, a migration or a deprecation flagged for /oneezy-migrate, the config changes, the tool's version
@@ -75,13 +75,13 @@ export function message({ command, args = "", report = {}, toolVersion = "", run
   const by = `\`${asked}\`, run by .github/workflows/run.yml with ${tool},`;
   if (!Array.isArray(report.updated)) {
     const body = [`${by} changed the library; the diff is the report.`, ...(run ? ["", `Run: ${run}`] : [])];
-    return `🔧 chore(sources): ${asked}\n\n${body.join("\n")}\n`;
+    return `🔧 chore(repo): ${asked}\n\n${body.join("\n")}\n`;
   }
   const updated = report.updated;
   const ids = updated.map((u) => u.id);
   const subject = ids.length
-    ? `🔧 chore(sources): ${command} ${ids.join(", ")}`
-    : `🔧 chore(sources): rebuild plugins with ${tool.replace(/^@oneezy\//, "")}`;
+    ? `🔧 chore(repo): ${command} ${ids.join(", ")}`
+    : `🔧 chore(repo): rebuild plugins with ${tool.replace(/^@oneezy\//, "")}`;
   const body = [
     ids.length
       ? `${by} moved ${ids.length} source${ids.length === 1 ? "" : "s"} and rebuilt the packages.`
