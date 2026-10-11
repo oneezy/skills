@@ -32,11 +32,6 @@ refs:
     id: skills/oneezy/oneezy-naming/references/titles.md
     need: conditional
     when: setting or changing a chat title
-  - token: /oneezy-remote
-    kind: skill
-    id: oneezy-remote
-    need: example
-    when: its workspace command takes the worktree name
   - token: /wayfinder
     kind: skill
     id: wayfinder
@@ -66,7 +61,7 @@ steps:
     outcome:
       done: the title matches the shape and every label Matt's skill set is still there
   - id: title-chat
-    after: pick-kind
+    after: name-it
     does: for a chat, verify each origin marker with the checks in references/titles.md, then set the title through the session's rename route, or propose a Title line when there is none
     outcome:
       done: the chat carries the title, or its first reply line proposes it

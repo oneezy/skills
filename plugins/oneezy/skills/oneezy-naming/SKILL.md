@@ -5,7 +5,7 @@ metadata:
   internal: true
 ---
 
-Every title is **one emoji, a name, a colon, then plain words** an eighth grader reads at once: `✨ app: Sign in with Google`. Matt Pocock's skills find tickets by label and sub-issue link, never by title, so these rules change titles and add labels while every step and label of Matt's skills stays exactly as he wrote it.
+Issue, commit, PR and release titles are **one emoji, a name, a colon, then plain words** an eighth grader reads at once: `✨ app: Sign in with Google`. Branches, chats and worktrees take the shapes in their own sections. Matt Pocock's skills find tickets by label and sub-issue link, never by title, so these rules change titles and add labels while every step and label of Matt's skills stays exactly as he wrote it.
 
 Before calling a dependency, read `references/capabilities/contract.md`, then the adapter for this host. Load its actual instructions and discover its tools; a name or mention does not execute it.
 
@@ -76,8 +76,8 @@ One version for the whole repo, tagged `v<major>.<minor>.<patch>`, with the rele
 A chat title is an **origin marker**, a space, then the chat's name.
 
 - **Name**: a chat about an issue takes the issue title plus its number. Any other chat takes the ticket shape, `<emoji> <area>: <the work>`.
-- **Origin marker**: one to three emoji, in this order, each from a fact you verified (`references/titles.md` has the checks):
-  1. Where the session runs: 💻 Justin's computer (also when his phone drives it), ☁️ cloud, 🌐 SSH. ✴️ marks a Claude Code session or a chat imported from one; join it to a known place as ☁️✴️ or 🌐✴️, and use it alone on Justin's computer. 💬 holds the place until it is known.
+- **Origin marker**: up to four emoji, in this order, each from a fact you verified (`references/titles.md` has the checks):
+  1. Where the session runs: 💻 Justin's computer (also when his phone drives it), ☁️ cloud, 🌐 SSH. ✴️ marks a Claude Code session or a chat imported from one; join it to a known place as ☁️✴️ or 🌐✴️, and use it alone on Justin's computer. ❔ holds the place until it is known.
   2. 🤖 for a delegated subagent session.
   3. 🌳 while the working directory is a linked Git worktree.
 
@@ -98,6 +98,7 @@ A chat title is an **origin marker**, a space, then the chat's name.
 A task worktree's folder is `<repo>-issue-<n>-<slug>`, `<repo>-pr-<n>-<slug>`, or `<repo>-<slug>` with no ticket: lowercase words joined by hyphens, the repo and the number first, and `<slug>` a few words naming the work (`brain-issue-2-fix-login`, `tools-pr-20-session-continuity`).
 
 - Add a numeric suffix only on a collision.
-- Pass the name wherever the creation route takes one; `/oneezy-remote`'s `workspace` command does.
+- Pass the name wherever the creation route takes one: the `workspace` command of oneezy/tools `packages/remote-sessions/remote_sessions.py` does, and so do most harness worktree tools.
+- Start the harness in the `WorkingDirectory` the `workspace` command returns.
 - An existing worktree keeps its folder and its saved session paths.
 - When an app chose the folder before you ran, report that the name was not yours to set.

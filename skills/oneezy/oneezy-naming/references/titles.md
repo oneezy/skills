@@ -1,13 +1,13 @@
 # Chat titles: checks and rename routes
 
-Read this before setting or changing a chat title. Every marker comes from a fact you checked in this session; a guess becomes 💬, or leaves 🤖 and 🌳 off.
+Read this before setting or changing a chat title. Every marker comes from a fact you checked in this session; a guess becomes ❔, or leaves 🤖 and 🌳 off.
 
 ## Checks
 
 - **☁️ cloud**: the session runs on a hosted machine, not Justin's: `CLAUDE_CODE_REMOTE=true` in a Claude cloud session, or the host's own context says it is a cloud task.
 - **🌐 SSH**: `SSH_CONNECTION` or `SSH_TTY` is set.
 - **💻 Justin's computer**: a local session with neither of the above.
-- **✴️ Claude Code**: this session is Claude Code, or the chat was imported from Claude Code.
+- **✴️ Claude Code**: `CLAUDECODE=1` is set, or the chat was imported from Claude Code.
 - **🤖 subagent**: another agent dispatched this session; its task came from that agent, not from Justin.
 - **🌳 worktree**: `git rev-parse --path-format=absolute --git-dir` differs from `git rev-parse --path-format=absolute --git-common-dir`, or `git worktree list` names this directory as a linked worktree. A folder named `worktrees` or an app-generated folder name proves nothing on its own.
 
