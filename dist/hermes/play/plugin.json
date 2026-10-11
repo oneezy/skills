@@ -1,0 +1,30 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "play",
+  "version": "0.43.4",
+  "description": "Justin's playground: skills he is trying out, each named play-<name>, before they move into oneezy or trident.",
+  "author": {
+    "name": "oneezy",
+    "url": "https://github.com/oneezy"
+  },
+  "homepage": "https://github.com/oneezy/skills",
+  "repository": "https://github.com/oneezy/skills",
+  "keywords": [
+    "skills",
+    "play"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Play",
+        "shortDescription": "Justin's playground",
+        "longDescription": "Justin's playground: skills he is trying out, each named play-<name>, before they move into oneezy or trident.",
+        "developerName": "oneezy",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive"
+        ]
+      }
+    }
+  }
+}

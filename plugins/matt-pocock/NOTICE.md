@@ -9,3 +9,5 @@
 - Skills: ask-matt, chief-of-staff, claude-handoff, code-review, codebase-design, diagnosing-bugs, domain-modeling, git-guardrails-claude-code, grill-me, grill-with-docs, grilling, handoff, implement, implement-spec, improve-codebase-architecture, loop-me, migrate-to-shoehorn, pr, prototype, research, retro, scaffold-exercises, setup-matt-pocock-skills, setup-pre-commit, setup-ts-deep-modules, tdd, teach, to-questionnaire, to-spec, to-tickets, triage, wait-what, wayfinder, wizard, writing-beats, writing-for-agents (at 321658273cb1d20b76026717d027d505790106d4), writing-fragments, writing-shape
 
 Every `SKILL.md` under `skills/` carries `metadata.internal: true`: the library's own copies are the ones `npx skills` installs and updates, and these are skipped (`INSTALL_INTERNAL_SKILLS=1` re-exposes them).
+
+Hermes rejects that flag (its portable loader takes only string-valued metadata), so the copy it loads is `dist/hermes/matt-pocock/` in the library: this package without the flag, each skill's `name` set to its folder. `hermes plugins install oneezy/skills/dist/hermes/matt-pocock` installs it; Hermes lists its skills as `agent-plugin-matt-pocock-c0b71e82:<skill>`.
