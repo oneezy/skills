@@ -208,6 +208,10 @@
           "path": "pstack/skills/automate-me",
           "hash": "08b9c387f2a3da3faa0ba0a3519292a6025ef1f1b3a48273e451f84688142ede"
         },
+        "benchmark-checklist": {
+          "path": "pstack/skills/benchmark-checklist",
+          "hash": "4ed522cb6ea05fedac17edcc92b48462ddd7032595ef5c19eb25ede6654e1a48"
+        },
         "blast-radius": {
           "path": "pstack/skills/blast-radius",
           "hash": "e59c40c6882599243a2988e8001e968d0e92ae982273ed3369eec58c4b956d30"
@@ -215,6 +219,10 @@
         "bro": {
           "path": "pstack/skills/bro",
           "hash": "b651827a1c11465d79500780e53414fdccffd12ce3b640138dee2d04133a9a33"
+        },
+        "correct": {
+          "path": "pstack/skills/correct",
+          "hash": "61c8a417f95b6e3cc198cd869ba92ab5d65c68fcc4e3191a302a5a9f24bc2645"
         },
         "create-verification-skill": {
           "path": "pstack/skills/create-verification-skill",
@@ -232,6 +240,10 @@
           "path": "pstack/skills/interrogate",
           "hash": "63fc9e7c2bfae24d955a1ea308e02264817cf6ca911df40d3233b5c67b18cdb9"
         },
+        "ketchup": {
+          "path": "pstack/skills/ketchup",
+          "hash": "8971cb260b9c7af00cb07885e117a82c558608a41077da9eb95c9814d72b9d6a"
+        },
         "maintain-verification-skill": {
           "path": "pstack/skills/maintain-verification-skill",
           "hash": "283083c9547641392a58c38edeb147e75aa99912e7fba55edaa7b1a02021ffec"
@@ -243,6 +255,10 @@
         "no-comments": {
           "path": "pstack/skills/no-comments",
           "hash": "0104443baedded93b3419249c9449bd50d0e0c9e4135a059210661923c295bf4"
+        },
+        "poteto-help": {
+          "path": "pstack/skills/poteto-help",
+          "hash": "711c7092a51ce05807b9013e75d7e75aca644a739ae1e7125fdc6f8f8dc8ee1f"
         },
         "poteto-mode": {
           "path": "pstack/skills/poteto-mode",
@@ -271,6 +287,10 @@
         "principle-experience-first": {
           "path": "pstack/skills/principle-experience-first",
           "hash": "bd0254d8a460c145a148214cbc136f84dbba6edc9acc48c00a8af660efc88856"
+        },
+        "principle-explain-the-number": {
+          "path": "pstack/skills/principle-explain-the-number",
+          "hash": "a266874f779972670f2cc9e0ed49d868eae06c301207c6deb80a90f205d12d61"
         },
         "principle-fix-root-causes": {
           "path": "pstack/skills/principle-fix-root-causes",
