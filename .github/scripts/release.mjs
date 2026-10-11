@@ -2,10 +2,10 @@
 // The release record of one `main` commit, for the release job in .github/workflows/library.yml. It reads what
 // `build --artifacts` wrote (artifacts/releases.json and the archives) and the committed packages under plugins/, and
 // writes artifacts/release.json and artifacts/release-notes.md: the source commit and tree, the digests of
-// skills-sync.json and skills-sync.lock.json, the tool commit, and per plugin its version, archive sha256 and every file
-// with its sha256.
+// skills-sync.json and skills-sync.lock.json, the npm version of the tool that built it, and per plugin its version,
+// archive sha256 and every file with its sha256.
 //
-//   node release.mjs <library> [--previous <release.json>] [--tool-ref <sha>] [--repo <owner/repo>]
+//   node release.mjs <library> [--previous <release.json>] [--tool-version <semver>] [--repo <owner/repo>]
 //
 // The release number is the previous one plus one (1 when there is none), and its tag is release-<n>. Nothing is
 // released, and the step outputs say so (release=false), when the content is the previous release's: a promotion
@@ -101,7 +101,7 @@ export function compare(previous, plugins) {
 }
 
 /** The release record and its notes, or why there is none. */
-export function plan({ library, previous, toolRef, repo, commit, tree }) {
+export function plan({ library, previous, toolVersion, repo, commit, tree }) {
   const record = JSON.parse(fs.readFileSync(path.join(library, "artifacts", "releases.json"), "utf8"));
   const plugins = {};
   for (const [id, r] of Object.entries(record.plugins).sort(([a], [b]) => cmp(a, b))) {
@@ -126,7 +126,7 @@ export function plan({ library, previous, toolRef, repo, commit, tree }) {
     number,
     previous: previous?.release ?? null,
     source: { repo, commit, tree },
-    tool: { repo: "oneezy/tools", package: "@oneezy/skills-sync", commit: toolRef ?? null },
+    tool: { repo: "oneezy/tools", package: "@oneezy/skills-sync", version: toolVersion || null },
     digests: { "skills-sync.json": digest("skills-sync.json"), "skills-sync.lock.json": digest("skills-sync.lock.json") },
     content,
     changes: { added: diff.added, changed: diff.changed, removed: diff.removed },
@@ -160,12 +160,12 @@ function main(argv) {
     return i >= 0 ? argv.splice(i, 2)[1] : undefined;
   };
   const prevFile = opt("--previous");
-  const toolRef = opt("--tool-ref");
+  const toolVersion = opt("--tool-version");
   const repo = opt("--repo") ?? process.env.GITHUB_REPOSITORY ?? "oneezy/skills";
   const library = path.resolve(argv[0] ?? ".");
   const git = (...a) => execFileSync("git", ["-C", library, ...a], { encoding: "utf8" }).trim();
   const previous = prevFile && fs.existsSync(prevFile) ? JSON.parse(fs.readFileSync(prevFile, "utf8")) : null;
-  const r = plan({ library, previous, toolRef, repo, commit: git("rev-parse", "HEAD"), tree: git("rev-parse", "HEAD^{tree}") });
+  const r = plan({ library, previous, toolVersion, repo, commit: git("rev-parse", "HEAD"), tree: git("rev-parse", "HEAD^{tree}") });
   const outputs = { release: String(r.release), tag: r.tag ?? "", number: String(r.number ?? ""), reason: r.reason ?? "" };
   if (r.release) {
     fs.writeFileSync(path.join(library, "artifacts", "release.json"), JSON.stringify(r.record, null, 2) + "\n");
