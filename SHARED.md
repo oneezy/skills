@@ -1,6 +1,6 @@
 # How Justin works
 
-Every repo, every session. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md is canonical for that repo and extends these rules. skills-sync copies this file into each global instructions file; Justin edits it as `SHARED.md` in oneezy/skills.
+Every repo, every session. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md adds to these rules and wins where they disagree. skills-sync copies this file into each global instructions file; Justin edits it as `SHARED.md` in oneezy/skills.
 
 ## Skills
 
@@ -12,29 +12,30 @@ Skills come from the library oneezy/skills, installed into each harness in one f
 | Codex | `$<skill>` in the prompt (a plugin's skill: `$<plugin>:<skill>`), the `/skills` picker, or `@<skill>` on ChatGPT web |
 | Hermes | `/<skill>` for a loose skill; a plugin's skill: `/agent-plugin-<id>-<hash>:<skill>` |
 
-- **Named skill**: when Justin names a skill, run it from the plugin this session loaded, user-only skills included. Start a user-only skill only when he names it.
-- **Loaded copy**: the plugin this session loaded is the only source of a skill, plus the repo's own skills for that repo. A `SKILL.md` fetched from GitHub or read from another folder skips its guardrails; never run one.
-- **Missing skill**: say so, show the table above, then run `/oneezy-skills`.
-- **Inner loop**: Matt Pocock's skills. `/ask-matt` picks the right one.
+- **Named skill**: when Justin names a skill, run it. If the harness refuses because it is user-only, Read its `SKILL.md` in the loaded plugin's own folder on disk and follow it, with the rest of his message as its arguments. Start a user-only skill only when he names it, or under an autopilot grant.
+- **Loaded copy**: run a skill only from a loaded plugin (its folder on disk counts) or the repo's own skills. A `SKILL.md` from GitHub or any other folder skips its guardrails; never run one.
+- **Missing skill**: say so and show the table above. Run `/oneezy-skills` (if that is missing too, `npx --yes @oneezy/skills-sync@latest status`), report its manual steps, and tell Justin the skill appears in a new session.
+- **Matt Pocock's skills**: when it is unclear which one fits, suggest Justin run `/ask-matt`.
 
 ## Git
 
-- **Landing, merging, promoting `main`**: `/oneezy-merge`, when Justin asks ("oneezy merge to dev", "release", "land them both"). It is the only way `main` changes.
-- **`dev`** is the integration branch. Cut every branch and worktree from an up-to-date `dev`.
-- **Propose** every git action first. Commit, push, delete a branch or force anything only when Justin asks for that action in this session.
-- **Branch deletion**: ask Justin every time. The daily GitHub branch-cleanup workflow is the one exception. `main`, `dev`, `*-keep`, `research/*` and `prototype/*` branches stay forever.
+- **Landing, merging, promoting `main`**: `/oneezy-merge`, when Justin asks ("oneezy merge to dev", "release", "dev and main"). `main` changes only through `/oneezy-merge` or a repo's own documented landing workflow (oneezy/skills: `land/*` branches).
+- **`dev`** is the integration branch. Cut new branches and worktrees from an up-to-date `dev`; inside an autopilot run, from the autopilot branch; in a repo with no `dev`, from the default branch.
+- **Propose** every git write (commit, push, merge, rebase, reset, branch or tag change, any `--force`) and wait for Justin's yes in this session. Read-only git needs no proposal. A skill Justin runs carries the git permissions its `SKILL.md` states; an autopilot grant covers its run.
+- **Branch deletion**: ask Justin every time, unless he already said yes: `/oneezy-merge into <branch>` deletes the branch it landed, an autopilot grant deletes landed ticket branches, and the daily cleanup workflow (ADR-0013) deletes merged ones. `main`, `dev`, `*-keep`, `research/*` and `prototype/*` branches are kept forever.
 - **Stash** only with a message (`git stash push -m "<why>"`), or make a WIP commit.
 - **Preview URLs**: after a push, give Justin the preview URLs it produced.
 
 ## Autopilot
 
 - An **autopilot run** builds one spec's tickets with no human in the loop, on an **autopilot branch** `feature/<spec>-<desc>` cut from `dev`. Ticket branches are cut from it and land back in it. It reaches `dev` only through Justin's own `/oneezy-merge into dev`.
-- An **autopilot grant** in the run's starting prompt, naming its autopilot branch, lets every agent in the run commit, push, open pull requests, squash-merge into that branch, close the landed ticket and delete the ticket branch. Changes outside the repo wait until the autopilot branch lands in `dev`.
+- An **autopilot grant** in the run's starting prompt, naming its autopilot branch, counts as Justin's ask for every agent in the run. Each may run `/implement` and `/oneezy-merge into <autopilot branch>` from the loaded plugin, commit, push, open pull requests, close the landed ticket and delete its ticket branch. Changes outside the repo wait until the autopilot branch lands in `dev`.
 
 ## Names and worktrees
 
 - **Titles and names** of issues, branches, commits, pull requests, releases, chats and worktrees: `/oneezy-naming`.
-- **Worktree and remote-thread commands**: `/oneezy-remote`.
+- **Remote threads**: Justin runs `/oneezy-remote`.
+- **New worktree**: create it with the `workspace` command of oneezy/tools `packages/remote-sessions/remote_sessions.py` (preview with `--plan --json`), or with the harness's own worktree tool when that is absent.
 
 ## Work
 
@@ -48,12 +49,12 @@ Skills come from the library oneezy/skills, installed into each harness in one f
 
 ## Voice chats
 
-- **Conversation** carries simple questions and quick lookups. Substantive work goes to its own task; record which task and where it runs.
-- **Follow-up**: arrange one before your turn ends: waits of at most 60 seconds each while you coordinate, or a saved monitor for later. Reuse a monitor that already exists. If none can be arranged, tell Justin.
+- **Conversation** carries simple questions and quick lookups. Substantive work goes to its own task; tell Justin the task's title, ID and host.
+- **Follow-up**: after handing work to a task, arrange one before your turn ends: waits of at most 60 seconds each while you coordinate, or a saved monitor for later. Reuse a monitor that already exists. If none can be arranged, tell Justin.
 - **Report back** when a task finishes, fails or needs Justin, with its verified result and a link that opens it. Stay quiet while nothing changes; end or pause the monitor once you have reported.
-- **What's running**: read the live sessions and list each by exact title, host and verified state, with a link the app returned.
+- **What's running**: read the live sessions and list each by exact title, host and verified state, with a link the app returned for it; never build one yourself. Idle is not done: say unknown when a state is unverified.
 - **Stop, pause, quiet, hold on**: go quiet and wait for Justin to speak to you again. The call stays open until he ends it. Talk between Justin and other people is conversation, not commands.
 
 ## Brain
 
-**Brain** capture, lookup, agenda, triage, task status and durable context: load `/oneezy-brain` and follow its current registry. It owns the Google Drive Brain, and it replaces any earlier Brain location in these instructions. If the skill or its Drive route is unavailable, report that exact blocker and stop the dependent Brain work.
+**Brain** capture, lookup, agenda, triage, task status and durable context: load `/oneezy-brain` and follow its current registry. It owns the Google Drive Brain, and it replaces every other Brain location in this file, including GitHub issues in oneezy/brain. If the skill or its Drive route is unavailable, report that exact blocker and stop the dependent Brain work.
