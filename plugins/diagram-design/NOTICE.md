@@ -3,8 +3,8 @@
 `diagram-design` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: cathrynlavery/diagram-design (ref `main`, skills under `skills`)
-- Version: 2.6.59
-- Commit: 3996c1607503ec4bcdb60b018568359d20f71d15 (2026-10-06T06:44:34Z)
+- Version: 2.6.74
+- Commit: 7a2e22170ee838e859d8142ba825d83f8b6375e6 (2026-10-10T21:10:13Z)
 - License: MIT, see LICENSE
 - Skills: diagram-design
 

@@ -4,7 +4,7 @@
 
 - Source: anthropics/skills (ref `main`, skills under `skills`)
 - Version: unversioned upstream
-- Commit: 683bc88e56f3e09ba94f7055977f3d3aa499f202 (2026-10-05T06:46:42-07:00)
+- Commit: dbd4588f9e1033efb41dad4bef2f7947c8993d44 (2026-10-09T18:45:49Z)
 - License: no LICENSE among the source's attribution files
 - Skills: frontend-design
 
