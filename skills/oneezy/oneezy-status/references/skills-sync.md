@@ -4,14 +4,14 @@ Two inputs: the canonical script's command, exit code and complete action report
 
 ## Definition of done
 
-**Done** is `ok: true` and `manualSteps: []` in `status --json`, nothing less. `ok` is false while any line is red (a harness line, the release line, a checkout). Manual steps are work only Justin can do; they never turn a line red, they keep the machine from being done. In a cloud thread expect `release: null`, no plugin lines and no checkouts, and possibly the `cloud-setup` step.
+**Done** is `ok: true` and `manualSteps: []` in `status --json`, nothing less. `ok` is false while any line is red (a harness line, the release line, a checkout). Manual steps are work only Justin can do; they never turn a line red, they keep the machine from being done. In a cloud thread expect `release: null`, no plugin lines and no checkouts, and possibly the `cloud-setup` step. When `status --json` has no `manualSteps` key, the tool is older than 0.9.0: say `Skills Sync <version from --help> cannot list manual steps yet; done cannot be judged`, never write "No manual steps open.", and do not run `branches` or `hook` (0.9.0 commands).
 
 ## Per-harness lines
 
 Open the report with one line for the machine, then one green or red line per harness in `harnesses`, in the order the tool gives them:
 
 ```
-Skills Sync: not done (2 red lines, 1 manual step)   (latest oneezy/skills release-17, ae92a54)
+Skills Sync: not done (3 red lines, 1 manual step)   (latest oneezy/skills release-17, ae92a54)
 ✅ Codex  plugins from GitHub
 ❌ Claude Code  account plugins: 2 red
    ! matt-pocock@synced 1.3.0 (latest 1.3.1)
@@ -24,8 +24,8 @@ Manual steps (1): ...
 - A harness is ✅ when none of its `lines` has `ok: false`, ❌ otherwise; list its red lines (`mark`, `text`) under it. The `.` notes (loose links left alone, other plugins) are not listed unless asked. A harness `status` does not list was not found on the machine: say so in one clause, not as a red line.
 - A Codex `hook` with `trusted: false` is green with a manual step (`codex-trust`); do not paint it red.
 - The release line (top-level `lines`) and each `checkouts` entry with `ok: false` are red on the machine line, not under a harness.
-- Close the report with `manualSteps` (after everything else, run evidence included): each `title`, then its `steps` numbered, exactly as the tool wrote them (they are phone-ready). Nothing open: "No manual steps open."
-- Quote the tool's words for red lines and steps; add no advice of your own. The next move for a red line is `sync`, which the tool's line says; the next move for a step is the step.
+- Close the report with `manualSteps` (after everything else, run evidence included): each `title`, then its `steps` numbered, exactly as the tool wrote them (they are phone-ready). Nothing open and the `manualSteps` key present: "No manual steps open." Key absent: the version sentence under Definition of done.
+- Quote the tool's words for red lines and steps; add no advice of your own. The next move for a red line is `sync`, which the tool's line says. The steps are Justin's: list them and never perform one (no `codex plugin remove`, no folder or link deletion, no settings or setup-script edit) unless he asks for that exact step in this conversation.
 
 ## Run evidence
 

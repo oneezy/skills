@@ -36,7 +36,7 @@ refs:
     kind: file
     id: .github/workflows/run.yml
     need: conditional
-    when: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread); the library's daily upstream check
+    when: update, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread); the library's daily upstream check
   - token: docs/agents/references.md
     kind: file
     id: docs/agents/references.md
@@ -140,9 +140,8 @@ agents:
   max: 0
 steps:
   - id: map-request
-    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; versions
-      <source>; status; unlink; branches; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
-      or latest), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
+    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; status; unlink; branches; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
+      or latest; versions <source> in a checkout, or dispatch-run from a cloud thread), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
       development/entrypoints or explicit creator/management action by current host
     outcome:
       done: arguments chosen, or change, add or playground
@@ -162,7 +161,7 @@ steps:
         so uncommitted third-party snapshots exist without moving pins
     needs:
     - git
-      - npx
+    - npx
     outcome:
         done: an isolated checkout on the appropriate review or authorized land branch with its frozen snapshots
   - id: change-sources
@@ -190,7 +189,7 @@ steps:
       done: the skill folder written, removed or moved
   - id: dispatch-run
     after: map-request
-    if: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread)
+    if: update, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
     does: dispatch the library's run workflow over gh api REST with the command and its arguments as one string, then
       watch the run; a changed update or add pushes land/<command>-<args>-<run id>, versions only prints in the log
     needs:
