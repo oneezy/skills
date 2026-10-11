@@ -1,5 +1,5 @@
 skill: oneezy-skills
-purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill; land updates, downgrades, adds and playground changes in the library as a release, link them, and run oneezy-migrate.
+purpose: Keep Justin's skills in sync from the library by running the published sync tool through the script beside the skill; land updates, downgrades, adds and playground changes in the library as a release, take them on this machine, run oneezy-migrate, and end every run with the manual steps still open.
 runtime: [npx (Node 20+), git, gh]
 refs:
   - token: references/aliases.md
@@ -36,7 +36,7 @@ refs:
     kind: file
     id: .github/workflows/run.yml
     need: conditional
-    when: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread); the library's daily upstream check
+    when: update, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread); the library's daily upstream check
   - token: docs/agents/references.md
     kind: file
     id: docs/agents/references.md
@@ -140,20 +140,17 @@ agents:
   max: 0
 steps:
   - id: map-request
-    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; versions
-      <source>; status; unlink; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
-      or latest), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
+    does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; status; unlink; branches; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
+      or latest; versions <source> in a checkout, or dispatch-run from a cloud thread), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
       development/entrypoints or explicit creator/management action by current host
     outcome:
       done: arguments chosen, or change, add or playground
   - id: run-script
     after: map-request
     if: a plain run
-    does: run the canonical platform script, using the supported version floor or reviewed SKILLS_SYNC_CLI; sync exact
-      lock, links and declared managed instruction blocks, then verify readback
+    does: run the canonical platform script (the latest published tool, or a reviewed SKILLS_SYNC_CLI); a machine command reads the latest release from GitHub, writes the global block, the one hook entry and the harness plugins, and verifies its readback
     needs:
     - npx
-    - git
     outcome:
       done: the tool's output on screen (nothing when a quiet sync changed nothing)
   - id: clone
@@ -164,7 +161,7 @@ steps:
         so uncommitted third-party snapshots exist without moving pins
     needs:
     - git
-      - npx
+    - npx
     outcome:
         done: an isolated checkout on the appropriate review or authorized land branch with its frozen snapshots
   - id: change-sources
@@ -192,7 +189,7 @@ steps:
       done: the skill folder written, removed or moved
   - id: dispatch-run
     after: map-request
-    if: update, add, versions or rename from a session that cannot clone or push oneezy/skills (a cloud thread)
+    if: update, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
     does: dispatch the library's run workflow over gh api REST with the command and its arguments as one string, then
       watch the run; a changed update or add pushes land/<command>-<args>-<run id>, versions only prints in the log
     needs:
@@ -227,12 +224,11 @@ steps:
     if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: link-new
     after: land-release
-    does: run the script with --pull --quiet, so the release is linked on this machine now, then delete the temporary folder
+    does: run the script with no arguments, so this machine takes the new release now, then delete the temporary folder
     needs:
     - npx
-    - git
     outcome:
-      done: the new state linked
+      done: the new release taken on this machine
     if: normal change whose scope authorizes landing/release; skip for review/no-publication/source handoff
   - id: migrate
     after: link-new
@@ -246,11 +242,19 @@ steps:
     after: [run-script, migrate]
     calls:
       skill: oneezy-status
-    does: invoke Oneezy Status Skills Sync mode with canonical actions, exit code and before/after readbacks; distinguish verified success, failure and every skipped or unreachable destination, separate source/generated/installed versions and SHAs
+    does: run the script with status --json, then invoke Oneezy Status Skills Sync mode with canonical actions, exit code, that status output and before/after readbacks; distinguish verified success, failure and every skipped or unreachable destination, separate source/generated/installed versions and SHAs
+    needs:
+    - npx
     returns: the change lines, versions, release tag and migrate report
     outcome:
       done: report on screen
-      fail: a skill Justin asked for is still missing after the sync → say which and stop; the fix belongs in the library
+      fail: a skill Justin asked for is still missing after the sync → say which, show the per-harness invocation table and stop; the fix belongs in the library
+  - id: manual-steps
+    after: report
+    does: end the message with every manualSteps entry of status --json, each as its title and its numbered steps in the tool's words; none open ends with "No manual steps open."
+    returns: the open manual steps, step by step
+    outcome:
+      done: the list is the last thing on screen
   - id: management
     after: map-request
     if: explicit authoring/packaging/install/connect/update/audit request

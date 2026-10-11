@@ -93,9 +93,10 @@ agents:
 steps:
   - id: skills-sync
     if: request is canonical Skills Sync results
-    does: read Skills Sync reference and render verified canonical command output and before/after snapshots; no mutation or installation
+    does: read Skills Sync reference, read status --json (read-only) and render a green or red line per harness, the definition of done (ok true and no manual step), the verified canonical command output and before/after snapshots, then the open manual steps; no mutation or installation
+    needs: [npx]
     outcome:
-      done: successes, failures and all skipped destinations reported with exact paths and source/generated/installed versions
+      done: per-harness green/red lines, successes, failures and all skipped destinations reported with exact paths and source/generated/installed versions, closing with every open manual step or none
   - id: brain
     if: request is Brain agenda or Brain status
     does: load Brain daily reference and consume oneezy-brain's verified Drive snapshot
