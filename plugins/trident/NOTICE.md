@@ -3,8 +3,8 @@
 `trident` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: `skills/trident` of oneezy/skills (https://github.com/oneezy/skills)
-- Version: 0.43.3
-- Commit: 819a1b12d26ba8acc15abd00df6a78ade07dd1a3 (2026-10-11T02:30:37Z)
+- Version: 0.43.4
+- Commit: 85ed251aa34c7de66f663ed20f97461c3113e105 (2026-10-10T20:03:14-07:00)
 - License: no LICENSE file in the library
 - Skills: oneezy-app-route, oneezy-ui-component
 
