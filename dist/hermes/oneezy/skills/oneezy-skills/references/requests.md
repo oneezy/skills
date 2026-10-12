@@ -11,7 +11,7 @@
 | make a skill that does X in my playground | **Playground**: create |
 | remove X from my playground | **Playground**: remove |
 | move X from my playground into oneezy (or trident) | **Playground**: promote |
-| update my ChatGPT plugins (typed in ChatGPT) | `references/chatgpt-update.md`; from any other host, tell him to type `@oneezy-skills update my ChatGPT plugins to the latest oneezy/skills release` in ChatGPT |
+| update my ChatGPT plugins | inside ChatGPT, `references/chatgpt-update.md`; on a host without Plugin Creator, tell him to type `@oneezy-skills update my ChatGPT plugins to the latest oneezy/skills release` in a ChatGPT chat |
 | what is installed, what is missing, am I done | `status` (the end-of-run `status --json` shows the same) |
 | clean up my branches | `branches --plan`, show it, then `branches` on his yes (needs `GITHUB_TOKEN` or `GH_TOKEN`; ADR-0013) |
 | take the tool off this machine | `unlink --plan`, then `unlink` on his yes (this machine only; run it inside each WSL distro too) |
@@ -23,4 +23,4 @@ No arguments is a quiet sync, and it needs no checkout of the library: it reads 
 
 Old flags (`-y`, `--agents`, `--global`, `--no-projects`, `--no-pull`, `--no-remember` and the rest), and library flags such as `--repo`, are ignored on a machine command and named once on stderr; `hook` refuses any flag but `--library`. Do not pass them. The library commands (`update`, `add`, `versions`, `refresh`, `build`, `check`) take `--repo <clone>`.
 
-Every request ends with `status --json` and its open manual steps (`SKILL.md`, step 6).
+Every request ends with `status --json` and its open manual steps (`SKILL.md`, step 6), except the ChatGPT update, which ends with its own report.

@@ -4,7 +4,7 @@
 
 - Source: `skills/oneezy` of oneezy/skills (https://github.com/oneezy/skills)
 - Version: 0.46.0
-- Commit: 59ae4c3da7c1027f0f442829ff0f3220c9d30ca7 (2026-10-12T00:36:54Z)
+- Commit: 488070bfe45e593edc28b98bea3f136ea0253d6a (2026-10-12T01:54:08Z)
 - License: no LICENSE file in the library
 - Skills: oneezy-brain, oneezy-estimate, oneezy-meeting, oneezy-merge, oneezy-migrate, oneezy-naming, oneezy-remote, oneezy-skills, oneezy-status
 

@@ -260,6 +260,13 @@ steps:
     returns: the open manual steps, step by step
     outcome:
       done: the list is the last thing on screen
+  - id: chatgpt-update
+    after: map-request
+    if: update my ChatGPT plugins, inside ChatGPT
+    does: follow references/chatgpt-update.md; Plugin Creator brings each library plugin's personal copy to the latest release's files, creates a missing one, reads each back and reports; no script, no status --json
+    outcome:
+      done: one report line per release plugin, every write read back
+      fail: Plugin Creator not exposed → name the missing tool and tell Justin to type the line in a ChatGPT chat
   - id: management
     after: map-request
     if: explicit authoring/packaging/install/connect/update/audit request

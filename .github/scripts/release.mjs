@@ -149,7 +149,7 @@ function notes(r) {
     "",
     "- Claude Code: switch each plugin on at https://claude.ai/customize/plugins; it arrives as `<plugin>@synced` (ADR-0007). Do not `claude plugin install` it on a machine that runs Skills Sync: a CLI install hides the account plugin and `status` reports it red.",
     "- Every machine with Skills Sync (Claude Code, Codex, Hermes): `npx --yes @oneezy/skills-sync@latest`. It reads the latest release from GitHub, clones nothing and keeps nothing of its own; `npx --yes @oneezy/skills-sync@latest status` lists the manual steps still open.",
-    "- ChatGPT: upload the changed archives by hand, `docs/agents/chatgpt-upload.md`.",
+    "- ChatGPT: type `@oneezy-skills update my ChatGPT plugins to the latest oneezy/skills release` in a ChatGPT chat (`docs/agents/chatgpt-upload.md`).",
     "",
   ].join("\n");
 }
