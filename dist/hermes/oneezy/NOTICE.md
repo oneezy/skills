@@ -3,8 +3,8 @@
 `oneezy` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: `skills/oneezy` of oneezy/skills (https://github.com/oneezy/skills)
-- Version: 0.46.0
-- Commit: 1293b4e0a0f5b79d69ba1de1b9da2e55d81c51eb (2026-10-12T01:59:20Z)
+- Version: 0.47.0
+- Commit: 5930114daa6ab2e029962d385082a1e64e5fb0c2 (2026-10-11T19:14:38-07:00)
 - License: no LICENSE file in the library
 - Skills: oneezy-brain, oneezy-estimate, oneezy-meeting, oneezy-merge, oneezy-migrate, oneezy-naming, oneezy-remote, oneezy-skills, oneezy-status
 
