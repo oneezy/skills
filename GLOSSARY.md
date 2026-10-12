@@ -20,7 +20,7 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **User folder**: a harness's home-level skills folder (`~/.claude/skills`, `~/.agents/skills`, Codex's old `~/.codex/skills`). Older versions linked every skill into it; now the tool only removes its own leftover links there and names what else it finds, to adopt into the library or delete by hand.
 - **Sync**: making every harness on a machine match the latest release, in its one **form**, with its **hook** and **global block** in place. Changes only what differs; silent when nothing changed.
 - **Wrapper**: the `oneezy-skills` skill and its scripts, the way an agent runs the tool. It ends every run with the open **manual steps**.
-- **Manual step**: something only a person can do (switch an account plugin on, trust the Codex hook once, uninstall a doubled Codex plugin, adopt or delete what sync leaves, replace a cloud setup line). `status --json` lists them as `manualSteps`; a machine is **done** when `ok` is true and none is open.
+- **Manual step**: something only a person can do (switch an account plugin on, trust the Codex hook once, uninstall a doubled Codex plugin, bring the ChatGPT **account copies** up to the release, adopt or delete what sync leaves, replace a cloud setup line). `status --json` lists them as `manualSteps`; a machine is **done** when `ok` is true and none is open.
 - **Invocation table**: how each harness calls a skill (`/<plugin>:<skill>` on Claude Code, `$<skill>` on Codex, `/<skill>` for a loose Hermes skill, `/agent-plugin-<id>-<hash>:<skill>` for a plugin's). Shown when a typed skill does not resolve; an agent never fetches a `SKILL.md` to run instead.
 - **Rendering opt-in**: a key in the config (`renderings.hermes`) that switches on generator output a tool change added, so the tool releases first and the library takes the new output after.
 - **Plugin**: a package of skills a harness installs as one unit, namespaced by its id (`/oneezy:oneezy-brain`). The library builds one per group and one per source into `plugins/<id>/`, committed beside the source.
@@ -29,12 +29,12 @@ The words this library uses, one meaning each. Implementation lives in the tool'
 - **Account plugin**: a plugin switched on in Justin's claude.ai account. Claude Code receives it as `<id>@synced`, on his machines and in the cloud.
 - **Catalog**: a marketplace file at the root that lists the plugins and points at `./plugins/<id>` (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`).
 - **Build**: generating plugins, catalogs and artifacts from the own skills and the snapshots. **Check** validates frontmatter, flows and generated-file drift, writes nothing, and is a command, never a hook.
-- **Artifact**: an archive of one plugin for the ChatGPT upload, under `artifacts/`.
-- **Release**: one upload of an artifact to ChatGPT, recorded in `artifacts/releases.json` by plugin id, release id and hash.
+- **Artifact**: an archive of one plugin, under `artifacts/` and attached to each GitHub release; the ChatGPT update reads it.
+- **Account copy**: a library plugin on Justin's ChatGPT account (personal or workspace). Changed only inside ChatGPT, when he types the update line (ADR-0015); a Codex signed in with ChatGPT lists it as `<id>@created-by-me-remote` or `<id>@workspace-*`, which is how `status` verifies it. _Avoid_: release (that word means `release-<n>`).
 - **Reference token**: how prose names a skill (`/oneezy-brain`), a plugin or app (`@GitHub`), a file (`docs/agents/references.md`): the identity, never the invocation.
 - **Registry**: `skills-registry.json`, the generated index of every skill's identity, host invocation forms, plugin, source and relationships. Deferred until the Skills app exists.
 - **Flow**: `flow.yaml` beside an own skill's `SKILL.md`: its steps, references and outcomes in machine-readable form, describing what the skill does today.
-- **Harness**: a coding agent product that reads skills (Claude Code, Codex, Hermes; Goose is dropped until a harness needs it). **Host** is the same thing seen from a reference token.
+- **Harness**: a coding agent product that reads skills (Claude Code, Codex, Hermes; Goose is dropped until a harness needs it). ChatGPT is not one: it has no machine to sync, only **account copies**. **Host** is the same thing seen from a reference token.
 - **Harness default**: a skill, plugin or hook a harness ships with or that came from outside the library. Never touched.
 - **Hook**: the one session-start entry the tool writes into a harness's settings; it runs a quiet sync and reports checkout drift.
 - **Global block**: the tool's marked section in a harness's global instructions file (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`). Never in a repository.
