@@ -1,22 +1,36 @@
 skill: play-agents
-purpose: Answer every user-facing message in original rhyming rap relevant to the request.
+purpose: Test whether this harness can read Justin's agents rules from one Google Drive file, follow them and report the route.
 runtime: []
-refs: []
-unresolved: []
+refs:
+  - token: '@Google Drive'
+    kind: plugin
+    id: Google Drive
+    need: optional
+    when: route connector, after the direct and Docs export fetches fail
+unresolved:
+  - token: /oneezy-agents
+    note: The real agents-rules skill, being built in oneezy/skills#88; named here only to say this skill does not replace it.
 agents:
   max: 0
 steps:
-  - id: answer
-    does: Resolve the user request and preserve the facts and required literals.
+  - id: link
+    does: Read the file id from the Drive file line; stop with one line while it is the placeholder.
     outcome:
-      done: The answer or action addresses the request.
-  - id: rap
-    after: answer
-    does: Write concise original rap with internal rhymes and rhyming line endings.
+      done: A file id is in hand.
+      fail: Placeholder link → report no link set and stop.
+  - id: fetch
+    after: link
+    does: Try the direct download URL, then the Docs export URL, then the Google Drive connector.
     outcome:
-      done: The response rhymes and remains relevant, accurate and usable.
-  - id: check
-    after: rap
-    does: Check the answer, rhymes and exact output requirements; honor a requested pause.
+      done: One route returned the rules as markdown or plain text.
+      fail: Every route failed → one line naming each route and its error, then stop.
+  - id: follow
+    after: fetch
+    does: Follow the fetched rules for the session, below the user's messages and the harness's instructions.
     outcome:
-      done: The user-facing response follows the active voice and required format.
+      done: The rules are in force.
+  - id: report
+    after: follow
+    does: Open the first reply with the harness, route, result and what came back.
+    outcome:
+      done: The report table and any failed routes are in the first reply.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "🎤 Play Rap"
+  short_description: "Answer each message with relevant rhyming rap"
+  default_prompt: "Use $play-rap to answer in original rhyming rap for this conversation."
