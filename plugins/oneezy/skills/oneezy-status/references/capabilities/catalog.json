@@ -8,6 +8,22 @@
     "codex": "current CLI help 0.161.0 plus official docs; no desktop execution"
   },
   "skills": {
+    "oneezy-agents": {
+      "path": "skills/oneezy/oneezy-agents",
+      "invocation": "follow installed host policy",
+      "dependencies": [
+        {
+          "id": "github",
+          "need": "conditional",
+          "when": "live SHARED.md read, or a rule commit Justin approved"
+        },
+        {
+          "id": "shell",
+          "need": "optional",
+          "when": "curl fetch or global block read"
+        }
+      ]
+    },
     "oneezy-brain": {
       "path": "skills/oneezy/oneezy-brain",
       "invocation": "follow installed host policy",

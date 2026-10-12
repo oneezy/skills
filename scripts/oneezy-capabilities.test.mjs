@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { test } from 'node:test';
-import { bundle, root } from './oneezy-capabilities.mjs';
+import { bundle, root, shared, sharedCopy } from './oneezy-capabilities.mjs';
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const catalog = JSON.parse(read('docs/agents/capabilities/catalog.json'));
 
@@ -44,6 +44,24 @@ test('generator detects stale packaged routing and preserves unrelated and upstr
     fs.writeFileSync(file, JSON.stringify(changed));
     assert.ok(bundle(repo).some(error => error.includes('user-only dependency')));
   } finally { fs.rmSync(repo,{recursive:true,force:true}); }
+});
+
+test('the packaged SHARED.md copy refreshes on --write and a stale copy never fails the check', () => {
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'oneezy-shared-'));
+  try {
+    const skill = path.join(repo, 'skills/oneezy/oneezy-agents');
+    fs.mkdirSync(path.join(skill, 'references'), { recursive:true });
+    fs.writeFileSync(path.join(skill, 'SKILL.md'), 'authored instructions');
+    fs.writeFileSync(path.join(repo, 'SHARED.md'), 'rules v2');
+    fs.writeFileSync(path.join(repo, sharedCopy), 'rules v1');
+    assert.equal(shared(repo), false);
+    assert.equal(fs.readFileSync(path.join(repo, sharedCopy), 'utf8'), 'rules v1');
+    assert.equal(shared(repo, true), true);
+    assert.equal(fs.readFileSync(path.join(repo, sharedCopy), 'utf8'), 'rules v2');
+    assert.equal(fs.readFileSync(path.join(skill, 'SKILL.md'), 'utf8'), 'authored instructions');
+  } finally { fs.rmSync(repo,{recursive:true,force:true}); }
+  assert.match(read('skills/oneezy/oneezy-agents/SKILL.md'), /raw\.githubusercontent\.com\/oneezy\/skills\/dev\/SHARED\.md/);
+  assert.doesNotMatch(read('skills/oneezy/oneezy-agents/SKILL.md'), /disable-model-invocation/);
 });
 
 test('moved rules, templates and invocation boundaries retain reviewed behavior', () => {

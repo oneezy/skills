@@ -1,0 +1,70 @@
+skill: oneezy-agents
+purpose: Load Justin's shared instructions (SHARED.md) from the newest reachable copy and follow them for the rest of the session.
+runtime: [web fetch, browser or shell]
+refs:
+  - token: https://raw.githubusercontent.com/oneezy/skills/dev/SHARED.md
+    kind: url
+    id: https://raw.githubusercontent.com/oneezy/skills/dev/SHARED.md
+    need: required
+    when: load, first source
+  - token: references/SHARED.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/SHARED.md
+    need: conditional
+    when: load, when the live copy and the global block are out of reach
+  - token: https://github.com/oneezy/skills/edit/dev/SHARED.md
+    kind: url
+    id: https://github.com/oneezy/skills/edit/dev/SHARED.md
+    need: conditional
+    when: Justin asks to change a rule
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
+unresolved: []
+agents:
+  max: 0
+steps:
+  - id: load
+    does: take the first source that gives the full text of SHARED.md, the live copy on dev, then the skills-sync global block (skipped when its marker says built-in), then the packaged references/SHARED.md
+    needs: [web fetch, browser or shell]
+    outcome:
+      done: one source's full text held, and which source it was
+      fail: none of the three reachable; Justin told which failed
+  - id: follow
+    after: load
+    does: treat the text as standing instructions for the session; load a skill it routes to when the work reaches it
+    outcome:
+      done: the rules are in force
+  - id: name-source
+    after: load
+    does: open the reply with one line naming the source, and for the global block or the packaged copy that it may be older than dev
+    returns: the source line, then the answer to Justin's message
+    outcome:
+      done: source line printed
+  - id: change-rule
+    if: Justin asks to change a rule
+    does: give him the new wording and the edit link on dev; commit it only on his yes with write access
+    outcome:
+      done: wording and link given, or the commit on dev after his yes

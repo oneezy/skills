@@ -24,8 +24,21 @@ export function bundle(repo = root, write = false) {
   }
   return errors;
 }
+// The packaged copy of SHARED.md that /oneezy-agents falls back to. Justin commits SHARED.md straight to dev (ADR-0016),
+// so a stale copy is a note, never an error; --write refreshes it. Returns whether the copy matches SHARED.md.
+export const sharedCopy = "skills/oneezy/oneezy-agents/references/SHARED.md";
+export function shared(repo = root, write = false) {
+  const source = path.join(repo, "SHARED.md");
+  const target = path.join(repo, sharedCopy);
+  if (!fs.existsSync(source) || !fs.existsSync(path.join(path.dirname(path.dirname(target)), "SKILL.md"))) return true;
+  const bytes = fs.readFileSync(source);
+  if (write) fs.writeFileSync(target, bytes);
+  return fs.existsSync(target) && fs.readFileSync(target).equals(bytes);
+}
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const errors = bundle(root, process.argv.includes("--write"));
+  const write = process.argv.includes("--write");
+  const errors = bundle(root, write);
+  if (!shared(root, write)) process.stdout.write(`note: ${sharedCopy} is older than SHARED.md; run with --write to refresh it\n`);
   if (errors.length) { process.stderr.write(errors.join("\n") + "\n"); process.exitCode = 1; }
   else process.stdout.write("Oneezy capability references current\n");
 }
