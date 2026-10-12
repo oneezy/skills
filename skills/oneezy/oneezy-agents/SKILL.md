@@ -11,7 +11,7 @@ Before calling a dependency, read `references/capabilities/contract.md`, then th
 
 Take the first source that gives you the full text:
 
-1. **Live**: fetch https://raw.githubusercontent.com/oneezy/skills/dev/SHARED.md with this host's web fetch, browser or shell (`curl -fsSL <url>`). Justin edits the file on `dev` (ADR-0016), so this copy is current.
+1. **Live**: fetch https://raw.githubusercontent.com/oneezy/skills/dev/SHARED.md with this host's web fetch, browser or shell (`curl -fsSL <url>`). Justin edits the file on `dev` (ADR-0017), so this copy is current.
 2. **Global block**: on a machine skills-sync manages, the block between `<!-- skills-sync:skills:start ... -->` and `<!-- skills-sync:skills:end -->` in `~/.claude/CLAUDE.md` or `~/.codex/AGENTS.md` (under `CLAUDE_CONFIG_DIR` or `CODEX_HOME` when set). Its start marker names a release; a marker that says `built-in` holds the tool's own text, so skip it.
 3. **Packaged**: `references/SHARED.md` beside this file, the copy this plugin release carries.
 
@@ -27,4 +27,4 @@ Open your reply with one line: `Loaded SHARED.md live from dev`, `Loaded SHARED.
 
 ## Changing a rule
 
-Justin edits `SHARED.md` himself on `dev` in the GitHub app or site, https://github.com/oneezy/skills/edit/dev/SHARED.md, and commits straight to `dev`: no pull request, no promotion (ADR-0016). The live copy changes at once; global blocks and the packaged copy follow with the next release. When he asks you to change a rule, give him the new wording and that link; commit it yourself only when he says yes and you have write access.
+Justin edits `SHARED.md` himself on `dev` in the GitHub app or site, https://github.com/oneezy/skills/edit/dev/SHARED.md, and commits straight to `dev`: no pull request, no promotion (ADR-0017). The live copy changes at once; global blocks and the packaged copy follow with the next release. When he asks you to change a rule, give him the new wording and that link; commit it yourself only when he says yes and you have write access.

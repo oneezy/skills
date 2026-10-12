@@ -24,7 +24,7 @@ export function bundle(repo = root, write = false) {
   }
   return errors;
 }
-// The packaged copy of SHARED.md that /oneezy-agents falls back to. Justin commits SHARED.md straight to dev (ADR-0016),
+// The packaged copy of SHARED.md that /oneezy-agents falls back to. Justin commits SHARED.md straight to dev (ADR-0017),
 // so a stale copy is a note, never an error; --write refreshes it. Returns whether the copy matches SHARED.md.
 export const sharedCopy = "skills/oneezy/oneezy-agents/references/SHARED.md";
 export function shared(repo = root, write = false) {

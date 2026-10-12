@@ -1,4 +1,4 @@
-# ADR-0016: SHARED.md is edited straight on dev and read live by /oneezy-agents
+# ADR-0017: SHARED.md is edited straight on dev and read live by /oneezy-agents
 
 Date: 2026-10-12. Status: accepted. Amends ADR-0011 (global blocks only), which made the global block the one way `SHARED.md` reaches a harness. Ticket: oneezy/skills#87.
 
