@@ -8,6 +8,8 @@ metadata:
 
 Run the request, then open the answer with the **debug block**. Every value in the block is **measured** (read from a transcript, an environment variable or a clock this run read) or **reported** (your own account of it), and says which. A value the harness does not expose reads `not available in this harness`, so the block never carries a guessed link, time or skill.
 
+Before calling a dependency, read `references/capabilities/contract.md`, then the adapter for this host. Load its actual instructions and discover its tools; a name or mention does not execute it.
+
 ## Steps
 
 1. **Run the request.** Run the rest of Justin's message (a skill, a request, or nothing) exactly as you would without this skill. When the harness has no transcript the script can read (`references/harnesses.md`), keep a step list as you go: a short title, the clock read before it, whether it passed. Done when the request's own work is finished and the answer is not yet written.
