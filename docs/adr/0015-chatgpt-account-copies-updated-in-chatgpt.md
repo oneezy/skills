@@ -22,5 +22,5 @@ ChatGPT (the website and the desktop app) holds plugins on Justin's account, not
 
 ## Consequences
 
-- The first run uses the account's current, older `/oneezy-skills`, which lacks the procedure; the typed line names its whole goal so Plugin Creator can still follow it, and from then on the account carries the procedure.
+- The first run uses the account's current, older `/oneezy-skills`, which lacks the procedure, so that once Justin types a Plugin Creator bootstrap line (`docs/agents/chatgpt-upload.md`) that brings the oneezy plugin up; from then on the account carries the procedure and the short line works.
 - A machine without a signed-in Codex cannot say whether ChatGPT is current; its `status` says so in one note.
