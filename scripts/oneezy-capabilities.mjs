@@ -24,12 +24,14 @@ export function bundle(repo = root, write = false) {
   }
   return errors;
 }
-// The packaged copy of SHARED.md that /oneezy-agents falls back to. Justin commits SHARED.md straight to dev (ADR-0017),
-// so a stale copy is a note, never an error; --write refreshes it. Returns whether the copy matches SHARED.md.
-export const sharedCopy = "skills/oneezy/oneezy-agents/references/SHARED.md";
-export function shared(repo = root, write = false) {
-  const source = path.join(repo, "SHARED.md");
-  const target = path.join(repo, sharedCopy);
+// The packaged copy of Justin's rules that /oneezy-agents falls back to. The source sits outside every package, so
+// Justin can commit it straight to dev (ADR-0017) without build drift; a stale copy is a note, never an error, and
+// --write refreshes it. Returns whether the copy matches the source.
+export const agentsSource = "skills/oneezy/agents.md";
+export const agentsCopy = "skills/oneezy/oneezy-agents/references/agents.md";
+export function agents(repo = root, write = false) {
+  const source = path.join(repo, agentsSource);
+  const target = path.join(repo, agentsCopy);
   if (!fs.existsSync(source) || !fs.existsSync(path.join(path.dirname(path.dirname(target)), "SKILL.md"))) return true;
   const bytes = fs.readFileSync(source);
   if (write) fs.writeFileSync(target, bytes);
@@ -38,7 +40,7 @@ export function shared(repo = root, write = false) {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const write = process.argv.includes("--write");
   const errors = bundle(root, write);
-  if (!shared(root, write)) process.stdout.write(`note: ${sharedCopy} is older than SHARED.md; run with --write to refresh it\n`);
+  if (!agents(root, write)) process.stdout.write(`note: ${agentsCopy} is older than ${agentsSource}; run with --write to refresh it\n`);
   if (errors.length) { process.stderr.write(errors.join("\n") + "\n"); process.exitCode = 1; }
   else process.stdout.write("Oneezy capability references current\n");
 }

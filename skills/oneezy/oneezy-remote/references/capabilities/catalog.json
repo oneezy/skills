@@ -15,12 +15,12 @@
         {
           "id": "github",
           "need": "conditional",
-          "when": "live SHARED.md read, or a rule commit Justin approved"
+          "when": "live agents.md read, or a rule commit Justin approved"
         },
         {
           "id": "shell",
           "need": "optional",
-          "when": "curl fetch or global block read"
+          "when": "curl fetch"
         }
       ]
     },
