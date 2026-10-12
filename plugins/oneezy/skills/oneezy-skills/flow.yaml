@@ -52,9 +52,9 @@ refs:
     id: unslop
     need: example
     when: the source's own copy stays when a skill is copied to the playground
-  - token: references/entrypoints.md
+  - token: references/global-block.md
     kind: file
-    id: skills/oneezy/oneezy-skills/references/entrypoints.md
+    id: skills/oneezy/oneezy-skills/references/global-block.md
     need: conditional
     when: the named operation/reference branch in SKILL.md
   - token: references/management.md
@@ -147,7 +147,7 @@ steps:
   - id: map-request
     does: match Justin's words to a plain run of the script (none for sync, my skills are missing or nothing; status; unlink; branches; --plan), or to change (update, upgrade, downgrade, all or one source, --to a version, previous
       or latest; versions <source> in a checkout, or dispatch-run from a cloud thread), add (owner/repo or a link to one skill) or playground (copy, create, remove, promote); or route source
-      development/entrypoints or explicit creator/management action by current host
+      development/global block or explicit creator/management action by current host
     outcome:
       done: arguments chosen, or change, add or playground
   - id: run-script
@@ -277,10 +277,10 @@ steps:
       done: action performed and identity/version/source/readback verified, or source-only artifact prepared with delivery
         held
       fail: report blocked destination while independent destinations continue
-  - id: entrypoint-development
+  - id: block-development
     after: map-request
-    if: source development, entrypoint audit or desktop handoff
-    does: follow entrypoints reference with reviewed source/tool; plan, apply only in accessible authorized environment,
+    if: source development, global block audit or desktop handoff
+    does: follow global block reference with reviewed source/tool; plan, apply only in accessible authorized environment,
       status/readback and idempotence; no hand edits and no default main substitution
     outcome:
       done: verified code/artifact and exact commands/prerequisites; actual execution distinguished from handoff
