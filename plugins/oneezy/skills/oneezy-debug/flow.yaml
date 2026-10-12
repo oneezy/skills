@@ -1,0 +1,34 @@
+skill: oneezy-debug
+purpose: Run the request, then open the answer with a debug block (harness, session link, model, skills, a timed table of steps), every value marked measured or reported.
+runtime: [node]
+refs:
+  - token: scripts/trace.mjs
+    kind: file
+    id: skills/oneezy/oneezy-debug/scripts/trace.mjs
+    need: conditional
+    when: the harness has a shell
+  - token: references/harnesses.md
+    kind: file
+    id: skills/oneezy/oneezy-debug/references/harnesses.md
+    need: conditional
+    when: the script prints Transcript not available, or there is no shell
+unresolved: []
+agents:
+  max: 0
+steps:
+  - id: run
+    does: run the rest of the message as it would run without this skill; with no readable transcript, keep a step list with a clock read before each step
+    outcome:
+      done: the request's own work is finished and the answer is not yet written
+  - id: build
+    after: run
+    does: run scripts/trace.mjs and take its block unedited, or fill the template from the step list and references/harnesses.md
+    needs: [node]
+    outcome:
+      done: every block line has a value or "not available in this harness", each marked measured or reported
+  - id: answer
+    after: build
+    does: print the block first, then the answer
+    returns: the debug block and the answer
+    outcome:
+      done: block on screen above the answer
