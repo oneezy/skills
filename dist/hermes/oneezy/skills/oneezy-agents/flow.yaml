@@ -7,11 +7,6 @@ refs:
     id: skills/oneezy/oneezy-agents/references/agents.md
     need: required
     when: load, the only source
-  - token: skills/oneezy/agents.md
-    kind: file
-    id: skills/oneezy/agents.md
-    need: conditional
-    when: Justin asks to change a rule
   - token: docs/agents/release.md
     kind: file
     id: docs/agents/release.md
@@ -65,6 +60,6 @@ steps:
       done: copy line printed
   - id: change-rule
     if: Justin asks to change a rule
-    does: give him the new wording; on his yes, land it on a land/* branch with the packaged copy refreshed and a patch bump, so it ships in the next release
+    does: give him the new wording; on his yes, edit references/agents.md in place and land it on a land/* branch with a patch bump, so it ships in the next release
     outcome:
       done: wording given, or the land/* branch pushed after his yes
