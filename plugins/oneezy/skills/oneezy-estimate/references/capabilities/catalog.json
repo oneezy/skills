@@ -60,6 +60,17 @@
         }
       ]
     },
+    "oneezy-debug": {
+      "path": "skills/oneezy/oneezy-debug",
+      "invocation": "follow installed host policy",
+      "dependencies": [
+        {
+          "id": "shell",
+          "need": "conditional",
+          "when": "trace.mjs reads the harness transcript, or a clock read before each step"
+        }
+      ]
+    },
     "oneezy-estimate": {
       "path": "skills/oneezy/oneezy-estimate",
       "invocation": "explicit-only",
