@@ -1,20 +1,19 @@
 ---
 name: oneezy-agents
-description: Load Justin's rules for every harness (`agents.md`, read live from GitHub) and follow them for the rest of the session. Use at the start of every session when custom instructions or the skills-sync global block say to, or when Justin asks how he works or what his rules are.
+description: Load Justin's rules for every harness (`agents.md`, the copy packaged in this plugin) and follow them for the rest of the session. Use at the start of every session when custom instructions or the skills-sync global block say to, or when Justin asks how he works or what his rules are.
 metadata:
   internal: true
 ---
 
-`agents.md` is Justin's one set of rules for every harness: a short router to his Oneezy skills plus the few rules no skill owns. This skill loads the newest copy you can reach and makes it this session's standing instructions.
+`agents.md` is Justin's one set of rules for every harness: a short router to his Oneezy skills plus the few rules no skill owns. This skill reads the copy installed with this plugin and makes it this session's standing instructions. The installed copy is the only source (ADR-0018): read it from disk, never from GitHub or any other remote.
 
 Before calling a dependency, read `references/capabilities/contract.md`, then the adapter for this host. Load its actual instructions and discover its tools; a name or mention does not execute it.
 
-## 1. Load the newest copy
+## 1. Read the installed copy
 
-1. **Live**: fetch https://raw.githubusercontent.com/oneezy/skills/dev/skills/oneezy/agents.md with this host's web fetch, browser or shell (`curl -fsSL <url>`). Justin edits the file on `dev` (ADR-0017), so this copy is current.
-2. **Packaged**: when the fetch fails, read `references/agents.md` beside this file, the copy this plugin release carries.
+Read `references/agents.md` beside this file. When the base directory the harness reported holds no such file, find the installed copy on disk: search this harness's plugin and skill folders for `oneezy-agents/references/agents.md` (Claude Code: under `~/.claude/plugins/`) and read that one.
 
-Done when you hold one copy's full text and know which it was. When neither works, tell Justin both failed and stop.
+Done when you hold the installed copy's full text. When no installed copy exists, tell Justin the installed plugin's `agents.md` could not be found, name the folders you searched, and stop.
 
 ## 2. Follow it
 
@@ -22,8 +21,8 @@ Treat the text as standing instructions for the rest of this session, with the s
 
 ## 3. Name the copy
 
-Open your reply with one line: `Loaded agents.md live from dev` or `Loaded the packaged agents.md, may be older than dev`. Then answer Justin's message.
+Open your reply with one line: `Loaded agents.md from the installed plugin`, followed by the plugin version when its `plugin.json` is readable (`Loaded agents.md from the installed plugin (oneezy 0.50.1)`). Then answer Justin's message.
 
 ## Changing a rule
 
-Justin edits the file himself on `dev` in the GitHub app or site, https://github.com/oneezy/skills/edit/dev/skills/oneezy/agents.md, and commits straight to `dev`: no pull request, no promotion (ADR-0017). The live copy changes at once; the packaged copy follows with the next release. When he asks you to change a rule, give him the new wording and that link; commit it yourself only when he says yes and you have write access.
+The source is `skills/oneezy/agents.md` in oneezy/skills; a session sees a change only after it ships in a plugin release and the harness syncs it. When Justin asks you to change a rule, give him the new wording. On his yes, land it with a `land/<topic>` branch cut from `dev` (`docs/agents/release.md`): edit the source, refresh the packaged copy with `node scripts/oneezy-capabilities.mjs --write`, bump `library.version` one patch, run `npx @oneezy/skills-sync build` and `check`, and push. That branch lands in `dev`, promotes `main` and cuts the release; open sessions keep the rules they loaded until the next session.

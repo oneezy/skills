@@ -1,20 +1,20 @@
 skill: oneezy-agents
-purpose: Load Justin's rules for every harness (agents.md) from the newest reachable copy and follow them for the rest of the session.
-runtime: [web fetch, browser or shell]
+purpose: Load Justin's rules for every harness (agents.md) from the copy installed with this plugin and follow them for the rest of the session.
+runtime: [file read, shell]
 refs:
-  - token: https://raw.githubusercontent.com/oneezy/skills/dev/skills/oneezy/agents.md
-    kind: url
-    id: https://raw.githubusercontent.com/oneezy/skills/dev/skills/oneezy/agents.md
-    need: required
-    when: load, first source
   - token: references/agents.md
     kind: file
     id: skills/oneezy/oneezy-agents/references/agents.md
+    need: required
+    when: load, the only source
+  - token: skills/oneezy/agents.md
+    kind: file
+    id: skills/oneezy/agents.md
     need: conditional
-    when: load, when the live copy is out of reach
-  - token: https://github.com/oneezy/skills/edit/dev/skills/oneezy/agents.md
-    kind: url
-    id: https://github.com/oneezy/skills/edit/dev/skills/oneezy/agents.md
+    when: Justin asks to change a rule
+  - token: docs/agents/release.md
+    kind: file
+    id: docs/agents/release.md
     need: conditional
     when: Justin asks to change a rule
   - token: references/capabilities/contract.md
@@ -47,11 +47,11 @@ agents:
   max: 0
 steps:
   - id: load
-    does: fetch agents.md live from dev; when that fails, read the packaged references/agents.md
-    needs: [web fetch, browser or shell]
+    does: read the installed references/agents.md beside SKILL.md; when the reported base directory lacks it, find the installed copy under the harness's plugin folders; never fetch a remote copy
+    needs: [file read, shell]
     outcome:
-      done: one copy's full text held, and which copy it was
-      fail: neither reachable; Justin told both failed
+      done: the installed copy's full text held
+      fail: no installed copy found; Justin told where you searched
   - id: follow
     after: load
     does: treat the text as standing instructions for the session; load a skill it routes to when the work reaches it
@@ -59,12 +59,12 @@ steps:
       done: the rules are in force
   - id: name-copy
     after: load
-    does: open the reply with one line naming the copy, and for the packaged copy that it may be older than dev
+    does: open the reply with one line saying agents.md was loaded from the installed plugin, with the plugin version when readable
     returns: the copy line, then the answer to Justin's message
     outcome:
       done: copy line printed
   - id: change-rule
     if: Justin asks to change a rule
-    does: give him the new wording and the edit link on dev; commit it only on his yes with write access
+    does: give him the new wording; on his yes, land it on a land/* branch with the packaged copy refreshed and a patch bump, so it ships in the next release
     outcome:
-      done: wording and link given, or the commit on dev after his yes
+      done: wording given, or the land/* branch pushed after his yes

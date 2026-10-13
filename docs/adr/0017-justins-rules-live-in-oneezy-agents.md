@@ -1,6 +1,6 @@
 # ADR-0017: Justin's rules live in the oneezy plugin, loaded by /oneezy-agents and edited straight on dev
 
-Date: 2026-10-12. Status: accepted. Amends ADR-0011 (global blocks only): the global block no longer carries the rules, only a pointer to the skill that loads them. Tickets: oneezy/skills#87, oneezy/tools#205.
+Date: 2026-10-12. Status: accepted; decisions 3 (a stale copy is a note), 4 (live from `dev`) and 5 (edited straight on `dev`) superseded by ADR-0018. Amends ADR-0011 (global blocks only): the global block no longer carries the rules, only a pointer to the skill that loads them. Tickets: oneezy/skills#87, oneezy/tools#205.
 
 ## Context
 
