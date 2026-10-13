@@ -185,6 +185,14 @@ steps:
     outcome:
       done: the source and its plugin declared
       fail: the tool refuses the source → its error line, stop
+  - id: remove-source
+    after: clone
+    if: remove
+    does: name the source (its id, or the owner/repo of exactly one source); run the script with remove <source> --repo .
+    needs: [npx, git]
+    outcome:
+      done: the source, its lock entries, snapshot and plugin gone
+      fail: the tool refuses (unknown, ambiguous, still referenced) → its error line, stop
   - id: playground
     after: clone
     if: playground
@@ -194,9 +202,9 @@ steps:
       done: the skill folder written, removed or moved
   - id: dispatch-run
     after: map-request
-    if: update, add or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
+    if: update, add, remove or versions from a session that cannot clone or push oneezy/skills (a cloud thread)
     does: dispatch the library's run workflow over gh api REST with the command and its arguments as one string, then
-      watch the run; a changed update or add pushes land/<command>-<args>-<run id>, versions only prints in the log
+      watch the run; a changed update, add or remove pushes land/<command>-<args>-<run id>, versions only prints in the log
     needs:
     - gh
     outcome:
@@ -206,6 +214,7 @@ steps:
     after:
     - change-sources
     - add-source
+    - remove-source
     - playground
     does: for authored Oneezy/capability changes, generate packaged capability references and run source tests; run canonical
       build then check; retain exact source/tool artifact for a held desktop handoff
@@ -262,7 +271,7 @@ steps:
       done: the list is the last thing on screen
   - id: chatgpt-update
     after: map-request
-    if: update my ChatGPT plugins, inside ChatGPT
+    if: inside ChatGPT, a sync or update request (update my skills, update my ChatGPT plugins); a library change there is dispatched first (references/requests.md, ChatGPT rows)
     does: follow references/chatgpt-update.md; Plugin Creator brings each library plugin's personal copy to the latest release's files, creates a missing one, reads each back and reports; no script, no status --json
     outcome:
       done: one report line per release plugin, every write read back

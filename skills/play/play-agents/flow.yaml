@@ -1,22 +1,41 @@
 skill: play-agents
-purpose: Answer every user-facing message in original rhyming rap relevant to the request.
-runtime: []
-refs: []
-unresolved: []
+purpose: Test loading Justin's agents rules from Google Drive, as a Google Doc and as a markdown file, follow them and report which routes worked.
+runtime: [web fetch, browser or shell]
+refs:
+  - token: '@Google Drive'
+    kind: plugin
+    id: Google Drive
+    need: optional
+    when: read, connector route for both files
+  - token: https://docs.google.com/document/d/1-zc8U-qySKlULknKZYR-wKarkmG2y0RQpC2YrSijSNQ/view
+    kind: url
+    id: https://docs.google.com/document/d/1-zc8U-qySKlULknKZYR-wKarkmG2y0RQpC2YrSijSNQ/view
+    need: required
+    when: read, the Google Doc
+  - token: https://drive.google.com/file/d/1prpsvbABf5bAP4PX-CBCHtXD3Fu0Mo2w/view
+    kind: url
+    id: https://drive.google.com/file/d/1prpsvbABf5bAP4PX-CBCHtXD3Fu0Mo2w/view
+    need: required
+    when: read, the markdown file
+unresolved:
+  - token: /oneezy-agents
+    note: Justin's real agents-rules skill, added in oneezy/skills#88; named only to say this test does not replace it.
 agents:
   max: 0
 steps:
-  - id: answer
-    does: Resolve the user request and preserve the facts and required literals.
+  - id: read
+    does: for each file, try the connector and the URL route
+    needs: [web fetch, browser or shell]
     outcome:
-      done: The answer or action addresses the request.
-  - id: rap
-    after: answer
-    does: Write concise original rap with internal rhymes and rhyming line endings.
+      done: all four file-and-route pairs read or failed
+  - id: follow
+    after: read
+    does: treat the Google Doc's text as standing instructions, or the markdown file's when only it was read
     outcome:
-      done: The response rhymes and remains relevant, accurate and usable.
-  - id: check
-    after: rap
-    does: Check the answer, rhymes and exact output requirements; honor a requested pause.
+      done: the rules are in force, or nothing was read
+  - id: report
+    after: read
+    does: open the reply with the host, the copy followed and the file-by-route table
+    returns: the report, then the answer to Justin's message
     outcome:
-      done: The user-facing response follows the active voice and required format.
+      done: report printed
