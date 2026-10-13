@@ -4,7 +4,7 @@
     "name": "skills",
     "owner": "oneezy",
     "homepage": "https://github.com/oneezy/skills",
-    "version": "0.50.0"
+    "version": "0.50.1"
   },
   "generate": {
     "skills": true,

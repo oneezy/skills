@@ -24,9 +24,9 @@ export function bundle(repo = root, write = false) {
   }
   return errors;
 }
-// The packaged copy of Justin's rules that /oneezy-agents falls back to. The source sits outside every package, so
-// Justin can commit it straight to dev (ADR-0017) without build drift; a stale copy is a note, never an error, and
-// --write refreshes it. Returns whether the copy matches the source.
+// The packaged copy of Justin's rules, the only copy /oneezy-agents reads (ADR-0018). The source sits outside every
+// package; --write refreshes the copy, and the test suite fails while it is stale, so a rule edit cannot reach main
+// without shipping. Returns whether the copy matches the source.
 export const agentsSource = "skills/oneezy/agents.md";
 export const agentsCopy = "skills/oneezy/oneezy-agents/references/agents.md";
 export function agents(repo = root, write = false) {
