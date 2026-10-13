@@ -4,7 +4,7 @@
 
 - Source: `skills/play` of oneezy/skills (https://github.com/oneezy/skills)
 - Version: 0.48.0
-- Commit: de821d606934891742cb1fdc4d02d86eec2e54c3 (2026-10-12T23:52:33Z)
+- Commit: d9dbf9b8b87f9b14402ed592ea96472e3e8e43b6 (2026-10-12T16:01:16-07:00)
 - License: no LICENSE file in the library
 - Skills: play-agents, play-unslop
 
