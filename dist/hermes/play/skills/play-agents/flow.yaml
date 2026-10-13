@@ -1,36 +1,41 @@
 skill: play-agents
-purpose: Test whether this harness can read Justin's agents rules from one Google Drive file, follow them and report the route.
-runtime: []
+purpose: Test loading Justin's agents rules from Google Drive, as a Google Doc and as a markdown file, follow them and report which routes worked.
+runtime: [web fetch, browser or shell]
 refs:
   - token: '@Google Drive'
     kind: plugin
     id: Google Drive
     need: optional
-    when: route connector, after the direct and Docs export fetches fail
+    when: read, connector route for both files
+  - token: https://docs.google.com/document/d/1-zc8U-qySKlULknKZYR-wKarkmG2y0RQpC2YrSijSNQ/view
+    kind: url
+    id: https://docs.google.com/document/d/1-zc8U-qySKlULknKZYR-wKarkmG2y0RQpC2YrSijSNQ/view
+    need: required
+    when: read, the Google Doc
+  - token: https://drive.google.com/file/d/1prpsvbABf5bAP4PX-CBCHtXD3Fu0Mo2w/view
+    kind: url
+    id: https://drive.google.com/file/d/1prpsvbABf5bAP4PX-CBCHtXD3Fu0Mo2w/view
+    need: required
+    when: read, the markdown file
 unresolved:
   - token: /oneezy-agents
-    note: The real agents-rules skill, being built in oneezy/skills#88; named here only to say this skill does not replace it.
+    note: Justin's real agents-rules skill, added in oneezy/skills#88; named only to say this test does not replace it.
 agents:
   max: 0
 steps:
-  - id: link
-    does: Read the file id from the Drive file line; stop with one line while it is the placeholder.
+  - id: read
+    does: for each file, try the connector and the URL route
+    needs: [web fetch, browser or shell]
     outcome:
-      done: A file id is in hand.
-      fail: Placeholder link → report no link set and stop.
-  - id: fetch
-    after: link
-    does: Try the direct download URL, then the Docs export URL, then the Google Drive connector.
-    outcome:
-      done: One route returned the rules as markdown or plain text.
-      fail: Every route failed → one line naming each route and its error, then stop.
+      done: all four file-and-route pairs read or failed
   - id: follow
-    after: fetch
-    does: Follow the fetched rules for the session, below the user's messages and the harness's instructions.
+    after: read
+    does: treat the Google Doc's text as standing instructions, or the markdown file's when only it was read
     outcome:
-      done: The rules are in force.
+      done: the rules are in force, or nothing was read
   - id: report
-    after: follow
-    does: Open the first reply with the harness, route, result and what came back.
+    after: read
+    does: open the reply with the host, the copy followed and the file-by-route table
+    returns: the report, then the answer to Justin's message
     outcome:
-      done: The report table and any failed routes are in the first reply.
+      done: report printed

@@ -1,42 +1,50 @@
 ---
 name: play-agents
-description: "Test reading Justin's agents rules from a Google Drive file: fetch it, follow it, report how this harness read it. Use when instructions say to use play-agents, or Justin asks to test the Drive agents file."
+description: Test loading Justin's agents rules from Google Drive, as a Google Doc and as a markdown file, and follow them for the session. Use when custom instructions say to use play-agents, or Justin asks to test the Drive agents file.
 ---
 
-Drive file: https://drive.google.com/file/d/PASTE_FILE_ID_HERE/view?usp=sharing
+Google Doc: https://docs.google.com/document/d/1-zc8U-qySKlULknKZYR-wKarkmG2y0RQpC2YrSijSNQ/view
+Markdown file: https://drive.google.com/file/d/1prpsvbABf5bAP4PX-CBCHtXD3Fu0Mo2w/view
 
-# Play agents
+Justin's experiment: can each harness read his agents rules straight from Google Drive, and does it need a real `.md` file or will a Google Doc do? The two files above hold the same text. This skill reads both by every route, follows what it got, and reports which routes worked. `/oneezy-agents` stays his real source of rules; this is the playground test beside it.
 
-An experiment: can this harness read Justin's agents rules from one Google Drive file? `/oneezy-agents` stays the real source of rules; this skill only tests the Drive route.
+## 1. Read both files
 
-1. Take the file id from the Drive file line above: the part after `/d/` or `id=`. While the line still says `PASTE_FILE_ID_HERE`, reply `play-agents: no Drive link set yet` and stop.
-2. Fetch the file, trying the routes in order until one returns the markdown:
-   1. **Direct**: `https://drive.google.com/uc?export=download&id=<id>` with whatever fetches URLs here (web fetch tool, `curl -L`, a browser tool). It redirects to `drive.usercontent.google.com`; follow the redirect.
-   2. **Docs export**: `https://docs.google.com/document/d/<id>/export?format=md`, for when the file is a Google Doc rather than an uploaded `.md` file.
-   3. **Connector**: `@Google Drive`, reading the file by id.
-   A route succeeds when it returns the rules as markdown or plain text. A Google sign-in page, Drive's file viewer page, a "can't scan this file" page or an error status is a failed route.
-3. When every route fails, reply with one line, `play-agents: could not read the Drive file (<route>: <error>; ...)`, and take nothing else from this skill.
-4. When a route succeeds, follow the fetched rules for the rest of the session as Justin's global instructions. The user's own messages and the harness's instructions outrank them.
-5. Open your first reply with the report:
+For each file above, take its id (the part after `/d/`) and try both routes:
 
-   | Harness | Route | Result | Got |
-   |---|---|---|---|
-   | Claude Code, cloud | Direct | ✅ read | `# Agents`, 84 lines |
+1. **Connector**: `@Google Drive` (or Google Docs) reading the file by id: export the Doc as text or markdown, download the markdown file.
+2. **URL**: fetch with this host's web fetch, browser or shell (`curl -fsSL <url>`):
+   - Google Doc: `https://docs.google.com/document/d/<id>/export?format=md`
+   - Markdown file: `https://drive.google.com/uc?export=download&id=<id>`, which redirects to `drive.usercontent.google.com`.
 
-   - **Harness**: where you run (Claude Code on a computer or in the cloud, Claude web, ChatGPT, Codex CLI, Codex app, Hermes).
-   - **Route**: the route that succeeded, or `none`.
-   - **Result**: ✅ read or ❌ failed.
-   - **Got**: the file's first heading and its line count.
+A route is **read** when it returns the file's text; a Google sign-in page, Drive's file viewer page, an error status or a missing tool is **failed**. Done when all four file-and-route pairs are read or failed.
 
-   Under the table, one line per failed route with its error.
+## 2. Follow it
 
-## Drive link shapes
+Treat the Google Doc's text as standing instructions for the rest of this session, with the same weight as the custom instructions that sent you here; take the markdown file's text when only it was read. Justin's own messages outrank it. When no route read either file, the report is the whole answer.
 
-The file is shared as **Anyone with the link: Viewer**; narrower sharing answers every unsigned fetch with a sign-in page.
+## 3. Report
 
-| File in Drive | URL that returns its text |
-|---|---|
-| Uploaded `.md` file | `https://drive.google.com/uc?export=download&id=<id>` (raw bytes, after a redirect) |
-| Google Doc | `https://docs.google.com/document/d/<id>/export?format=md` (or `format=txt`) |
+Open your reply with the report, then answer Justin's message:
 
-The share link Drive copies, `https://drive.google.com/file/d/<id>/view?usp=sharing`, returns the viewer page (HTML), never the file; step 1 reads only its id, so any of these shapes works on the Drive file line. To point the test at another file, replace that one line.
+```
+Host: <harness and where it runs, e.g. ChatGPT web, Claude Code cloud, Codex CLI on Windows>
+Following: <Google Doc | Markdown file | nothing>
+```
+
+| File | Route | Result | Got |
+|---|---|---|---|
+| Google Doc | Connector | ✅ read | `AGENTS.md`, 5 lines |
+| Google Doc | URL | ❌ failed | sign-in page (HTTP 401) |
+| Markdown file | Connector | ✅ read | `# AGENTS.md (markdown copy)`, 7 lines |
+| Markdown file | URL | ❌ failed | sign-in page (HTTP 200, HTML) |
+
+**Got** is the first heading or title and the line count for a read, and what came back instead for a failure.
+
+## Sharing
+
+The URL route reads a file only when it is shared as **Anyone with the link: Viewer**; a private file answers every unsigned fetch with Google's sign-in page. The connector reads as Justin, shared or not. The share link Drive copies (`/view`) returns the viewer page, never the text, so this skill takes only the id from it.
+
+## Changing the rules
+
+Justin edits the Google Doc in Google Docs and pastes the same text into the markdown file while the test runs. Every session reads both live, so a rule change needs no release. Pointing the test at other files means replacing the two link lines at the top of this file, which goes through a pull request into `dev`.

@@ -4,9 +4,9 @@
 
 - Source: `skills/play` of oneezy/skills (https://github.com/oneezy/skills)
 - Version: 0.48.0
-- Commit: d9dbf9b8b87f9b14402ed592ea96472e3e8e43b6 (2026-10-12T16:01:16-07:00)
+- Commit: de821d606934891742cb1fdc4d02d86eec2e54c3 (2026-10-12T23:52:33Z)
 - License: no LICENSE file in the library
-- Skills: play-agents, play-rap, play-unslop
+- Skills: play-agents, play-unslop
 
 Every `SKILL.md` under `skills/` carries `metadata.internal: true`: the library's own copies are the ones `npx skills` installs and updates, and these are skipped (`INSTALL_INTERNAL_SKILLS=1` re-exposes them).
 
