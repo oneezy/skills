@@ -1,27 +1,31 @@
-# What each harness exposes
+# Building the report by hand
 
-Read this when `scripts/trace.mjs` prints `Transcript not available`, or there is no shell. Find the row for the harness you are in, then fill each block line from its column. A cell that says `not available in this harness` goes into the block as written.
+Read this when `scripts/trace.mjs` prints `Transcript not available`, or there is no shell. Find the row for the harness you are in and fill the header from its columns; anything a row does not give is `unknown`.
 
 | Harness | Recognise it by | Session | Times |
 |---|---|---|---|
-| Claude Code (CLI, desktop, cloud) | `CLAUDECODE=1`; `CLAUDE_CODE_ENTRYPOINT` names the surface; `CLAUDE_CODE_REMOTE=true` in the cloud | Cloud: `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<x>`, the link is `https://claude.ai/code/session_<x>`. Local: `claude --resume <CLAUDE_CODE_SESSION_ID>` | The script reads `~/.claude/projects/<cwd>/<session>.jsonl` (measured) |
-| Codex (CLI, app, IDE) | `CODEX_THREAD_ID` is set in the shell | `codex resume <CODEX_THREAD_ID>` | The script reads `~/.codex/sessions/**/rollout-*-<thread>.jsonl` (measured) |
-| Cowork (Claude desktop) | Your system prompt names Cowork | With `CLAUDECODE=1` in its shell, the Claude Code row applies. Otherwise not available in this harness | Clock read in the shell (measured) |
-| Hermes | Your system prompt names Hermes | not available in this harness | Clock read in the terminal tool (measured) |
-| ChatGPT (web, desktop, mobile) | Your system prompt names ChatGPT | not available in this harness; the link is in the browser's address bar, for Justin to paste | Clock read in the Python tool when it is on (measured); otherwise not available in this harness |
-| Claude.ai chat (web, desktop, mobile) | Your system prompt names Claude.ai, with no shell of your own | not available in this harness | Clock read in the code execution tool when it is on (measured); otherwise not available in this harness |
+| Claude Code (terminal, desktop, cloud) | `CLAUDECODE=1`; `CLAUDE_CODE_ENTRYPOINT` names the surface | Cloud: `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<x>`, the link `https://claude.ai/code/session_<x>`. Local: `claude --resume <CLAUDE_CODE_SESSION_ID>` | The script covers it; by hand, clock reads |
+| Codex (CLI, app, IDE) | `CODEX_THREAD_ID` in the shell | `codex resume <CODEX_THREAD_ID>` | The script covers it; by hand, clock reads |
+| Cowork (Claude desktop) | your system prompt names Cowork | with `CLAUDECODE=1` in its shell, the Claude Code row; otherwise unknown | clock reads in the shell |
+| Hermes | your system prompt names Hermes | unknown | clock reads in the terminal tool |
+| ChatGPT (web, desktop, mobile) | your system prompt names ChatGPT | unknown; Justin sees it in the address bar | clock reads in the Python tool when it is on; otherwise unknown |
+| Claude.ai chat (web, desktop, mobile) | your system prompt names Claude.ai, and you have no shell of your own | unknown | clock reads in the code execution tool when it is on; otherwise unknown |
 
-## Clock reads
+## Header by hand
 
-A clock read is one command run just before a step, and its time is that step's start; the next read ends it. The read itself is not a row.
+- **Harness and surface**: [verified] from an environment variable, [reported] from your system prompt.
+- **Model and effort**: [reported] from your system prompt; [verified] unknown.
+- **System prompt, instructions, memory**: the locations your own context names (a global instructions file, project instructions, custom instructions, a memory folder), each [reported]. Name a location, never its contents.
+- **Skills**: the skills you loaded or read a `SKILL.md` for, [reported], with plugin and version when the skill's folder shows them.
 
-- bash: `date -u +%H:%M:%S.%3N`
-- PowerShell 7: `Get-Date -AsUTC -Format HH:mm:ss.fff`
-- Python: `datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]`
+## Rows by hand
 
-## Hand-filled lines
+Keep a step list while the target runs: one row per action (a tool call, a skill load, a search), in order, nested under the step that started it.
 
-- **Harness**: the row you matched. From an environment variable it is measured; from your system prompt it is reported.
-- **Model**: your system prompt's model name, reported.
-- **Skills**: the skills you loaded or read a `SKILL.md` for this turn, reported.
-- **Status**: from the command's exit code or the tool's error, measured; your own judgement of a step with no tool, reported.
+A clock read is one command run just before a step; its time is that step's Start, and the next read ends it. The read itself is not a row.
+
+- bash: `date -u +%H:%M:%S`
+- PowerShell 7: `Get-Date -AsUTC -Format HH:mm:ss`
+- Python: `datetime.now(timezone.utc).strftime('%H:%M:%S')`
+
+With no clock, Start and Duration are `—`. Status comes from the command's exit code or the tool's error; a step with neither is ℹ️, with its state in the title.

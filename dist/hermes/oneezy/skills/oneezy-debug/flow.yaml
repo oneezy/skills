@@ -1,5 +1,5 @@
 skill: oneezy-debug
-purpose: Run the request, then open the answer with a debug block (harness, session link, model, skills, a timed table of steps), every value marked measured or reported.
+purpose: Wrapper for debugging what an agent did. The default target, this chat, reports the harness, model, session, loaded instructions, context and skills, the answer, then a nested four-column table of every step and the outcomes, every value tagged verified, selected, reported or unknown.
 runtime: [node]
 refs:
   - token: references/capabilities/contract.md
@@ -27,6 +27,11 @@ refs:
     id: skills/oneezy/oneezy-debug/references/capabilities/catalog.json
     need: conditional
     when: inventory, management or missing dependency
+  - token: references/chat.md
+    kind: file
+    id: skills/oneezy/oneezy-debug/references/chat.md
+    need: conditional
+    when: target is this chat, or a skill or request run under the wrapper
   - token: scripts/trace.mjs
     kind: file
     id: skills/oneezy/oneezy-debug/scripts/trace.mjs
@@ -37,23 +42,39 @@ refs:
     id: skills/oneezy/oneezy-debug/references/harnesses.md
     need: conditional
     when: the script prints Transcript not available, or there is no shell
+  - token: /show-me-your-work
+    kind: skill
+    id: show-me-your-work
+    need: mention
+    when: its decision trail exists in the working folder; linked, never run or rewritten
 unresolved: []
 agents:
   max: 0
 steps:
-  - id: run
-    does: run the rest of the message as it would run without this skill; with no readable transcript, keep a step list with a clock read before each step
+  - id: target
+    does: read the words after /oneezy-debug and pick the target from the SKILL.md table; an unbuilt target is named in one line and the chat target runs
     outcome:
-      done: the request's own work is finished and the answer is not yet written
-  - id: build
+      done: one target chosen
+  - id: run
+    after: target
+    if: a skill or request follows the wrapper
+    does: run it exactly as without this skill
+    outcome:
+      done: its work finished and the answer not yet written
+  - id: trace
     after: run
-    does: run scripts/trace.mjs and take its block unedited, or fill the template from the step list and references/harnesses.md
+    does: run scripts/trace.mjs with --scope chat or turn and --tz, or build the report by hand from references/harnesses.md
     needs: [node]
     outcome:
-      done: every block line has a value or "not available in this harness", each marked measured or reported
-  - id: answer
-    after: build
-    does: print the block first, then the answer
-    returns: the debug block and the answer
+      done: header with every line valued or unknown and tagged, and the table
+  - id: complete
+    after: trace
+    does: add [reported] header values from the agent's own context, write the answer in place of <<ANSWER>>, write Outcomes with their evidence
     outcome:
-      done: block on screen above the answer
+      done: no known value missing; every outcome names its evidence
+  - id: report
+    after: complete
+    does: print header, answer, table, legend and Outcomes in that order
+    returns: the debug report
+    outcome:
+      done: report on screen in that order
