@@ -42,7 +42,7 @@ agents:
   max: 0
 steps:
   - id: mode
-    does: read the arguments into open (no branch named), land (one branch named) or release (release, both, dev and main), and pick the PR base; a release from dev itself, or from a branch already landed, is promotion-only
+    does: read the arguments into open (no branch named), land (one branch other than main named), release (release, both, dev and main, or main named) or release all, and pick the PR base; a release from dev itself, or from a branch already landed, and release all are promotion-only; release scope is the repos this session landed, else every checkout in the working area, and for release all every repo Justin owns
     outcome:
       done: mode and base known
   - id: commit-push
@@ -82,12 +82,12 @@ steps:
       fail: origin/<base> does not contain the squash → stop; a refused delete is left for the report, not retried
   - id: promote
     after: [mode, land]
-    if: mode is release
-    does: fast-forward main to dev on origin; when origin refuses, open a release PR dev → main, merge it with a merge commit, verify origin/main contains it; then fast-forward the local main ref, verify origin/dev is an ancestor of origin/main with an identical tree, and wait for the checks on main's new head (a release job among them) as in wait-checks
+    if: mode is release or release all
+    does: plan one line per repo in the release scope (ready when dev holds commits main lacks and dev's checks are green; else skipped with the reason); release all waits for Justin's yes before any write; then per ready repo open a release PR dev → main, merge it with a merge commit, verify origin/main contains it, fast-forward the local main ref, verify origin/dev is an ancestor of origin/main with an identical tree, and wait for the checks on main's new head (a release or publish job among them) as in wait-checks
     needs: [git, gh]
     outcome:
-      done: origin/main contains origin/dev, the trees are identical, main's checks are green (a merge-commit promotion never makes the two commits equal)
-      fail: promotion refused, containment or tree differs, or main's checks red → one line, stop
+      done: every ready repo's origin/main contains its origin/dev, the trees are identical, main's checks are green (a merge-commit promotion never makes the two commits equal)
+      fail: release all without a yes, promotion refused, containment or tree differs, or main's checks red → one line, stop
   - id: report
     after: [wait-checks, land, promote]
     calls:
