@@ -1,0 +1,70 @@
+skill: oneezy-agents
+purpose: Load Justin's rules for every harness (agents.md) from the newest reachable copy and follow them for the rest of the session.
+runtime: [web fetch, browser or shell]
+refs:
+  - token: https://raw.githubusercontent.com/oneezy/skills/dev/skills/oneezy/agents.md
+    kind: url
+    id: https://raw.githubusercontent.com/oneezy/skills/dev/skills/oneezy/agents.md
+    need: required
+    when: load, first source
+  - token: references/agents.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/agents.md
+    need: conditional
+    when: load, when the live copy is out of reach
+  - token: https://github.com/oneezy/skills/edit/dev/skills/oneezy/agents.md
+    kind: url
+    id: https://github.com/oneezy/skills/edit/dev/skills/oneezy/agents.md
+    need: conditional
+    when: Justin asks to change a rule
+  - token: references/capabilities/contract.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/contract.md
+    need: required
+    when: before any dependency call
+  - token: references/capabilities/chatgpt.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/chatgpt.md
+    need: conditional
+    when: ChatGPT host
+  - token: references/capabilities/claude.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/claude.md
+    need: conditional
+    when: Claude host
+  - token: references/capabilities/codex.md
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/codex.md
+    need: conditional
+    when: Codex host
+  - token: references/capabilities/catalog.json
+    kind: file
+    id: skills/oneezy/oneezy-agents/references/capabilities/catalog.json
+    need: conditional
+    when: inventory, management or missing dependency
+unresolved: []
+agents:
+  max: 0
+steps:
+  - id: load
+    does: fetch agents.md live from dev; when that fails, read the packaged references/agents.md
+    needs: [web fetch, browser or shell]
+    outcome:
+      done: one copy's full text held, and which copy it was
+      fail: neither reachable; Justin told both failed
+  - id: follow
+    after: load
+    does: treat the text as standing instructions for the session; load a skill it routes to when the work reaches it
+    outcome:
+      done: the rules are in force
+  - id: name-copy
+    after: load
+    does: open the reply with one line naming the copy, and for the packaged copy that it may be older than dev
+    returns: the copy line, then the answer to Justin's message
+    outcome:
+      done: copy line printed
+  - id: change-rule
+    if: Justin asks to change a rule
+    does: give him the new wording and the edit link on dev; commit it only on his yes with write access
+    outcome:
+      done: wording and link given, or the commit on dev after his yes

@@ -3,10 +3,10 @@
 `oneezy` is a plugin package built by @oneezy/skills-sync; its files are copies, not the place to edit.
 
 - Source: `skills/oneezy` of oneezy/skills (https://github.com/oneezy/skills)
-- Version: 0.48.0
-- Commit: 040ef25e5e96f89d071b825f00f80e956b6e93e5 (2026-10-12T23:57:10Z)
+- Version: 0.49.0
+- Commit: 1c4af435b1b77d1485b53e478631d9f796855078 (2026-10-12T23:51:58Z)
 - License: no LICENSE file in the library
-- Skills: oneezy-brain, oneezy-debug, oneezy-estimate, oneezy-meeting, oneezy-merge, oneezy-migrate, oneezy-naming, oneezy-remote, oneezy-skills, oneezy-status
+- Skills: oneezy-agents, oneezy-brain, oneezy-debug, oneezy-estimate, oneezy-meeting, oneezy-merge, oneezy-migrate, oneezy-naming, oneezy-remote, oneezy-skills, oneezy-status
 
 Every `SKILL.md` under `skills/` carries `metadata.internal: true`: the library's own copies are the ones `npx skills` installs and updates, and these are skipped (`INSTALL_INTERNAL_SKILLS=1` re-exposes them).
 
