@@ -46,7 +46,7 @@ test('generator detects stale packaged routing and preserves unrelated and upstr
   } finally { fs.rmSync(repo,{recursive:true,force:true}); }
 });
 
-test('the packaged agents.md copy refreshes on --write and a stale copy never fails the check', () => {
+test('the packaged agents.md copy refreshes on --write', () => {
   const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'oneezy-agents-'));
   try {
     const skill = path.join(repo, 'skills/oneezy/oneezy-agents');
@@ -60,9 +60,15 @@ test('the packaged agents.md copy refreshes on --write and a stale copy never fa
     assert.equal(fs.readFileSync(path.join(repo, agentsCopy), 'utf8'), 'rules v2');
     assert.equal(fs.readFileSync(path.join(skill, 'SKILL.md'), 'utf8'), 'authored instructions');
   } finally { fs.rmSync(repo,{recursive:true,force:true}); }
+});
+
+test('oneezy-agents reads only the installed copy, and that copy matches the source (ADR-0018)', () => {
   const skill = read('skills/oneezy/oneezy-agents/SKILL.md');
-  assert.match(skill, /raw\.githubusercontent\.com\/oneezy\/skills\/dev\/skills\/oneezy\/agents\.md/);
+  assert.match(skill, /references\/agents\.md/);
+  assert.doesNotMatch(skill, /raw\.githubusercontent|curl|web fetch/);
+  assert.doesNotMatch(read('skills/oneezy/oneezy-agents/flow.yaml'), /https?:\/\//);
   assert.doesNotMatch(skill, /disable-model-invocation/);
+  assert.equal(agents(), true, `${agentsCopy} is older than ${agentsSource}; run node scripts/oneezy-capabilities.mjs --write`);
 });
 
 test('moved rules, templates and invocation boundaries retain reviewed behavior', () => {

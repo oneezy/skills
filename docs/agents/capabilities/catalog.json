@@ -15,12 +15,12 @@
         {
           "id": "github",
           "need": "conditional",
-          "when": "live agents.md read, or a rule commit Justin approved"
+          "when": "a rule change Justin approved, landed on a land/* branch"
         },
         {
           "id": "shell",
           "need": "optional",
-          "when": "curl fetch"
+          "when": "finding the installed copy when the reported base directory lacks it"
         }
       ]
     },
