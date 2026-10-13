@@ -1,6 +1,6 @@
 # How Justin works
 
-Every repo, every session. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md adds to these rules and wins where they disagree. skills-sync copies this file into each global instructions file; Justin edits it as `SHARED.md` in oneezy/skills.
+Every repo, every session, every harness. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md adds to these rules and wins where they disagree. `/oneezy-agents` loads this file; Justin edits it on `dev` as `skills/oneezy/agents.md` in oneezy/skills.
 
 ## Skills
 

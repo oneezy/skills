@@ -4,7 +4,7 @@
     "name": "skills",
     "owner": "oneezy",
     "homepage": "https://github.com/oneezy/skills",
-    "version": "0.48.0"
+    "version": "0.50.0"
   },
   "generate": {
     "skills": true,
@@ -463,7 +463,7 @@
   "plugins": {
     "oneezy": {
       "displayName": "Oneezy",
-      "description": "Justin's own skills: brain, estimate, meeting, merge, migrate, naming, remote, skills, status.",
+      "description": "Justin's own skills: agents, brain, debug, estimate, meeting, merge, migrate, naming, remote, skills, status.",
       "group": "oneezy"
     },
     "trident": {
