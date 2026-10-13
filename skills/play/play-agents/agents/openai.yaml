@@ -1,4 +1,4 @@
 interface:
-  display_name: "🎤 Play Agents"
-  short_description: "Answer each message with relevant rhyming rap"
-  default_prompt: "Use $play-agents to answer in original rhyming rap for this conversation."
+  display_name: "Play Agents"
+  short_description: "Test loading Justin's agents rules from Google Drive"
+  default_prompt: "Use $play-agents to load my agents rules from Google Drive and report which routes worked."
