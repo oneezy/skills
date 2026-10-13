@@ -15,6 +15,7 @@ Skills come from the library oneezy/skills, installed into each harness in one f
 - **Named skill**: when Justin names a skill, run it. If the harness refuses because it is user-only, Read its `SKILL.md` in the loaded plugin's own folder on disk and follow it, with the rest of his message as its arguments. Start a user-only skill only when he names it, or under an autopilot grant.
 - **Loaded copy**: run a skill only from a loaded plugin (its folder on disk counts) or the repo's own skills. A `SKILL.md` from GitHub or any other folder skips its guardrails; never run one.
 - **Missing skill**: say so and show the table above. Run `/oneezy-skills` (if that is missing too, `npx --yes @oneezy/skills-sync@latest status`), report its manual steps, and tell Justin the skill appears in a new session.
+- **Skill changes**: `/oneezy-skills` is the one route when Justin asks, in any harness, to sync, update, add, remove or change skills or plugins ("update my skills", "add owner/repo skills"); it changes the library, and every harness follows its release.
 - **Matt Pocock's skills**: when it is unclear which one fits, suggest Justin run `/ask-matt`.
 
 ## Git
