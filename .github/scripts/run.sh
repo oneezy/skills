@@ -5,7 +5,7 @@
 # tree pushes no branch, `versions` only prints, and bad input (an unknown command, a command this tool version does
 # not have, a missing argument, a tool error) fails with one ::error line and pushes nothing.
 #
-# Environment: CLI (the tool's CLI entry, run with node), COMMAND (update | add | versions | rename), ARGS (the command's
+# Environment: CLI (the tool's CLI entry, run with node), COMMAND (update | add | remove | versions | rename), ARGS (the command's
 # arguments as one string, split on spaces; may be empty), LIBRARY (the checkout, default library), RUN_ID (the branch
 # suffix, default local), RUN_URL (named in the commit body; optional), TOOL_VERSION (named in messages; optional),
 # HAS_PUSH_TOKEN (true when the checkout pushes with a token whose push starts workflows; a push made with GITHUB_TOKEN
@@ -16,7 +16,7 @@
 set -euo pipefail
 
 : "${CLI:?CLI (the tool CLI entry, a node script) is required}"
-: "${COMMAND:?COMMAND: update, add, versions or rename is required}"
+: "${COMMAND:?COMMAND: update, add, remove, versions or rename is required}"
 ARGS=${ARGS:-}
 LIBRARY=${LIBRARY:-library}
 RUN_ID=${RUN_ID:-local}
@@ -36,15 +36,15 @@ summary() { if [[ -n ${GITHUB_STEP_SUMMARY:-} ]]; then printf '%s\n' "$@" >> "$G
 # 1. The command: one of the library commands, and one this tool version has. Its --help lists every command it knows;
 #    a word it does not know falls through to the default `sync`, a machine command that must never run here.
 case $COMMAND in
-  update | add | versions | rename) ;;
-  *) fail "unknown command '$COMMAND'; the library commands are update, add, versions and rename" ;;
+  update | add | remove | versions | rename) ;;
+  *) fail "unknown command '$COMMAND'; the library commands are update, add, remove, versions and rename" ;;
 esac
 if ! help=$(node "$CLI" --help 2>&1); then
   fail "the tool's --help failed: $(head -n 1 <<< "$help")"
 fi
 if ! grep -Eq "^  $COMMAND( |\$)" <<< "$help"; then
-  known=$(grep -oE '^  (update|add|versions|rename)\b' <<< "$help" | tr -d ' ' | paste -sd ',' | sed 's/,/, /g' || true)
-  fail "$tool has no '$COMMAND' command (it has ${known:-none of update, add, versions, rename}); nothing run, nothing pushed"
+  known=$(grep -oE '^  (update|add|remove|versions|rename)\b' <<< "$help" | tr -d ' ' | paste -sd ',' | sed 's/,/, /g' || true)
+  fail "$tool has no '$COMMAND' command (it has ${known:-none of update, add, remove, versions, rename}); nothing run, nothing pushed"
 fi
 
 # 2. The arguments, split on spaces. The checkout and the output form are the workflow's to choose.
@@ -60,6 +60,7 @@ for a in ${argv[@]+"${argv[@]}"}; do
 done
 case $COMMAND in
   add) (( ${#positional[@]} )) || fail "add needs a source: owner/repo[#ref] or a git URL, then its flags (--id, --root, --skills, --as, --plugin); nothing pushed" ;;
+  remove) (( ${#positional[@]} )) || fail "remove needs a source: its id from skills-sync.json, or the owner/repo of exactly one source; nothing pushed" ;;
   versions) (( ${#positional[@]} )) || fail "versions needs a source id from skills-sync.json; nothing pushed" ;;
   rename) (( ${#positional[@]} >= 2 )) || fail "rename needs the old and the new name; nothing pushed" ;;
 esac
@@ -97,6 +98,10 @@ case $COMMAND in
     exit 0
     ;;
   *)
+    # The checkout has no upstream/ snapshots (gitignored); remove rebuilds every package, so the other sources need theirs.
+    if [[ $COMMAND == remove ]]; then
+      node "$CLI" refresh --frozen --repo "$LIBRARY" || fail "refresh --frozen failed (exit $?); nothing pushed"
+    fi
     node "$CLI" "$COMMAND" ${argv[@]+"${argv[@]}"} --yes --repo "$LIBRARY" || fail "$shown failed (exit $?); nothing pushed"
     echo '{}' > "$tmp/report.json"
     ;;

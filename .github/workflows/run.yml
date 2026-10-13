@@ -1,8 +1,8 @@
-# run: one library command (update, add, versions, rename) run here with the latest published @oneezy/skills-sync, so
+# run: one library command (update, add, remove, versions, rename) run here with the latest published @oneezy/skills-sync, so
 # any session can ask for it, a cloud thread with no library checkout included (ADR-0014), and the daily upstream check
 # of every source (ADR-0009). Both end the same way: a change becomes a land/* branch and land.yml takes it from there.
 #
-#   workflow_dispatch  command (update | add | versions | rename) and args (the command's arguments as one string, split
+#   workflow_dispatch  command (update | add | remove | versions | rename) and args (the command's arguments as one string, split
 #                      on spaces; may be empty). From a session:
 #                        gh api repos/oneezy/skills/actions/workflows/run.yml/dispatches -f ref=dev \
 #                          -f 'inputs[command]=update' -f 'inputs[args]=matt-pocock'
@@ -31,7 +31,7 @@ on:
       command:
         description: The library command to run against dev
         type: choice
-        options: [update, add, versions, rename]
+        options: [update, add, remove, versions, rename]
         default: update
       args:
         description: Its arguments as one string, split on spaces (update <source> --to <version>; add owner/repo --id x --skills a,b; versions <source>); empty updates every unheld source
