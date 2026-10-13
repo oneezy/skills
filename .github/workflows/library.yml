@@ -88,6 +88,9 @@ jobs:
           node library/tests/brain-drive.test.mjs
           node --test library/tests/provider-capture.test.mjs
 
+      - name: oneezy-debug transcript parser
+        run: node --test library/tests/oneezy-debug-trace.test.mjs
+
       - name: release script tests
         run: node --test library/.github/scripts/*.test.mjs
 
