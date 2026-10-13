@@ -47,6 +47,7 @@ Skills come from the library oneezy/skills, installed into each harness in one f
 - **Tests**: approved work ships with tests the agent wrote and ran.
 - **Dev servers**: start every dev or preview server with `--host`, leave it running, and give Justin every Network URL it prints, unasked.
 - **Report** outcomes faithfully: what was done, what failed, what was skipped, what is unverified.
+- **Text Justin types**: whatever you need him to type or paste (a merge line, a go, a command, text for another app) goes in its own code block, exact and complete, so he copies it in one tap.
 
 ## Voice chats
 
