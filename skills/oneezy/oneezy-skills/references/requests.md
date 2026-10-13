@@ -7,11 +7,20 @@
 | downgrade X, go back to the previous release | **Change**: `update <source> --to previous` |
 | what version of X am I on, what versions does X have | in a library checkout, the script with `versions <source> --repo <checkout>`; without one (a cloud thread), **Dispatch** `versions` and read the `*` line in the run log |
 | add `<owner/repo>`, add this skill (a link to one) | **Add** |
+| remove `<owner/repo>` skills, remove X (a third-party source) | **Change**: `remove <source>` (a source id, or the `owner/repo` of exactly one source); authored skills change through **Playground** or an edit |
 | add X to my playground, play with X, test this skill | **Playground**: copy |
 | make a skill that does X in my playground | **Playground**: create |
 | remove X from my playground | **Playground**: remove |
 | move X from my playground into oneezy (or trident) | **Playground**: promote |
 | update my ChatGPT plugins | inside ChatGPT, `references/chatgpt-update.md`; on a host without Plugin Creator, tell him to type `@oneezy-skills update my ChatGPT plugins to the latest oneezy/skills release` in a ChatGPT chat |
+
+**Inside ChatGPT** (the website or the desktop app) no script runs, so the rows above map this way:
+
+| Justin says, in ChatGPT | do |
+|---|---|
+| sync, update my skills, update everything, my skills are missing, update my ChatGPT plugins | `references/chatgpt-update.md`: brings this account up to the latest release |
+| a library change (update or downgrade a source, add, remove) | **Dispatch** it (`references/changes.md`) through the GitHub connector when it can start the run; once the land run's release is out, `references/chatgpt-update.md`. Without a connector that can dispatch, tell him to say the same words in Claude Code or Codex, then `update my ChatGPT plugins` here |
+| what is installed, am I done | the report of `references/chatgpt-update.md` with no writes: steps 1 to 4 and 7 |
 | what is installed, what is missing, am I done | `status` (the end-of-run `status --json` shows the same) |
 | clean up my branches | `branches --plan`, show it, then `branches` on his yes (needs `GITHUB_TOKEN` or `GH_TOKEN`; ADR-0013) |
 | take the tool off this machine | `unlink --plan`, then `unlink` on his yes (this machine only; run it inside each WSL distro too) |
@@ -23,4 +32,4 @@ No arguments is a quiet sync, and it needs no checkout of the library: it reads 
 
 Old flags (`-y`, `--agents`, `--global`, `--no-projects`, `--no-pull`, `--no-remember` and the rest), and library flags such as `--repo`, are ignored on a machine command and named once on stderr; `hook` refuses any flag but `--library`. Do not pass them. The library commands (`update`, `add`, `versions`, `refresh`, `build`, `check`) take `--repo <clone>`.
 
-Every request ends with `status --json` and its open manual steps (`SKILL.md`, step 6), except the ChatGPT update, which ends with its own report.
+Every request ends with `status --json` and its open manual steps (`SKILL.md`, step 6), except inside ChatGPT, where `references/chatgpt-update.md`'s report ends it.
