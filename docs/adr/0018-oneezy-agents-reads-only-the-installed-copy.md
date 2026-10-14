@@ -1,6 +1,6 @@
 # ADR-0018: /oneezy-agents reads only the installed copy of agents.md
 
-Date: 2026-10-13. Status: accepted. Supersedes decisions 3 (a stale copy is a note), 4 (live from `dev`) and 5 (edited straight on `dev`) of ADR-0017; the rest of ADR-0017 stands.
+Date: 2026-10-13. Status: accepted; decision 4 (the loose source and its copy step) superseded by ADR-0019. Supersedes decisions 3 (a stale copy is a note), 4 (live from `dev`) and 5 (edited straight on `dev`) of ADR-0017; the rest of ADR-0017 stands.
 
 ## Context
 

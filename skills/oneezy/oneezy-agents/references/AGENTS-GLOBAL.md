@@ -1,6 +1,6 @@
 # How Justin works
 
-Every repo, every session, every harness. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md adds to these rules and wins where they disagree. `/oneezy-agents` loads the copy installed with the oneezy plugin; the source is `skills/oneezy/agents.md` in oneezy/skills, and a change reaches sessions with the next plugin release.
+Every repo, every session, every harness. Justin's Oneezy skills own the detail: when the work reaches one, load it. A repo's own AGENTS.md adds to these rules and wins where they disagree. `/oneezy-agents` loads this file from the installed oneezy plugin. Justin edits it in place, `skills/oneezy/oneezy-agents/references/AGENTS-GLOBAL.md` in oneezy/skills; a change reaches sessions with the next plugin release.
 
 ## Skills
 
