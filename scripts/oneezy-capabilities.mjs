@@ -24,23 +24,9 @@ export function bundle(repo = root, write = false) {
   }
   return errors;
 }
-// The packaged copy of Justin's rules, the only copy /oneezy-agents reads (ADR-0018). The source sits outside every
-// package; --write refreshes the copy, and the test suite fails while it is stale, so a rule edit cannot reach main
-// without shipping. Returns whether the copy matches the source.
-export const agentsSource = "skills/oneezy/agents.md";
-export const agentsCopy = "skills/oneezy/oneezy-agents/references/agents.md";
-export function agents(repo = root, write = false) {
-  const source = path.join(repo, agentsSource);
-  const target = path.join(repo, agentsCopy);
-  if (!fs.existsSync(source) || !fs.existsSync(path.join(path.dirname(path.dirname(target)), "SKILL.md"))) return true;
-  const bytes = fs.readFileSync(source);
-  if (write) fs.writeFileSync(target, bytes);
-  return fs.existsSync(target) && fs.readFileSync(target).equals(bytes);
-}
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const write = process.argv.includes("--write");
   const errors = bundle(root, write);
-  if (!agents(root, write)) process.stdout.write(`note: ${agentsCopy} is older than ${agentsSource}; run with --write to refresh it\n`);
   if (errors.length) { process.stderr.write(errors.join("\n") + "\n"); process.exitCode = 1; }
   else process.stdout.write("Oneezy capability references current\n");
 }
