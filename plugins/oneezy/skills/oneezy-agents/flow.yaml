@@ -1,10 +1,10 @@
 skill: oneezy-agents
-purpose: Load Justin's rules for every harness (agents.md) from the copy installed with this plugin and follow them for the rest of the session.
+purpose: Load Justin's global rules for every harness (AGENTS-GLOBAL.md) from the copy installed with this plugin and follow them for the rest of the session.
 runtime: [file read, shell]
 refs:
-  - token: references/agents.md
+  - token: references/AGENTS-GLOBAL.md
     kind: file
-    id: skills/oneezy/oneezy-agents/references/agents.md
+    id: skills/oneezy/oneezy-agents/references/AGENTS-GLOBAL.md
     need: required
     when: load, the only source
   - token: docs/agents/release.md
@@ -42,7 +42,7 @@ agents:
   max: 0
 steps:
   - id: load
-    does: read the installed references/agents.md beside SKILL.md; when the reported base directory lacks it, find the installed copy under the harness's plugin folders; never fetch a remote copy
+    does: read the installed references/AGENTS-GLOBAL.md beside SKILL.md; when the reported base directory lacks it, find the installed copy under the harness's plugin folders; never fetch a remote copy
     needs: [file read, shell]
     outcome:
       done: the installed copy's full text held
@@ -54,12 +54,12 @@ steps:
       done: the rules are in force
   - id: name-copy
     after: load
-    does: open the reply with one line saying agents.md was loaded from the installed plugin, with the plugin version when readable
+    does: open the reply with one line saying AGENTS-GLOBAL.md was loaded from the installed plugin, with the plugin version when readable
     returns: the copy line, then the answer to Justin's message
     outcome:
       done: copy line printed
   - id: change-rule
     if: Justin asks to change a rule
-    does: give him the new wording; on his yes, edit references/agents.md in place and land it on a land/* branch with a patch bump, so it ships in the next release
+    does: give him the new wording; on his yes, edit references/AGENTS-GLOBAL.md in place and land it on a land/* branch with a patch bump, so it ships in the next release
     outcome:
       done: wording given, or the land/* branch pushed after his yes

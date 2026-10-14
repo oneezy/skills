@@ -46,14 +46,14 @@ test('generator detects stale packaged routing and preserves unrelated and upstr
   } finally { fs.rmSync(repo,{recursive:true,force:true}); }
 });
 
-test('oneezy-agents reads only its own references/agents.md, the one hand-edited rules file (ADR-0018, ADR-0019)', () => {
+test('oneezy-agents reads only its own references/AGENTS-GLOBAL.md, the one hand-edited rules file (ADR-0018, ADR-0019)', () => {
   const skill = read('skills/oneezy/oneezy-agents/SKILL.md');
-  assert.match(skill, /references\/agents\.md/);
+  assert.match(skill, /references\/AGENTS-GLOBAL\.md/);
   assert.doesNotMatch(skill, /raw\.githubusercontent|curl|web fetch/);
   assert.doesNotMatch(read('skills/oneezy/oneezy-agents/flow.yaml'), /https?:\/\//);
   assert.doesNotMatch(skill, /disable-model-invocation/);
-  assert.match(read('skills/oneezy/oneezy-agents/references/agents.md'), /^# How Justin works/);
-  assert.equal(fs.existsSync(path.join(root, 'skills/oneezy/agents.md')), false, 'the rules live only in skills/oneezy/oneezy-agents/references/agents.md');
+  assert.match(read('skills/oneezy/oneezy-agents/references/AGENTS-GLOBAL.md'), /^# How Justin works/);
+  for (const old of ['skills/oneezy/agents.md', 'skills/oneezy/oneezy-agents/references/agents.md']) assert.equal(fs.existsSync(path.join(root, old)), false, 'the rules live only in skills/oneezy/oneezy-agents/references/AGENTS-GLOBAL.md');
 });
 
 test('moved rules, templates and invocation boundaries retain reviewed behavior', () => {
