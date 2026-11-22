@@ -1,5 +1,7 @@
 # skills
 
+**Generated. Edit in [oneezy/tools `packages/skills`](https://github.com/oneezy/tools/tree/dev/packages/skills).** Each release is built there and published here by `packages/skills/scripts/publish-mirror.mjs` (ADR-0021). Every install below still reads this repository.
+
 Justin's agent skills and the third-party skills he uses, in one library. Vocabulary in `GLOSSARY.md`, decisions in `docs/adr/`, how skills name each other in `docs/agents/references.md`.
 
 ## Install

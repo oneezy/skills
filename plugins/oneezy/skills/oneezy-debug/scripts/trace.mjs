@@ -85,7 +85,8 @@ export function parseClaude(entries, {file = null, depth = 0} = {}) {
   let selected = null;
   for (const entry of entries) {
     const content = Array.isArray(entry.message?.content) ? entry.message.content : [];
-    for (const match of text(entry.message?.content).matchAll(/Base directory for this skill: ([^\s"\\]+)/g)) bases.set(basename(match[1]), match[1]);
+    const messageText = typeof entry.message?.content === 'string' ? entry.message.content : content.filter(part => part.type === 'text').map(part => part.text).join('\n');
+    for (const match of messageText.matchAll(/Base directory for this skill: ([^\r\n]+)/g)) bases.set(basename(match[1].trim()), match[1].trim());
     if (entry.type === 'assistant') {
       model = entry.message?.model ?? model;
       selected = entry.requestedModel ?? selected;
@@ -235,7 +236,7 @@ export function parseCodex(entries) {
     entrypoint: meta.originator ?? null,
     cwd: meta.cwd ?? context.cwd ?? null,
     session: meta.id ?? null,
-    instructions: [...new Set([...all.matchAll(/AGENTS\.md instructions for ([^\n<\\"]+)/g)].map(match => join(match[1].trim(), 'AGENTS.md')))],
+    instructions: [...new Set([...all.matchAll(/AGENTS\.md instructions for ([^\n<\\"]+)/g)].map(match => `${match[1].trim().replace(/[\\/]+$/, '')}/AGENTS.md`))],
     memory: [],
     recalled: 0,
     context: [],
