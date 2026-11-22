@@ -1,15 +1,9 @@
 # AGENTS.md
 
-Before working here, read `docs/agents/library.md` and `docs/agents/skill-loading.md`. For dependency discovery, read `docs/agents/capabilities.md`. For Brain work, load `/oneezy-brain`; it owns routing and locations.
+This repository is the release mirror of oneezy/tools `packages/skills` (ADR-0021). Make every change there, through a pull request into tools `dev`; `packages/skills/scripts/publish-mirror.mjs` publishes each release here through a `land/mirror-<sha>` branch, which `.github/workflows/land.yml` squashes into `dev`, promotes to `main` and releases. A commit made here by hand is overwritten by the next mirror run.
+
+Changes to `.github/` are the exception: the mirror leaves them alone, so they go through a pull request here that Justin merges.
 
 ### Issue tracker
 
-Issues are tracked as GitHub Issues on `oneezy/skills`, operated through `gh api` REST calls (never `gh issue` or GraphQL, which cloud sessions block). See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Issues are tracked on oneezy/tools (its `docs/agents/issue-tracker.md`). Issue links into oneezy/skills are history.
